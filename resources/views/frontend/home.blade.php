@@ -115,7 +115,7 @@
             <div class="container">
                 <a href="{{ route('landing') }}" class="navbar-brand">
                     <i class="fas fa-industry text-info"></i>
-                    <span class="brand-text font-weight-bold ml-2">CNC System</span>
+                    <span class="brand-text font-weight-bold ml-2">CNC Manufacture System</span>
                 </a>
 
                 <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse">
