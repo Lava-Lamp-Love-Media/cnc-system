@@ -9,23 +9,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', [
-                'super_admin',
-                'company_admin',
-                'engineer',
-                'qc',
-                'editor',
-                'checker',
-                'shop',
-                'user'
-            ])->default('user')->after('email');
+            $table->foreignId('company_id')->nullable()->after('id')->constrained()->onDelete('cascade');
+            $table->enum('role', ['super_admin', 'company_admin', 'engineer', 'qc', 'editor', 'checker', 'shop', 'user'])->default('user')->change();
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            $table->dropForeign(['company_id']);
+            $table->dropColumn('company_id');
         });
     }
 };

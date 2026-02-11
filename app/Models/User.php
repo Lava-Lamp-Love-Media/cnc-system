@@ -16,6 +16,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'company_id',
     ];
 
     protected $hidden = [
@@ -29,5 +30,34 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function isCompanyAdmin()
+    {
+        return $this->role === 'company_admin';
+    }
+
+    public function hasFeature(string $slug): bool
+    {
+        // Super admin can access everything
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        if (!$this->company) {
+            return false;
+        }
+
+        return $this->company->hasFeature($slug);
     }
 }

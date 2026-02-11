@@ -80,6 +80,41 @@
                             </a>
                         </li>
 
+                        @if(Auth::user()->isSuperAdmin())
+
+                        <li class="nav-item">
+                            <a href="{{ route('superadmin.plans.index') }}"
+                                class="nav-link {{ request()->routeIs('superadmin.plans.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-crown"></i>
+                                <p>Plans</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('superadmin.features.index') }}"
+                                class="nav-link {{ request()->routeIs('superadmin.features.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-layer-group"></i>
+                                <p>Features</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('superadmin.companies.index') }}"
+                                class="nav-link {{ request()->routeIs('superadmin.companies.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-building"></i>
+                                <p>Companies</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('superadmin.trial_requests.index') }}"
+                                class="nav-link {{ request()->routeIs('superadmin.trial_requests.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-inbox"></i>
+                                <p>Trial Requests</p>
+                            </a>
+                        </li>
+
+                        @endif
+
                         @if(in_array(Auth::user()->role, ['admin', 'editor']))
                         <li class="nav-item">
                             <a href="#" class="nav-link">
