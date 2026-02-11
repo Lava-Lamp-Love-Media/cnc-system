@@ -148,7 +148,7 @@
                             Multi-Tenant SaaS for CNC Operations
                         </div>
 
-                        <h1 class="display-4 mb-3">Run Quotes, Orders & Production — in one system.</h1>
+                        <h1 class="display-4 mb-3">Run Quotes, Orders & Production — in one cnc system.</h1>
                         <p class="mb-4">
                             Manage your CNC workflow: quotes → orders → job tracking → inventory → reports.
                             Start a free trial or request a demo for your company.
