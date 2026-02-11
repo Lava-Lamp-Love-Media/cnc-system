@@ -31,6 +31,6 @@ class TrialRequestController extends Controller
             'status' => 'pending',
         ]);
 
-        return back()->with('success', 'Request submitted. We will contact you soon.');
+        return redirect()->route('trial.success');
     }
 }

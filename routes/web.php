@@ -17,6 +17,7 @@ Route::get('/', function () {
     return view('frontend.home');
 })->name('landing');
 Route::post('/trial-request', [TrialRequestController::class, 'store'])->name('trial.request.store');
+Route::view('/trial-success', 'frontend.trial_success')->name('trial.success');
 Auth::routes(['register' => false]);
 
 Route::middleware('auth')->group(function () {
