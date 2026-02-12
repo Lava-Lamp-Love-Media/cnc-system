@@ -25,31 +25,87 @@ class PlanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'slug' => 'required|unique:plans,slug',
-            'price' => 'required|numeric',
-            'duration_days' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|unique:plans,slug|max:255',
+            'price' => 'required|numeric|min:0',
+            'duration_days' => 'required|integer|min:1',
+            'features' => 'nullable|array',
+            'features.*' => 'exists:features,id',
+        ], [
+            'name.required' => 'Plan name is required',
+            'slug.required' => 'Slug is required',
+            'slug.unique' => 'This slug already exists',
+            'price.required' => 'Price is required',
+            'price.numeric' => 'Price must be a number',
+            'duration_days.required' => 'Duration is required',
         ]);
 
-        $plan = Plan::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->slug),
-            'price' => $request->price,
-            'duration_days' => $request->duration_days,
-            'is_active' => true,
-        ]);
+        try {
+            $plan = Plan::create([
+                'name' => $request->name,
+                'slug' => Str::slug($request->slug, '_'),
+                'price' => $request->price,
+                'duration_days' => $request->duration_days,
+                'is_active' => true,
+            ]);
 
-        if ($request->features) {
-            $plan->features()->sync($request->features);
+            if ($request->features) {
+                $plan->features()->sync($request->features);
+            }
+
+            return redirect()->route('superadmin.plans.index')
+                ->with('toast_success', '✅ Plan created successfully!');
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('toast_error', '❌ Error creating plan: ' . $e->getMessage());
         }
+    }
 
-        return redirect()->route('superadmin.plans.index')
-            ->with('success', 'Plan created successfully.');
+    public function edit(Plan $plan)
+    {
+        $features = Feature::where('is_active', true)->get();
+        return view('backend.superadmin.plans.edit', compact('plan', 'features'));
+    }
+
+    public function update(Request $request, Plan $plan)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:plans,slug,' . $plan->id,
+            'price' => 'required|numeric|min:0',
+            'duration_days' => 'required|integer|min:1',
+            'is_active' => 'required|boolean',
+            'features' => 'nullable|array',
+        ]);
+
+        try {
+            $plan->update([
+                'name' => $request->name,
+                'slug' => Str::slug($request->slug, '_'),
+                'price' => $request->price,
+                'duration_days' => $request->duration_days,
+                'is_active' => $request->is_active,
+            ]);
+
+            $plan->features()->sync($request->features ?? []);
+
+            return redirect()->route('superadmin.plans.index')
+                ->with('toast_success', '✅ Plan updated successfully!');
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('toast_error', '❌ Error updating plan: ' . $e->getMessage());
+        }
     }
 
     public function destroy(Plan $plan)
     {
-        $plan->delete();
-        return back()->with('success', 'Plan deleted.');
+        try {
+            $planName = $plan->name;
+            $plan->delete(); // Soft delete
+
+            return back()->with('toast_success', "✅ Plan '{$planName}' deleted successfully!");
+        } catch (\Exception $e) {
+            return back()->with('toast_error', '❌ Error deleting plan: ' . $e->getMessage());
+        }
     }
 }

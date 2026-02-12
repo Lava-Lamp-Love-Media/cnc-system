@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('status', ['active', 'suspended', 'trial'])->default('active');
             $table->date('subscription_start')->nullable();
             $table->date('subscription_end')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

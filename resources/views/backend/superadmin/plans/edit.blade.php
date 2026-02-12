@@ -1,19 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Create Plan')
-@section('page-title', 'Create New Plan')
+@section('title', 'Edit Plan')
+@section('page-title', 'Edit Plan')
 
 @section('content')
 
-<div class="card card-primary">
+<div class="card card-warning">
     <div class="card-header">
         <h3 class="card-title">
-            <i class="fas fa-plus"></i> Add Plan
+            <i class="fas fa-edit"></i> Edit Plan
         </h3>
     </div>
 
-    <form method="POST" action="{{ route('superadmin.plans.store') }}" id="planForm">
+    <form method="POST" action="{{ route('superadmin.plans.update', $plan->id) }}" id="planForm">
         @csrf
+        @method('PUT')
 
         <div class="card-body">
             <div class="row">
@@ -25,8 +26,7 @@
                             name="name"
                             id="planName"
                             class="form-control @error('name') is-invalid @enderror"
-                            value="{{ old('name') }}"
-                            placeholder="Basic / Pro / Enterprise"
+                            value="{{ old('name', $plan->name) }}"
                             required>
                         @error('name')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -39,13 +39,8 @@
                             name="slug"
                             id="planSlug"
                             class="form-control @error('slug') is-invalid @enderror"
-                            value="{{ old('slug') }}"
-                            placeholder="basic / pro"
+                            value="{{ old('slug', $plan->slug) }}"
                             required>
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i>
-                            Auto-generated from name
-                        </small>
                         @error('slug')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
@@ -57,8 +52,7 @@
                             step="0.01"
                             name="price"
                             class="form-control @error('price') is-invalid @enderror"
-                            value="{{ old('price') }}"
-                            placeholder="29.99"
+                            value="{{ old('price', $plan->price) }}"
                             required>
                         @error('price')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -70,11 +64,19 @@
                         <input type="number"
                             name="duration_days"
                             class="form-control @error('duration_days') is-invalid @enderror"
-                            value="{{ old('duration_days', 30) }}"
+                            value="{{ old('duration_days', $plan->duration_days) }}"
                             required>
                         @error('duration_days')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="is_active" class="form-control">
+                            <option value="1" {{ old('is_active', $plan->is_active) == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ old('is_active', $plan->is_active) == 0 ? 'selected' : '' }}>Inactive</option>
+                        </select>
                     </div>
 
                 </div>
@@ -87,7 +89,7 @@
                         <span class="badge badge-info ml-2" id="featureCount">0 selected</span>
                     </label>
 
-                    <div class="border rounded p-3 bg-light" style="max-height:300px; overflow-y:auto;">
+                    <div class="border rounded p-3 bg-light" style="max-height:320px; overflow-y:auto;">
 
                         @if($features->count() > 0)
                         @foreach($features as $feature)
@@ -97,7 +99,7 @@
                                 value="{{ $feature->id }}"
                                 class="custom-control-input feature-checkbox"
                                 id="feature_{{ $feature->id }}"
-                                {{ in_array($feature->id, old('features', [])) ? 'checked' : '' }}>
+                                {{ in_array($feature->id, old('features', $plan->features->pluck('id')->toArray())) ? 'checked' : '' }}>
                             <label class="custom-control-label" for="feature_{{ $feature->id }}">
                                 <i class="fas fa-cube text-primary fa-xs mr-1"></i>
                                 {{ $feature->name }}
@@ -118,8 +120,8 @@
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-                <i class="fas fa-save"></i> Save Plan
+            <button type="submit" class="btn btn-warning btn-lg" id="submitBtn">
+                <i class="fas fa-save"></i> Update Plan
             </button>
 
             <a href="{{ route('superadmin.plans.index') }}" class="btn btn-secondary btn-lg">
@@ -155,7 +157,7 @@
 
         // Form submission
         $('#planForm').submit(function() {
-            $('#submitBtn').html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
+            $('#submitBtn').html('<i class="fas fa-spinner fa-spin"></i> Updating...').prop('disabled', true);
         });
     });
 </script>

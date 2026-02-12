@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('features', FeatureController::class);
             Route::resource('plans', PlanController::class);
             Route::resource('companies', CompanyController::class);
-
+            Route::post('companies/search-user', [CompanyController::class, 'searchUser'])->name('companies.search-user');
             Route::get('trial-requests', [TrialRequestAdminController::class, 'index'])->name('trial_requests.index');
             Route::post('trial-requests/{trialRequest}/approve', [TrialRequestAdminController::class, 'approve'])->name('trial_requests.approve');
             Route::post('trial-requests/{trialRequest}/reject', [TrialRequestAdminController::class, 'reject'])->name('trial_requests.reject');

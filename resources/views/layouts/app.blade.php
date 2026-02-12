@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     <style>
         :root {
@@ -141,7 +143,7 @@
         .btn {
             border-radius: 5px;
             font-weight: 500;
-            padding: 0.5rem 1rem;
+            /* padding: 0.5rem 1rem; */
         }
 
         .btn-primary {
@@ -333,7 +335,6 @@
                                 <i class="nav-icon fas fa-inbox"></i>
                                 <p>
                                     Trial Requests
-                                    <span class="badge badge-warning right">3</span>
                                 </p>
                             </a>
                         </li>
@@ -361,17 +362,6 @@
                         @endif
 
                         @if(Auth::user()->isCompanyAdmin())
-                        <!-- Company Admin Section -->
-                        <li class="nav-header">COMPANY ADMIN</li>
-
-                        <!-- Dashboard -->
-                        <li class="nav-item">
-                            <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-
                         <!-- User Management -->
                         <li class="nav-item">
                             <a href="{{ route('company.users.index') }}" class="nav-link {{ request()->routeIs('company.users.*') ? 'active' : '' }}">
@@ -379,97 +369,13 @@
                                 <p>
                                     Manage Users
                                     @if(Auth::user()->company)
-                                    <span class="badge badge-info right">{{ Auth::user()->company->users()->where('role', 'user')->count() }}</span>
+                                    <span class="badge badge-info right">{{ Auth::user()->company->users()->count() }}</span>
                                     @endif
                                 </p>
                             </a>
                         </li>
 
-                        <!-- Company Profile -->
-                        <li class="nav-item has-treeview {{ request()->routeIs('company.profile.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ request()->routeIs('company.profile.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-building"></i>
-                                <p>
-                                    Company
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Profile</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Settings</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Branding</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
 
-                        <!-- Billing & Subscription (when you add Stripe) -->
-                        <li class="nav-item has-treeview {{ request()->routeIs('subscription.*', 'invoices.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ request()->routeIs('subscription.*', 'invoices.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-credit-card"></i>
-                                <p>
-                                    Billing
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Subscription</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Invoices</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Payment Methods</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <!-- Reports & Analytics -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-chart-bar"></i>
-                                <p>Reports</p>
-                            </a>
-                        </li>
-
-                        <!-- Activity Log -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-history"></i>
-                                <p>Activity Log</p>
-                            </a>
-                        </li>
-
-                        <!-- Settings -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-cog"></i>
-                                <p>Settings</p>
-                            </a>
-                        </li>
                         @endif
 
 
@@ -520,8 +426,68 @@
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <script>
+        // Toastr Configuration
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // Show toast notifications from session
+        @if(session('toast_success'))
+        toastr.success("{{ session('toast_success') }}");
+        @endif
+
+        @if(session('toast_error'))
+        toastr.error("{{ session('toast_error') }}");
+        @endif
+
+        @if(session('toast_info'))
+        toastr.info("{{ session('toast_info') }}");
+        @endif
+
+        @if(session('toast_warning'))
+        toastr.warning("{{ session('toast_warning') }}");
+        @endif
+
+        // Show admin credentials if available
+        @if(session('admin_credentials'))
+        @php $creds = session('admin_credentials');
+        @endphp
+        @if($creds['password'])
+        Swal.fire({
+            icon: 'success',
+            title: 'Admin Credentials',
+            html: `
+                <div class="text-left">
+                    <p><strong>Email:</strong> <code>{{ $creds['email'] }}</code></p>
+                    <p><strong>Password:</strong> <code>{{ $creds['password'] }}</code></p>
+                    <hr>
+                    <small class="text-muted">Please save these credentials securely!</small>
+                </div>
+            `,
+            confirmButtonText: 'Got it!',
+            confirmButtonColor: '#667eea'
+        });
+        @endif
+        @endif
+
         // Delete confirmation with SweetAlert
         $(document).on('click', '.btn-delete', function(e) {
             e.preventDefault();
