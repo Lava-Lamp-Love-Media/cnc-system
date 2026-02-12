@@ -26,7 +26,7 @@ return new class extends Migration {
             // after approve
             $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamp('approved_at')->nullable();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

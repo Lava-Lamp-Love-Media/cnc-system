@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('icon')->default('fas fa-circle'); // Font Awesome icon
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

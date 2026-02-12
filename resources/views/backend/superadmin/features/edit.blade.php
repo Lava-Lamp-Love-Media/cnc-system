@@ -1,19 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Create Feature')
-@section('page-title', 'Create New Feature')
+@section('title', 'Edit Feature')
+@section('page-title', 'Edit Feature')
 
 @section('content')
 
-<div class="card card-primary">
+<div class="card card-warning">
     <div class="card-header">
         <h3 class="card-title">
-            <i class="fas fa-plus"></i> Add Feature
+            <i class="fas fa-edit"></i> Edit Feature
         </h3>
     </div>
 
-    <form method="POST" action="{{ route('superadmin.features.store') }}" id="featureForm">
+    <form method="POST" action="{{ route('superadmin.features.update', $feature->id) }}" id="featureForm">
         @csrf
+        @method('PUT')
 
         <div class="card-body">
 
@@ -23,8 +24,7 @@
                     name="name"
                     id="featureName"
                     class="form-control @error('name') is-invalid @enderror"
-                    value="{{ old('name') }}"
-                    placeholder="Example: Quotes Management"
+                    value="{{ old('name', $feature->name) }}"
                     required>
                 @error('name')
                 <span class="invalid-feedback">{{ $message }}</span>
@@ -37,13 +37,8 @@
                     name="slug"
                     id="featureSlug"
                     class="form-control @error('slug') is-invalid @enderror"
-                    value="{{ old('slug') }}"
-                    placeholder="quotes"
+                    value="{{ old('slug', $feature->slug) }}"
                     required>
-                <small class="text-muted">
-                    <i class="fas fa-info-circle"></i>
-                    Use lowercase, no spaces. Auto-generated from name.
-                </small>
                 @error('slug')
                 <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
@@ -53,15 +48,22 @@
                 <label>Description</label>
                 <textarea name="description"
                     class="form-control"
-                    rows="3"
-                    placeholder="Optional feature description">{{ old('description') }}</textarea>
+                    rows="3">{{ old('description', $feature->description) }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <select name="is_active" class="form-control">
+                    <option value="1" {{ old('is_active', $feature->is_active) == 1 ? 'selected' : '' }}>Active</option>
+                    <option value="0" {{ old('is_active', $feature->is_active) == 0 ? 'selected' : '' }}>Inactive</option>
+                </select>
             </div>
 
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-                <i class="fas fa-save"></i> Save Feature
+            <button type="submit" class="btn btn-warning btn-lg" id="submitBtn">
+                <i class="fas fa-save"></i> Update Feature
             </button>
 
             <a href="{{ route('superadmin.features.index') }}" class="btn btn-secondary btn-lg">
@@ -87,7 +89,7 @@
 
         // Form submission
         $('#featureForm').submit(function() {
-            $('#submitBtn').html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
+            $('#submitBtn').html('<i class="fas fa-spinner fa-spin"></i> Updating...').prop('disabled', true);
         });
     });
 </script>
