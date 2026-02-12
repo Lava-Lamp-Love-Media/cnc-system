@@ -364,20 +364,106 @@
                         <!-- Company Admin Section -->
                         <li class="nav-header">COMPANY ADMIN</li>
 
+                        <!-- Dashboard -->
+                        <li class="nav-item">
+                            <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+
+                        <!-- User Management -->
                         <li class="nav-item">
                             <a href="{{ route('company.users.index') }}" class="nav-link {{ request()->routeIs('company.users.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-users"></i>
-                                <p>Manage Users</p>
+                                <p>
+                                    Manage Users
+                                    @if(Auth::user()->company)
+                                    <span class="badge badge-info right">{{ Auth::user()->company->users()->where('role', 'user')->count() }}</span>
+                                    @endif
+                                </p>
                             </a>
                         </li>
 
+                        <!-- Company Profile -->
+                        <li class="nav-item has-treeview {{ request()->routeIs('company.profile.*') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ request()->routeIs('company.profile.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-building"></i>
+                                <p>
+                                    Company
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Profile</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Settings</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Branding</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Billing & Subscription (when you add Stripe) -->
+                        <li class="nav-item has-treeview {{ request()->routeIs('subscription.*', 'invoices.*') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ request()->routeIs('subscription.*', 'invoices.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-credit-card"></i>
+                                <p>
+                                    Billing
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Subscription</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Invoices</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Payment Methods</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Reports & Analytics -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-building"></i>
-                                <p>Company Profile</p>
+                                <i class="nav-icon fas fa-chart-bar"></i>
+                                <p>Reports</p>
                             </a>
                         </li>
 
+                        <!-- Activity Log -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-history"></i>
+                                <p>Activity Log</p>
+                            </a>
+                        </li>
+
+                        <!-- Settings -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
@@ -386,85 +472,6 @@
                         </li>
                         @endif
 
-                        @if(!Auth::user()->isSuperAdmin() && Auth::user()->company)
-                        <!-- Company Features -->
-                        <li class="nav-header">MODULES</li>
-
-                        @if(Auth::user()->hasFeature('quotes'))
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
-                                <p>
-                                    Quotes
-                                    <span class="badge badge-info right">12</span>
-                                </p>
-                            </a>
-                        </li>
-                        @endif
-
-                        @if(Auth::user()->hasFeature('orders'))
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-shopping-cart"></i>
-                                <p>Orders</p>
-                            </a>
-                        </li>
-                        @endif
-
-                        @if(Auth::user()->hasFeature('invoices'))
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-file-invoice-dollar"></i>
-                                <p>Invoices</p>
-                            </a>
-                        </li>
-                        @endif
-
-                        @if(Auth::user()->hasFeature('purchase_orders'))
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-file-invoice"></i>
-                                <p>Purchase Orders</p>
-                            </a>
-                        </li>
-                        @endif
-
-                        @if(Auth::user()->hasFeature('inventory'))
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-boxes"></i>
-                                <p>Inventory</p>
-                            </a>
-                        </li>
-                        @endif
-
-                        @if(Auth::user()->hasFeature('shipping'))
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-truck"></i>
-                                <p>Shipping</p>
-                            </a>
-                        </li>
-                        @endif
-
-                        @if(Auth::user()->hasFeature('receiving'))
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-dolly"></i>
-                                <p>Receiving</p>
-                            </a>
-                        </li>
-                        @endif
-
-                        @if(Auth::user()->hasFeature('reports'))
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-chart-line"></i>
-                                <p>Reports</p>
-                            </a>
-                        </li>
-                        @endif
-                        @endif
 
                     </ul>
                 </nav>

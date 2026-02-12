@@ -3,14 +3,17 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Trial Request Submitted</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Request Submitted - CNC System</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
     <style>
         body {
-            background: linear-gradient(135deg, #065A82 0%, #1C7293 100%);
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -18,58 +21,40 @@
         }
 
         .success-card {
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
-        .icon-circle {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: #28a745;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
+        .success-icon {
+            font-size: 5rem;
+            color: #28a745;
+            margin-bottom: 30px;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="card success-card p-5 text-center" style="max-width: 520px; width: 100%;">
-
-        <div class="icon-circle">
-            <i class="fas fa-check fa-2x text-white"></i>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="success-card">
+                    <i class="fas fa-check-circle success-icon"></i>
+                    <h1>Request Submitted!</h1>
+                    <p class="lead mb-4">Thank you for your interest in CNC System.</p>
+                    <p class="text-muted">We've received your trial request and will review it shortly. You'll receive an email with your login credentials once approved.</p>
+                    <hr class="my-4">
+                    <a href="{{ route('landing') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home"></i> Back to Home
+                    </a>
+                </div>
+            </div>
         </div>
-
-        <h3 class="font-weight-bold">Request Submitted Successfully!</h3>
-
-        <p class="text-muted mt-3">
-            Thank you for requesting a trial of <b>CNC Manufacture System</b>.
-            Our team will review your request and create your company account shortly.
-        </p>
-
-        <div class="alert alert-info mt-4">
-            <strong>Next Steps:</strong><br>
-            ✔ Company account will be created<br>
-            ✔ Company Admin login will be emailed<br>
-            ✔ Trial plan activated automatically
-        </div>
-
-        <div class="mt-4">
-            <a href="{{ route('landing') }}" class="btn btn-outline-secondary mr-2">
-                Back to Home
-            </a>
-
-            <a href="{{ route('login') }}" class="btn btn-primary">
-                Go to Login
-            </a>
-        </div>
-
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 </body>
 
 </html>
