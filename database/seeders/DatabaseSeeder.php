@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             PlanFeatureSeeder::class,
             CompanySeeder::class,
             UserSeeder::class,
+            MachineSeeder::class,
+            OperatorSeeder::class,
         ]);
     }
 }

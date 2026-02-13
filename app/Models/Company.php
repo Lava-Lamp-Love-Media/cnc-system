@@ -130,4 +130,13 @@ class Company extends Model
         }
         return $this->subscription_end < now();
     }
+
+    public function machines()
+    {
+        return $this->hasMany(Machine::class);
+    }
+    public function operators()
+    {
+        return $this->hasMany(Operator::class);
+    }
 }

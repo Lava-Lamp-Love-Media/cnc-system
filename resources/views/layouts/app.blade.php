@@ -375,6 +375,28 @@
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="{{ route('company.machines.index') }}" class="nav-link {{ request()->routeIs('company.machines.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-industry"></i>
+                                <p>
+                                    Machines
+                                    @if(Auth::user()->company)
+                                    <span class="badge badge-info right">{{ Auth::user()->company->machines()->count() }}</span>
+                                    @endif
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('company.operators.index') }}" class="nav-link {{ request()->routeIs('company.operators.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-user-hard-hat"></i>
+                                <p>
+                                    Operators
+                                    @if(Auth::user()->company)
+                                    <span class="badge badge-info right">{{ \App\Models\Operator::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                    @endif
+                                </p>
+                            </a>
+                        </li>
 
                         @endif
 

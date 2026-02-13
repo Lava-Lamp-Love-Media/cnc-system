@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SuperAdmin\PlanController;
 use App\Http\Controllers\SuperAdmin\CompanyController;
 use App\Http\Controllers\SuperAdmin\FeatureController;
+use App\Http\Controllers\CompanyAdmin\MachineController;
+use App\Http\Controllers\CompanyAdmin\OperatorController;
 use App\Http\Controllers\Frontend\TrialRequestController;
 use App\Http\Controllers\CompanyAdmin\CompanyUserController;
 use App\Http\Controllers\SuperAdmin\TrialRequestAdminController;
@@ -46,5 +48,7 @@ Route::middleware('auth')->group(function () {
         ->middleware('companyadmin')
         ->group(function () {
             Route::resource('users', CompanyUserController::class);
+            Route::resource('machines', MachineController::class); // ✅ Add this
+            Route::resource('operators', OperatorController::class); // ✅ Add this
         });
 });
