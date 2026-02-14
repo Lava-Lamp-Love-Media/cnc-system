@@ -388,11 +388,60 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('company.operators.index') }}" class="nav-link {{ request()->routeIs('company.operators.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-user-hard-hat"></i>
+                                <i class="nav-icon fas fa-user-cog"></i>
                                 <p>
                                     Operators
                                     @if(Auth::user()->company)
                                     <span class="badge badge-info right">{{ \App\Models\Operator::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                    @endif
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('company.operations.index') }}" class="nav-link {{ request()->routeIs('company.operations.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-tools"></i>
+                                <p>
+                                    Operations
+                                    @if(Auth::user()->company)
+                                    <span class="badge badge-info right">{{ \App\Models\Operation::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                    @endif
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('company.warehouses.index') }}" class="nav-link {{ request()->routeIs('company.warehouses.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-warehouse"></i>
+                                <p>
+                                    Warehouses
+                                    @if(Auth::user()->company)
+                                    <span class="badge badge-info right">{{ \App\Models\Warehouse::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                    @endif
+                                </p>
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a href="{{ route('company.customers.index') }}" class="nav-link {{ request()->routeIs('company.customers.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-user-tie"></i>
+                                <p>
+                                    Customers
+                                    @if(Auth::user()->company)
+                                    <span class="badge badge-success right">{{ \App\Models\Customer::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                    @endif
+                                </p>
+                            </a>
+                        </li>
+
+                        <!-- ✅ Vendors -->
+                        <li class="nav-item">
+                            <a href="{{ route('company.vendors.index') }}" class="nav-link {{ request()->routeIs('company.vendors.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-truck"></i>
+                                <p>
+                                    Vendors
+                                    @if(Auth::user()->company)
+                                    <span class="badge badge-warning right">{{ \App\Models\Vendor::where('company_id', Auth::user()->company_id)->count() }}</span>
                                     @endif
                                 </p>
                             </a>

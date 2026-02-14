@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             MachineSeeder::class,
             OperatorSeeder::class,
+            OperationSeeder::class,
+            WarehouseSeeder::class,
+            CustomerSeeder::class,
+            VendorSeeder::class,
         ]);
     }
 }

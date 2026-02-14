@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Machine;
+use App\Models\Operator;
+use App\Models\Operation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -138,5 +141,25 @@ class Company extends Model
     public function operators()
     {
         return $this->hasMany(Operator::class);
+    }
+
+    public function operations()
+    {
+        return $this->hasMany(Operation::class);
+    }
+
+    public function warehouses()
+    {
+        return $this->hasMany(Warehouse::class);
+    }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    public function vendors()
+    {
+        return $this->hasMany(Vendor::class);
     }
 }
