@@ -1,19 +1,23 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SuperAdmin\PlanController;
+use App\Http\Controllers\CompanyAdmin\ChamferController;
+use App\Http\Controllers\CompanyAdmin\CompanyUserController;
+use App\Http\Controllers\CompanyAdmin\CustomerController;
+use App\Http\Controllers\CompanyAdmin\DeburController;
+use App\Http\Controllers\CompanyAdmin\HoleController;
+use App\Http\Controllers\CompanyAdmin\MachineController;
+use App\Http\Controllers\CompanyAdmin\OperationController;
+use App\Http\Controllers\CompanyAdmin\OperatorController;
+use App\Http\Controllers\CompanyAdmin\TapController;
+use App\Http\Controllers\CompanyAdmin\VendorController;
+use App\Http\Controllers\CompanyAdmin\WarehouseController;
+use App\Http\Controllers\Frontend\TrialRequestController;
 use App\Http\Controllers\SuperAdmin\CompanyController;
 use App\Http\Controllers\SuperAdmin\FeatureController;
-use App\Http\Controllers\CompanyAdmin\VendorController;
-use App\Http\Controllers\CompanyAdmin\MachineController;
-use App\Http\Controllers\CompanyAdmin\CustomerController;
-use App\Http\Controllers\CompanyAdmin\OperatorController;
-use App\Http\Controllers\Frontend\TrialRequestController;
-use App\Http\Controllers\CompanyAdmin\OperationController;
-use App\Http\Controllers\CompanyAdmin\WarehouseController;
-use App\Http\Controllers\CompanyAdmin\CompanyUserController;
+use App\Http\Controllers\SuperAdmin\PlanController;
 use App\Http\Controllers\SuperAdmin\TrialRequestAdminController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
     return view('auth.login');
@@ -70,5 +74,10 @@ Route::middleware('auth')->group(function () {
             Route::delete('vendors/{vendor}/addresses/{address}', [VendorController::class, 'deleteAddress'])->name('vendors.delete-address');
             Route::post('vendors/{vendor}/upload-document', [VendorController::class, 'uploadDocument'])->name('vendors.upload-document');
             Route::delete('vendors/{vendor}/media/{media}', [VendorController::class, 'deleteMedia'])->name('vendors.delete-media');
+
+            Route::resource('holes', HoleController::class);
+            Route::resource('chamfers', ChamferController::class);
+            Route::resource('deburs', DeburController::class);
+            Route::resource('taps', TapController::class);
         });
 });

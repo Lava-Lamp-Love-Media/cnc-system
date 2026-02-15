@@ -20,6 +20,10 @@ class DatabaseSeeder extends Seeder
             WarehouseSeeder::class,
             CustomerSeeder::class,
             VendorSeeder::class,
+            HoleSeeder::class,
+            ChamferSeeder::class,
+            DeburSeeder::class,
+            TapSeeder::class,
         ]);
     }
 }

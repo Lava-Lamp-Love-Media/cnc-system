@@ -447,6 +447,59 @@
                             </a>
                         </li>
 
+                        <!-- Settings Menu (Add after Warehouses) -->
+              <!-- Settings Menu -->
+<li class="nav-header">SETTINGS & CONFIGURATION</li>
+
+<li class="nav-item has-treeview {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-cogs"></i>
+        <p>
+            Specifications
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('company.holes.index') }}" class="nav-link {{ request()->routeIs('company.holes.*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon text-primary"></i>
+                <p>
+                    Holes
+                    <span class="badge badge-primary right">{{ \App\Models\Hole::where('company_id', Auth::user()->company_id)->count() }}</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('company.chamfers.index') }}" class="nav-link {{ request()->routeIs('company.chamfers.*') ? 'active' : '' }}">
+                <i class="fas fa-draw-polygon nav-icon text-warning"></i>
+                <p>
+                    Chamfers
+                    <span class="badge badge-warning right">{{ \App\Models\Chamfer::where('company_id', Auth::user()->company_id)->count() }}</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('company.deburs.index') }}" class="nav-link {{ request()->routeIs('company.deburs.*') ? 'active' : '' }}">
+                <i class="fas fa-cut nav-icon text-success"></i>
+                <p>
+                    Deburs
+                    <span class="badge badge-success right">{{ \App\Models\Debur::where('company_id', Auth::user()->company_id)->count() }}</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('company.taps.index') }}" class="nav-link {{ request()->routeIs('company.taps.*') ? 'active' : '' }}">
+                <i class="fas fa-screwdriver nav-icon text-danger"></i>
+                <p>
+                    Taps
+                    <span class="badge badge-danger right">{{ \App\Models\Tap::where('company_id', Auth::user()->company_id)->count() }}</span>
+                </p>
+            </a>
+        </li>
+        <!-- Threads will be added here next -->
+    </ul>
+</li>
+
                         @endif
 
 
