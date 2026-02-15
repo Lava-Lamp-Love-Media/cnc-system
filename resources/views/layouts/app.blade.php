@@ -451,8 +451,8 @@
               <!-- Settings Menu -->
 <li class="nav-header">SETTINGS & CONFIGURATION</li>
 
-<li class="nav-item has-treeview {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') ? 'menu-open' : '' }}">
-    <a href="#" class="nav-link {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') ? 'active' : '' }}">
+<li class="nav-item has-treeview {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-cogs"></i>
         <p>
             Specifications
@@ -496,7 +496,15 @@
                 </p>
             </a>
         </li>
-        <!-- Threads will be added here next -->
+        <li class="nav-item">
+            <a href="{{ route('company.threads.index') }}" class="nav-link {{ request()->routeIs('company.threads.*') ? 'active' : '' }}">
+                <i class="fas fa-spinner nav-icon" style="color: #6f42c1;"></i>
+                <p>
+                    Threads
+                    <span class="badge right" style="background-color: #6f42c1;">{{ \App\Models\Thread::where('company_id', Auth::user()->company_id)->count() }}</span>
+                </p>
+            </a>
+        </li>
     </ul>
 </li>
 

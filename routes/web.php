@@ -9,6 +9,7 @@ use App\Http\Controllers\CompanyAdmin\MachineController;
 use App\Http\Controllers\CompanyAdmin\OperationController;
 use App\Http\Controllers\CompanyAdmin\OperatorController;
 use App\Http\Controllers\CompanyAdmin\TapController;
+use App\Http\Controllers\CompanyAdmin\ThreadController;
 use App\Http\Controllers\CompanyAdmin\VendorController;
 use App\Http\Controllers\CompanyAdmin\WarehouseController;
 use App\Http\Controllers\Frontend\TrialRequestController;
@@ -79,5 +80,10 @@ Route::middleware('auth')->group(function () {
             Route::resource('chamfers', ChamferController::class);
             Route::resource('deburs', DeburController::class);
             Route::resource('taps', TapController::class);
+            Route::resource('threads', ThreadController::class);
+
+            Route::get('quotes/create', function () {
+                return view('backend.companyadmin.quotes.create');
+            })->name('quotes.create');
         });
 });
