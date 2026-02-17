@@ -18,6 +18,8 @@
     <!-- Toastr -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
+    @yield('style')
+
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -29,6 +31,96 @@
 
         body {
             font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        /* ✅ TOP MENU BAR - Dark Navy Style */
+        .top-menubar {
+            background: #4a5f7f;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            z-index: 1030;
+            height: 50px;
+            transition: left 0.3s ease-in-out;
+        }
+
+        .top-menubar .navbar-nav {
+            flex-direction: row;
+            height: 50px;
+        }
+
+        .top-menubar .nav-item {
+            position: relative;
+        }
+
+        .top-menubar .nav-link {
+            color: #fff !important;
+            padding: 0 1.2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            height: 50px;
+            transition: all 0.3s;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .top-menubar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .top-menubar .nav-link i {
+            margin-right: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* ✅ Hamburger Menu Button */
+        .hamburger-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .hamburger-btn i {
+            font-size: 1.1rem;
+        }
+
+        .top-menubar .dropdown-menu {
+            border: 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 0;
+            margin-top: 0;
+            min-width: 200px;
+        }
+
+        .top-menubar .dropdown-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .top-menubar .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .top-menubar .dropdown-item i {
+            width: 20px;
+            margin-right: 0.5rem;
         }
 
         /* Brand */
@@ -47,6 +139,10 @@
         /* Sidebar */
         .main-sidebar {
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: margin-left 0.3s ease-in-out;
         }
 
         .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active {
@@ -79,6 +175,8 @@
         /* Content */
         .content-wrapper {
             background: #f4f6f9;
+            margin-top: 50px;
+            transition: margin-left 0.3s ease-in-out;
         }
 
         .content-header h1 {
@@ -143,7 +241,6 @@
         .btn {
             border-radius: 5px;
             font-weight: 500;
-            /* padding: 0.5rem 1rem; */
         }
 
         .btn-primary {
@@ -189,14 +286,9 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Navbar */
+        /* Navbar - Hide default navbar */
         .main-header {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .navbar-nav .nav-link {
-            color: #495057;
+            display: none;
         }
 
         .dropdown-menu {
@@ -209,6 +301,7 @@
         .main-footer {
             background: #fff;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
+            transition: margin-left 0.3s ease-in-out;
         }
 
         /* Form Controls */
@@ -226,30 +319,147 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-color: #667eea;
         }
+
+        /* ✅ Adjust for collapsed sidebar */
+        .sidebar-collapse .top-menubar {
+            left: 4.6rem;
+        }
+
+        /* ✅ Top menu right section */
+        .top-menubar .ml-auto {
+            margin-left: auto !important;
+        }
+
+        .top-menubar .user-dropdown .nav-link {
+            border-right: none;
+        }
+
+        .top-menubar .nav-link .badge {
+            position: absolute;
+            top: 10px;
+            right: 8px;
+            padding: 0.25em 0.5em;
+            font-size: 0.7rem;
+        }
     </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
 
-        <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- ✅ TOP MENUBAR -->
+        @if(Auth::user()->isCompanyAdmin())
+        <nav class="navbar navbar-expand top-menubar">
+            <!-- ✅ Hamburger Menu Button -->
+            <button class="hamburger-btn" data-widget="pushmenu" role="button">
+                <i class="fas fa-bars"></i>
+            </button>
+
             <ul class="navbar-nav">
+                <!-- CNC Quote -->
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button">
-                        <i class="fas fa-bars"></i>
+                    <a class="nav-link" href="{{ route('company.quotes.create') }}">
+                        <i class="fas fa-file-invoice"></i> CNC Quote
                     </a>
+                </li>
+
+                <!-- Customer -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('company.customers.index') }}">
+                        <i class="fas fa-user-tie"></i> Customer
+                    </a>
+                </li>
+
+                <!-- Vendor -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('company.vendors.index') }}">
+                        <i class="fas fa-truck"></i> Vendor
+                    </a>
+                </li>
+
+                <!-- Purchase -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fas fa-shopping-cart"></i> Purchase
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#"><i class="fas fa-plus"></i> New Purchase</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-list"></i> Purchase List</a>
+                    </div>
+                </li>
+
+                <!-- Inventory -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fas fa-boxes"></i> Inventory
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#"><i class="fas fa-warehouse"></i> Stock</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-exchange-alt"></i> Transfers</a>
+                    </div>
+                </li>
+
+                <!-- Order -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fas fa-clipboard-list"></i> Order
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#"><i class="fas fa-plus"></i> New Order</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-list"></i> Order List</a>
+                    </div>
+                </li>
+
+                <!-- Quote -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fas fa-file-contract"></i> Quote
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ route('company.quotes.create') }}"><i class="fas fa-plus"></i> New Quote</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-list"></i> Quote List</a>
+                    </div>
+                </li>
+
+                <!-- Shop -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-store"></i> Shop
+                    </a>
+                </li>
+
+                <!-- Receiving -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fas fa-dolly"></i> Receiving
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#"><i class="fas fa-plus"></i> New Receipt</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-list"></i> Receipt List</a>
+                    </div>
+                </li>
+
+                <!-- Shipping -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fas fa-shipping-fast"></i> Shipping
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#"><i class="fas fa-plus"></i> New Shipment</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-list"></i> Shipment List</a>
+                    </div>
                 </li>
             </ul>
 
+            <!-- Right Side -->
             <ul class="navbar-nav ml-auto">
                 <!-- Notifications -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">3</span>
+                        <span class="badge badge-warning">3</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <div class="dropdown-menu dropdown-menu-right">
                         <span class="dropdown-item dropdown-header">3 Notifications</span>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
@@ -263,7 +473,7 @@
                 </li>
 
                 <!-- User Menu -->
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown user-dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                         <i class="far fa-user-circle"></i>
                         <span class="d-none d-md-inline ml-1">{{ Auth::user()->name }}</span>
@@ -291,6 +501,7 @@
                 </li>
             </ul>
         </nav>
+        @endif
 
         <!-- Sidebar -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -333,9 +544,7 @@
                         <li class="nav-item">
                             <a href="{{ route('superadmin.trial_requests.index') }}" class="nav-link {{ request()->routeIs('superadmin.trial_requests.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-inbox"></i>
-                                <p>
-                                    Trial Requests
-                                </p>
+                                <p>Trial Requests</p>
                             </a>
                         </li>
 
@@ -434,7 +643,6 @@
                             </a>
                         </li>
 
-                        <!-- ✅ Vendors -->
                         <li class="nav-item">
                             <a href="{{ route('company.vendors.index') }}" class="nav-link {{ request()->routeIs('company.vendors.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-truck"></i>
@@ -447,70 +655,67 @@
                             </a>
                         </li>
 
-                        <!-- Settings Menu (Add after Warehouses) -->
-              <!-- Settings Menu -->
-<li class="nav-header">SETTINGS & CONFIGURATION</li>
+                        <!-- Settings Menu -->
+                        <li class="nav-header">SETTINGS & CONFIGURATION</li>
 
-<li class="nav-item has-treeview {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') ? 'menu-open' : '' }}">
-    <a href="#" class="nav-link {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-cogs"></i>
-        <p>
-            Specifications
-            <i class="fas fa-angle-left right"></i>
-        </p>
-    </a>
-    <ul class="nav nav-treeview">
-        <li class="nav-item">
-            <a href="{{ route('company.holes.index') }}" class="nav-link {{ request()->routeIs('company.holes.*') ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon text-primary"></i>
-                <p>
-                    Holes
-                    <span class="badge badge-primary right">{{ \App\Models\Hole::where('company_id', Auth::user()->company_id)->count() }}</span>
-                </p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ route('company.chamfers.index') }}" class="nav-link {{ request()->routeIs('company.chamfers.*') ? 'active' : '' }}">
-                <i class="fas fa-draw-polygon nav-icon text-warning"></i>
-                <p>
-                    Chamfers
-                    <span class="badge badge-warning right">{{ \App\Models\Chamfer::where('company_id', Auth::user()->company_id)->count() }}</span>
-                </p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ route('company.deburs.index') }}" class="nav-link {{ request()->routeIs('company.deburs.*') ? 'active' : '' }}">
-                <i class="fas fa-cut nav-icon text-success"></i>
-                <p>
-                    Deburs
-                    <span class="badge badge-success right">{{ \App\Models\Debur::where('company_id', Auth::user()->company_id)->count() }}</span>
-                </p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ route('company.taps.index') }}" class="nav-link {{ request()->routeIs('company.taps.*') ? 'active' : '' }}">
-                <i class="fas fa-screwdriver nav-icon text-danger"></i>
-                <p>
-                    Taps
-                    <span class="badge badge-danger right">{{ \App\Models\Tap::where('company_id', Auth::user()->company_id)->count() }}</span>
-                </p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ route('company.threads.index') }}" class="nav-link {{ request()->routeIs('company.threads.*') ? 'active' : '' }}">
-                <i class="fas fa-spinner nav-icon" style="color: #6f42c1;"></i>
-                <p>
-                    Threads
-                    <span class="badge right" style="background-color: #6f42c1;">{{ \App\Models\Thread::where('company_id', Auth::user()->company_id)->count() }}</span>
-                </p>
-            </a>
-        </li>
-    </ul>
-</li>
+                        <li class="nav-item has-treeview {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>
+                                    Specifications
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('company.holes.index') }}" class="nav-link {{ request()->routeIs('company.holes.*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon text-primary"></i>
+                                        <p>
+                                            Holes
+                                            <span class="badge badge-primary right">{{ \App\Models\Hole::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('company.chamfers.index') }}" class="nav-link {{ request()->routeIs('company.chamfers.*') ? 'active' : '' }}">
+                                        <i class="fas fa-draw-polygon nav-icon text-warning"></i>
+                                        <p>
+                                            Chamfers
+                                            <span class="badge badge-warning right">{{ \App\Models\Chamfer::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('company.deburs.index') }}" class="nav-link {{ request()->routeIs('company.deburs.*') ? 'active' : '' }}">
+                                        <i class="fas fa-cut nav-icon text-success"></i>
+                                        <p>
+                                            Deburs
+                                            <span class="badge badge-success right">{{ \App\Models\Debur::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('company.taps.index') }}" class="nav-link {{ request()->routeIs('company.taps.*') ? 'active' : '' }}">
+                                        <i class="fas fa-screwdriver nav-icon text-danger"></i>
+                                        <p>
+                                            Taps
+                                            <span class="badge badge-danger right">{{ \App\Models\Tap::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('company.threads.index') }}" class="nav-link {{ request()->routeIs('company.threads.*') ? 'active' : '' }}">
+                                        <i class="fas fa-spinner nav-icon" style="color: #6f42c1;"></i>
+                                        <p>
+                                            Threads
+                                            <span class="badge right" style="background-color: #6f42c1;">{{ \App\Models\Thread::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
                         @endif
-
-
                     </ul>
                 </nav>
             </div>
@@ -581,7 +786,6 @@
             "hideMethod": "fadeOut"
         };
 
-        // Show toast notifications from session
         @if(session('toast_success'))
         toastr.success("{{ session('toast_success') }}");
         @endif
@@ -598,10 +802,8 @@
         toastr.warning("{{ session('toast_warning') }}");
         @endif
 
-        // Show admin credentials if available
         @if(session('admin_credentials'))
-        @php $creds = session('admin_credentials');
-        @endphp
+        @php $creds = session('admin_credentials'); @endphp
         @if($creds['password'])
         Swal.fire({
             icon: 'success',
@@ -620,7 +822,6 @@
         @endif
         @endif
 
-        // Delete confirmation with SweetAlert
         $(document).on('click', '.btn-delete', function(e) {
             e.preventDefault();
             var form = $(this).closest('form');
@@ -640,7 +841,6 @@
             });
         });
 
-        // Auto-hide alerts
         setTimeout(function() {
             $('.alert').fadeOut('slow');
         }, 5000);
