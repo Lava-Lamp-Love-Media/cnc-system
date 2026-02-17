@@ -5,9 +5,12 @@ use App\Http\Controllers\CompanyAdmin\CompanyUserController;
 use App\Http\Controllers\CompanyAdmin\CustomerController;
 use App\Http\Controllers\CompanyAdmin\DeburController;
 use App\Http\Controllers\CompanyAdmin\HoleController;
+use App\Http\Controllers\CompanyAdmin\InventoryController;
+use App\Http\Controllers\CompanyAdmin\ItemController;
 use App\Http\Controllers\CompanyAdmin\MachineController;
 use App\Http\Controllers\CompanyAdmin\OperationController;
 use App\Http\Controllers\CompanyAdmin\OperatorController;
+use App\Http\Controllers\CompanyAdmin\PurchaseOrderController;
 use App\Http\Controllers\CompanyAdmin\TapController;
 use App\Http\Controllers\CompanyAdmin\ThreadController;
 use App\Http\Controllers\CompanyAdmin\VendorController;
@@ -81,6 +84,24 @@ Route::middleware('auth')->group(function () {
             Route::resource('deburs', DeburController::class);
             Route::resource('taps', TapController::class);
             Route::resource('threads', ThreadController::class);
+            Route::resource('items', ItemController::class);
+
+            // Purchase Orders Routes
+            Route::resource('purchase-orders', PurchaseOrderController::class);
+            Route::post('purchase-orders/{purchaseOrder}/receive', [PurchaseOrderController::class, 'receive'])
+                ->name('purchase-orders.receive');
+
+            // Inventory Routes
+            Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
+            Route::get('inventory/transactions', [InventoryController::class, 'transactions'])->name('inventory.transactions');
+            Route::post('inventory/{item}/adjust', [InventoryController::class, 'adjust'])->name('inventory.adjust');
+
+
+
+
+
+
+
 
             Route::get('quotes/create', function () {
                 return view('backend.companyadmin.quotes.create');

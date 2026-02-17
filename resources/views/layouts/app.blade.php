@@ -377,27 +377,42 @@
                     </a>
                 </li>
 
-                <!-- Purchase -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                        <i class="fas fa-shopping-cart"></i> Purchase
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#"><i class="fas fa-plus"></i> New Purchase</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-list"></i> Purchase List</a>
-                    </div>
-                </li>
+         <!-- ✅ Purchase Orders (Updated) -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                <i class="fas fa-shopping-cart"></i> Purchase
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ route('company.purchase-orders.create') }}">
+                    <i class="fas fa-plus"></i> New Purchase Order
+                </a>
+                <a class="dropdown-item" href="{{ route('company.purchase-orders.index') }}">
+                    <i class="fas fa-list"></i> Purchase Order List
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ route('company.items.create') }}">
+                    <i class="fas fa-box"></i> Add Item
+                </a>
+                <a class="dropdown-item" href="{{ route('company.items.index') }}">
+                    <i class="fas fa-boxes"></i> Items List
+                </a>
+            </div>
+        </li>
 
-                <!-- Inventory -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                        <i class="fas fa-boxes"></i> Inventory
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#"><i class="fas fa-warehouse"></i> Stock</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-exchange-alt"></i> Transfers</a>
-                    </div>
-                </li>
+        <!-- ✅ Inventory (Updated) -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                <i class="fas fa-boxes"></i> Inventory
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ route('company.inventory.index') }}">
+                    <i class="fas fa-warehouse"></i> Inventory List
+                </a>
+                <a class="dropdown-item" href="{{ route('company.inventory.transactions') }}">
+                    <i class="fas fa-history"></i> Transactions
+                </a>
+            </div>
+        </li>
 
                 <!-- Order -->
                 <li class="nav-item dropdown">
@@ -714,6 +729,33 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <!-- Purchase Orders -->
+                            <li class="nav-item">
+                                <a href="{{ route('company.purchase-orders.index') }}" 
+                                class="nav-link {{ request()->routeIs('company.purchase-orders.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-shopping-cart"></i>
+                                    <p>Purchase Orders</p>
+                                </a>
+                            </li>
+
+                            <!-- Items -->
+                            <li class="nav-item">
+                                <a href="{{ route('company.items.index') }}" 
+                                class="nav-link {{ request()->routeIs('company.items.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-box"></i>
+                                    <p>Items</p>
+                                </a>
+                            </li>
+
+                            <!-- Inventory -->
+                            <li class="nav-item">
+                                <a href="{{ route('company.inventory.index') }}" 
+                                class="nav-link {{ request()->routeIs('company.inventory.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-warehouse"></i>
+                                    <p>Inventory</p>
+                                </a>
+                            </li>
 
                         @endif
                     </ul>

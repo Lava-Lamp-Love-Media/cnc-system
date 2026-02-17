@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
             DeburSeeder::class,
             TapSeeder::class,
             ThreadSeeder::class,
+            ItemSeeder::class,
+            PurchaseOrderSeeder::class,
         ]);
     }
 }
