@@ -461,7 +461,7 @@
 @push('scripts')
 <script>
     let itemIndex = 0;
-    let items = @json($items); // Convert to array for easier manipulation
+    let items = @json($items);
 
     // Add Item Row
     document.getElementById('addItemBtn').addEventListener('click', function() {
@@ -480,12 +480,12 @@
         const row = `
             <tr id="item-${itemIndex}">
                 <td>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                         <select name="items[${itemIndex}][item_id]" class="form-control item-select" onchange="updateItemRow(${itemIndex})" required>
                             ${itemOptions}
                         </select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-success btn-sm" onclick="openQuickAddModal(${itemIndex})" title="Add New Item">
+                            <button type="button" class="btn btn-success" onclick="openQuickAddModal(${itemIndex})" title="Add New Item">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -498,6 +498,10 @@
                         <option value="each">Each</option>
                         <option value="kg">Kg</option>
                         <option value="lb">Lb</option>
+                        <option value="meter">Meter</option>
+                        <option value="foot">Foot</option>
+                        <option value="liter">Liter</option>
+                        <option value="gallon">Gallon</option>
                     </select>
                 </td>
                 <td><input type="number" name="items[${itemIndex}][count_price]" class="form-control form-control-sm" step="0.01" value="0"></td>
@@ -521,14 +525,14 @@
                     <div class="row">
                         <div class="col-md-2">
                             <label class="small">Discount Type</label>
-                            <select name="items[${itemIndex}][discount_type]" class="form-control form-control-sm">
+                            <select name="items[${itemIndex}][discount_type]" id="item_discount_type_${itemIndex}" class="form-control form-control-sm item-discount-type" onchange="calculateItemTotal(${itemIndex})">
                                 <option value="flat">Flat</option>
                                 <option value="percentage">Percentage</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label class="small">Discount</label>
-                            <input type="number" name="items[${itemIndex}][discount]" class="form-control form-control-sm" step="0.01" value="0" onchange="calculateItemTotal(${itemIndex})">
+                            <input type="number" name="items[${itemIndex}][discount]" id="item_discount_${itemIndex}" class="form-control form-control-sm item-discount" step="0.01" value="0" onchange="calculateItemTotal(${itemIndex})">
                         </div>
                         <div class="col-md-2">
                             <label class="small">Receiving Status</label>
@@ -672,14 +676,38 @@
         }
     }
 
-    // Calculate Item Total
+    // ✅ Calculate Item Total WITH DISCOUNT
     function calculateItemTotal(index) {
         const row = document.getElementById(`item-${index}`);
+        if (!row) return;
+        
         const price = parseFloat(row.querySelector('.item-price').value) || 0;
         const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
-        const total = price * qty;
         
-        row.querySelector('.item-total').value = total.toFixed(2);
+        // Calculate base total
+        let baseTotal = price * qty;
+        
+        // Get discount values
+        const discountType = document.getElementById(`item_discount_type_${index}`)?.value || 'flat';
+        const discount = parseFloat(document.getElementById(`item_discount_${index}`)?.value) || 0;
+        
+        // Calculate discount amount
+        let discountAmount = 0;
+        if (discount > 0) {
+            if (discountType === 'percentage') {
+                discountAmount = (baseTotal * discount) / 100;
+            } else {
+                discountAmount = discount;
+            }
+        }
+        
+        // Calculate final total after discount
+        const finalTotal = baseTotal - discountAmount;
+        
+        // Update the total field
+        row.querySelector('.item-total').value = finalTotal.toFixed(2);
+        
+        // Recalculate grand total
         calculateTotals();
     }
 

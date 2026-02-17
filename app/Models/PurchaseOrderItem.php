@@ -48,7 +48,7 @@ class PurchaseOrderItem extends Model
         return $this->belongsTo(Item::class);
     }
 
-    // Methods
+    // ✅ Updated: Don't auto-save, just calculate and return
     public function calculateTotal()
     {
         $baseTotal = $this->unit_price * $this->quantity;
@@ -63,6 +63,12 @@ class PurchaseOrderItem extends Model
         }
 
         $this->total = $baseTotal - $discountAmount;
-        $this->save();
+
+        // Only save if the model already exists (has an ID)
+        if ($this->exists) {
+            $this->save();
+        }
+
+        return $this->total;
     }
 }
