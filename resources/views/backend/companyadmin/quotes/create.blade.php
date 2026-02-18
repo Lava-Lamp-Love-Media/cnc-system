@@ -519,47 +519,82 @@
 </div>
 
 
-                    {{-- ══════ TAPS (Hidden, opens on click) ══════ --}}
-                    <div id="tapsPanel" style="display:none;" class="mb-4">
+              {{-- ══════ TAPS (Hidden, opens on click) ══════ --}}
+<div id="tapsPanel" style="display:none;" class="mb-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h6 class="mb-0"><i class="fas fa-screwdriver text-danger"></i> Taps</h6>
         <div>
-            <span class="badge badge-danger mr-2" style="font-size:14px;">$0.00</span>
-            <button type="button" class="btn btn-sm btn-danger" onclick="addTapRow()"><i class="fas fa-plus"></i> Add Tap</button>
+            <span class="badge badge-danger mr-2" style="font-size:14px;">$<span id="tapsTotalBadge">0.00</span></span>
+            <button type="button" class="btn btn-sm btn-danger" onclick="addTapRow()">
+                <i class="fas fa-plus"></i> Add Tap
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="$('#tapsPanel').slideUp(200)">
+                <i class="fas fa-times"></i> Close
+            </button>
         </div>
     </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th width="80">ID</th>
-                                        <th>Select Tapped</th>
-                                        <th>Tap Price</th>
-                                        <th>Thread Option</th>
-                                        <th>Thread Price</th>
-                                        <th>Direction</th>
-                                        <th>Thread Size</th>
-                                        <th>Base Price</th>
-                                        <th>Chamfer</th>
-                                        <th>Chamfer Price</th>
-                                        <th>Debur Price</th>
-                                        <th width="60">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tapsTableBody">
-                                    <tr><td colspan="12" class="text-center text-muted">No taps</td></tr>
-                                </tbody>
-                                <tfoot class="thead-light">
-                                    <tr>
-                                        <th colspan="10" class="text-right">Tap Total:</th>
-                                        <th>$0</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+              
+            </thead>
+            <tbody id="tapsTableBody">
+                <tr><td colspan="8" class="text-center text-muted py-4">No taps added. Click "Add Tap" to start.</td></tr>
+            </tbody>
+            <tfoot class="thead-light">
+                <tr>
+                    <th colspan="6" class="text-right">Taps Total:</th>
+                    <th class="text-center">$<span id="tapsTotal">0.00</span></th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+{{-- Add Tapped Modal --}}
+<div class="modal fade" id="addTappedModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-screwdriver mr-2"></i> Add New Tapped
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Tapped Name <span class="text-danger">*</span></label>
+                    <input type="text" id="new_tapped_name" class="form-control" placeholder="e.g., M6×1.0 Tap" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="new_tapped_desc" class="form-control" rows="2" placeholder="Optional description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tap Price ($)</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
                         </div>
+                        <input type="number" id="new_tapped_price" class="form-control" step="0.01" value="0.00">
                     </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-danger" onclick="saveTapped()">
+                    <i class="fas fa-check mr-1"></i> Add Tapped
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
                     {{-- ══════ THREADS (Hidden, opens on click) ══════ --}}
                     <div id="threadsPanel" style="display:none;" class="mb-4">
@@ -1349,18 +1384,18 @@ function addItemRow() {
 }
 
 // ══════════════════════════════════════════
-// HOLES SECTION - TWO ROW LAYOUT WITH LABELS
+// HOLES SECTION WITH INDIVIDUAL UNIT SELECTORS
 // ══════════════════════════════════════════
 
 let holeRowCounter = 0;
 
-// Add Hole Row (Two-Row Layout with Labels)
+// Add Hole Row with Individual Unit Selectors
 function addHoleRow() {
     holeRowCounter++;
     clearEmpty('holesTableBody');
     
     const rowHtml = `
-        <!-- FIRST ROW: ID, Quantity, Drilling Method, Hole Size, Tolerance, Depth, Hole Price -->
+        <!-- FIRST ROW -->
         <tr id="holeRow${holeRowCounter}_1" class="border-bottom-0">
             <!-- ID -->
             <td>
@@ -1407,19 +1442,34 @@ function addHoleRow() {
                 </div>
             </td>
             
-            <!-- Hole Size -->
+            <!-- Hole Size with Unit Switcher -->
             <td>
                 <label class="small text-muted mb-1">Hole Size</label>
                 <div class="input-group">
                     <input type="number" 
                            name="holes[${holeRowCounter}][hole_size]" 
+                           id="hole_size_${holeRowCounter}"
                            class="form-control" 
                            step="0.001" 
                            placeholder="2.505">
                     <div class="input-group-append">
-                        <span class="input-group-text">mm</span>
+                        <div class="btn-group">
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary active" 
+                                    id="hole_size_unit_mm_${holeRowCounter}"
+                                    onclick="toggleHoleSizeUnit(${holeRowCounter}, 'mm')">
+                                mm
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary" 
+                                    id="hole_size_unit_inch_${holeRowCounter}"
+                                    onclick="toggleHoleSizeUnit(${holeRowCounter}, 'inch')">
+                                inch
+                            </button>
+                        </div>
                     </div>
                 </div>
+                <input type="hidden" name="holes[${holeRowCounter}][hole_size_unit]" id="hole_size_unit_value_${holeRowCounter}" value="mm">
             </td>
             
             <!-- Tolerance PLUS (+) -->
@@ -1454,18 +1504,44 @@ function addHoleRow() {
                 </div>
             </td>
             
-            <!-- Depth -->
+            <!-- Depth Type -->
             <td>
-                <label class="small text-muted mb-1">Depth</label>
-                <div class="input-group">
-                    <input type="number" 
-                           name="holes[${holeRowCounter}][depth]" 
-                           class="form-control" 
-                           step="0.01" 
-                           placeholder="10.0">
-                    <div class="input-group-append">
-                        <span class="input-group-text">mm</span>
+                <label class="small text-muted mb-1">Depth Type</label>
+                <select name="holes[${holeRowCounter}][depth_type]" 
+                        class="form-control depth-type-select" 
+                        onchange="toggleDepthSize(${holeRowCounter})">
+                    <option value="through">Through</option>
+                    <option value="other">Other (specify)</option>
+                </select>
+                
+                <!-- Depth Size with Unit Switcher (Hidden by default) -->
+                <div id="depthSizeContainer${holeRowCounter}" class="mt-2" style="display: none;">
+                    <label class="small text-muted mb-1">Depth Size</label>
+                    <div class="input-group">
+                        <input type="number" 
+                               name="holes[${holeRowCounter}][depth_size]" 
+                               id="depth_size_${holeRowCounter}"
+                               class="form-control" 
+                               step="0.01" 
+                               placeholder="10.0">
+                        <div class="input-group-append">
+                            <div class="btn-group">
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-primary active" 
+                                        id="depth_size_unit_mm_${holeRowCounter}"
+                                        onclick="toggleDepthSizeUnit(${holeRowCounter}, 'mm')">
+                                    mm
+                                </button>
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-primary" 
+                                        id="depth_size_unit_inch_${holeRowCounter}"
+                                        onclick="toggleDepthSizeUnit(${holeRowCounter}, 'inch')">
+                                    inch
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                    <input type="hidden" name="holes[${holeRowCounter}][depth_size_unit]" id="depth_size_unit_value_${holeRowCounter}" value="mm">
                 </div>
             </td>
             
@@ -1486,7 +1562,7 @@ function addHoleRow() {
             </td>
         </tr>
         
-        <!-- SECOND ROW: Chamfer, Chamfer Size, Chamfer Price, Debur, Debur Size, Debur Price, Sub Total, Action -->
+        <!-- SECOND ROW -->
         <tr id="holeRow${holeRowCounter}_2" class="border-top-0">
             <!-- Chamfer -->
             <td>
@@ -1496,10 +1572,10 @@ function addHoleRow() {
                             class="form-control hole-chamfer"
                             onchange="updateChamferPrice(${holeRowCounter})">
                         <option value="">No Chamfer</option>
-                        <option value="1" data-price="2.50" data-size="0.5mm × 45°">0.5mm × 45°</option>
-                        <option value="2" data-price="3.00" data-size="1.0mm × 45°">1.0mm × 45°</option>
-                        <option value="3" data-price="3.50" data-size="1.5mm × 45°">1.5mm × 45°</option>
-                        <option value="4" data-price="4.00" data-size="2.0mm × 45°">2.0mm × 45°</option>
+                        <option value="1" data-price="2.50" data-size="0.5">0.5mm × 45°</option>
+                        <option value="2" data-price="3.00" data-size="1.0">1.0mm × 45°</option>
+                        <option value="3" data-price="3.50" data-size="1.5">1.5mm × 45°</option>
+                        <option value="4" data-price="4.00" data-size="2.0">2.0mm × 45°</option>
                     </select>
                     <div class="input-group-append">
                         <button type="button" 
@@ -1512,14 +1588,34 @@ function addHoleRow() {
                 </div>
             </td>
             
-            <!-- Chamfer Size -->
+            <!-- Chamfer Size with Unit Switcher -->
             <td>
                 <label class="small text-muted mb-1">Chamfer Size</label>
-                <input type="text" 
-                       name="holes[${holeRowCounter}][chamfer_size]" 
-                       id="chamfer_size_${holeRowCounter}"
-                       class="form-control bg-light" 
-                       readonly>
+                <div class="input-group">
+                    <input type="number" 
+                           name="holes[${holeRowCounter}][chamfer_size]" 
+                           id="chamfer_size_${holeRowCounter}"
+                           class="form-control bg-light" 
+                           step="0.001"
+                           readonly>
+                    <div class="input-group-append">
+                        <div class="btn-group">
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary active" 
+                                    id="chamfer_size_unit_mm_${holeRowCounter}"
+                                    onclick="toggleChamferSizeUnit(${holeRowCounter}, 'mm')">
+                                mm
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary" 
+                                    id="chamfer_size_unit_inch_${holeRowCounter}"
+                                    onclick="toggleChamferSizeUnit(${holeRowCounter}, 'inch')">
+                                inch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="holes[${holeRowCounter}][chamfer_size_unit]" id="chamfer_size_unit_value_${holeRowCounter}" value="mm">
             </td>
             
             <!-- Chamfer Price -->
@@ -1562,14 +1658,33 @@ function addHoleRow() {
                 </div>
             </td>
             
-            <!-- Debur Size -->
+            <!-- Debur Size with Unit Switcher -->
             <td>
                 <label class="small text-muted mb-1">Debur Size</label>
-                <input type="text" 
-                       name="holes[${holeRowCounter}][debur_size]" 
-                       id="debur_size_${holeRowCounter}"
-                       class="form-control bg-light" 
-                       readonly>
+                <div class="input-group">
+                    <input type="text" 
+                           name="holes[${holeRowCounter}][debur_size]" 
+                           id="debur_size_${holeRowCounter}"
+                           class="form-control bg-light" 
+                           readonly>
+                    <div class="input-group-append">
+                        <div class="btn-group">
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary active" 
+                                    id="debur_size_unit_mm_${holeRowCounter}"
+                                    onclick="toggleDeburSizeUnit(${holeRowCounter}, 'mm')">
+                                mm
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary" 
+                                    id="debur_size_unit_inch_${holeRowCounter}"
+                                    onclick="toggleDeburSizeUnit(${holeRowCounter}, 'inch')">
+                                inch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="holes[${holeRowCounter}][debur_size_unit]" id="debur_size_unit_value_${holeRowCounter}" value="mm">
             </td>
             
             <!-- Debur Price -->
@@ -1619,6 +1734,97 @@ function addHoleRow() {
     `;
     
     $('#holesTableBody').append(rowHtml);
+}
+
+// Toggle Hole Size Unit
+function toggleHoleSizeUnit(rowId, unit) {
+    $(`#hole_size_unit_mm_${rowId}`).toggleClass('active', unit === 'mm');
+    $(`#hole_size_unit_inch_${rowId}`).toggleClass('active', unit === 'inch');
+    $(`#hole_size_unit_value_${rowId}`).val(unit);
+    
+    // Optional: Convert value
+    convertHoleSizeValue(rowId, unit);
+}
+
+// Toggle Depth Size Unit
+function toggleDepthSizeUnit(rowId, unit) {
+    $(`#depth_size_unit_mm_${rowId}`).toggleClass('active', unit === 'mm');
+    $(`#depth_size_unit_inch_${rowId}`).toggleClass('active', unit === 'inch');
+    $(`#depth_size_unit_value_${rowId}`).val(unit);
+    
+    // Optional: Convert value
+    convertDepthSizeValue(rowId, unit);
+}
+
+// Toggle Chamfer Size Unit
+function toggleChamferSizeUnit(rowId, unit) {
+    $(`#chamfer_size_unit_mm_${rowId}`).toggleClass('active', unit === 'mm');
+    $(`#chamfer_size_unit_inch_${rowId}`).toggleClass('active', unit === 'inch');
+    $(`#chamfer_size_unit_value_${rowId}`).val(unit);
+    
+    // Optional: Convert value
+    convertChamferSizeValue(rowId, unit);
+}
+
+// Toggle Debur Size Unit
+function toggleDeburSizeUnit(rowId, unit) {
+    $(`#debur_size_unit_mm_${rowId}`).toggleClass('active', unit === 'mm');
+    $(`#debur_size_unit_inch_${rowId}`).toggleClass('active', unit === 'inch');
+    $(`#debur_size_unit_value_${rowId}`).val(unit);
+}
+
+// Conversion Functions (Optional - implement if you want auto-conversion)
+function convertHoleSizeValue(rowId, toUnit) {
+    const input = $(`#hole_size_${rowId}`);
+    const currentValue = parseFloat(input.val());
+    
+    if (!currentValue) return;
+    
+    if (toUnit === 'inch') {
+        // mm to inch: divide by 25.4
+        input.val((currentValue / 25.4).toFixed(4));
+    } else {
+        // inch to mm: multiply by 25.4
+        input.val((currentValue * 25.4).toFixed(3));
+    }
+}
+
+function convertDepthSizeValue(rowId, toUnit) {
+    const input = $(`#depth_size_${rowId}`);
+    const currentValue = parseFloat(input.val());
+    
+    if (!currentValue) return;
+    
+    if (toUnit === 'inch') {
+        input.val((currentValue / 25.4).toFixed(4));
+    } else {
+        input.val((currentValue * 25.4).toFixed(3));
+    }
+}
+
+function convertChamferSizeValue(rowId, toUnit) {
+    const input = $(`#chamfer_size_${rowId}`);
+    const currentValue = parseFloat(input.val());
+    
+    if (!currentValue) return;
+    
+    if (toUnit === 'inch') {
+        input.val((currentValue / 25.4).toFixed(4));
+    } else {
+        input.val((currentValue * 25.4).toFixed(3));
+    }
+}
+
+// Toggle Depth Size visibility
+function toggleDepthSize(rowId) {
+    const depthType = $(`#holeRow${rowId}_1 .depth-type-select`).val();
+    
+    if (depthType === 'other') {
+        $(`#depthSizeContainer${rowId}`).slideDown(200);
+    } else {
+        $(`#depthSizeContainer${rowId}`).slideUp(200);
+        $(`#depth_size_${rowId}`).val('');
+    }
 }
 
 // Update Chamfer Price
@@ -1672,7 +1878,7 @@ function calculateHolesTotal() {
     $('#holesTotalBadge').text(total.toFixed(2));
 }
 
-// Remove Hole Row (removes both rows)
+// Remove Hole Row
 function removeHoleRow(rowId) {
     $(`#holeRow${rowId}_1`).remove();
     $(`#holeRow${rowId}_2`).remove();
@@ -1699,28 +1905,463 @@ function openAddDeburModal() {
 }
 
 
-// ── Add Tap Row ──
+// ══════════════════════════════════════════
+// TAPS SECTION - TWO ROW LAYOUT
+// ══════════════════════════════════════════
+
 let tapRowCounter = 0;
+
+// Add Tap Row
 function addTapRow() {
     tapRowCounter++;
     clearEmpty('tapsTableBody');
-    $('#tapsTableBody').append(`
-        <tr>
-            <td><input type="text" class="form-control form-control-sm" placeholder="ID"></td>
-            <td><select class="form-control form-control-sm"><option value="">Select</option><option value="1">M6×1.0 Tap</option></select></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm bg-light" readonly value="11.00"></td>
-            <td><select class="form-control form-control-sm"><option value="internal">Internal</option><option value="external">External</option></select></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm bg-light" readonly value="2.50"></td>
-            <td><select class="form-control form-control-sm"><option value="right">Right</option><option value="left">Left</option></select></td>
-            <td><input type="text" class="form-control form-control-sm" placeholder="M6×1.0"></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm" value="0"></td>
-            <td><input type="text" class="form-control form-control-sm" placeholder="Chamfer"></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm" value="0"></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm" value="0"></td>
-            <td><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('tr').remove()"><i class="fas fa-trash"></i></button></td>
+    
+    const rowHtml = `
+        <!-- FIRST ROW -->
+        <tr id="tapRow${tapRowCounter}_1" class="border-bottom-0">
+            <!-- ID -->
+            <td>
+                <label class="small text-muted mb-1">ID</label>
+                <input type="text" 
+                       name="taps[${tapRowCounter}][tap_id]" 
+                       class="form-control text-center font-weight-bold" 
+                       placeholder="T${tapRowCounter}" 
+                       value="T${tapRowCounter}"
+                       required>
+            </td>
+            
+            <!-- Select Tapped -->
+            <td>
+                <label class="small text-muted mb-1">Select Tapped</label>
+                <div class="input-group">
+                    <select name="taps[${tapRowCounter}][tapped]" 
+                            class="form-control tap-tapped"
+                            onchange="updateTapPrice(${tapRowCounter})">
+                        <option value="">Select Tapped</option>
+                        <option value="1" data-price="11.00">M6×1.0 Tap</option>
+                        <option value="2" data-price="12.50">M8×1.25 Tap</option>
+                        <option value="3" data-price="14.00">M10×1.5 Tap</option>
+                        <option value="4" data-price="15.50">1/4-20 Tap</option>
+                        <option value="5" data-price="16.00">5/16-18 Tap</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button type="button" 
+                                class="btn btn-danger" 
+                                onclick="openAddTappedModal()"
+                                title="Add Tapped">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </td>
+            
+            <!-- Tap Price -->
+            <td>
+                <label class="small text-muted mb-1">Tap Price</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="number" 
+                           name="taps[${tapRowCounter}][tap_price]" 
+                           id="tap_price_${tapRowCounter}"
+                           class="form-control tap-price bg-light" 
+                           step="0.01" 
+                           value="0.00"
+                           onchange="calculateTapSubTotal(${tapRowCounter})"
+                           readonly>
+                </div>
+            </td>
+            
+            <!-- Thread Option -->
+            <td>
+                <label class="small text-muted mb-1">Thread Option</label>
+                <select name="taps[${tapRowCounter}][thread_option]" 
+                        class="form-control tap-thread-option"
+                        onchange="updateThreadPrice(${tapRowCounter})">
+                    <option value="">Select</option>
+                    <option value="internal" data-price="2.50">Internal</option>
+                    <option value="external" data-price="3.00">External</option>
+                </select>
+            </td>
+            
+            <!-- Thread Price -->
+            <td>
+                <label class="small text-muted mb-1">Thread Price</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="number" 
+                           name="taps[${tapRowCounter}][thread_price]" 
+                           id="thread_price_${tapRowCounter}"
+                           class="form-control tap-thread-price bg-light" 
+                           step="0.01" 
+                           value="0.00"
+                           onchange="calculateTapSubTotal(${tapRowCounter})"
+                           readonly>
+                </div>
+            </td>
+            
+            <!-- Direction -->
+            <td>
+                <label class="small text-muted mb-1">Direction</label>
+                <select name="taps[${tapRowCounter}][direction]" class="form-control">
+                    <option value="right">Right</option>
+                    <option value="left">Left</option>
+                </select>
+            </td>
+            
+            <!-- Thread Size with Unit Switcher -->
+            <td>
+                <label class="small text-muted mb-1">Thread Size</label>
+                <div class="input-group">
+                    <input type="text" 
+                           name="taps[${tapRowCounter}][thread_size]" 
+                           id="thread_size_${tapRowCounter}"
+                           class="form-control" 
+                           placeholder="M6×1.0">
+                    <div class="input-group-append">
+                        <div class="btn-group">
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary active" 
+                                    id="thread_size_unit_mm_${tapRowCounter}"
+                                    onclick="toggleThreadSizeUnit(${tapRowCounter}, 'mm')">
+                                mm
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary" 
+                                    id="thread_size_unit_inch_${tapRowCounter}"
+                                    onclick="toggleThreadSizeUnit(${tapRowCounter}, 'inch')">
+                                inch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="taps[${tapRowCounter}][thread_size_unit]" id="thread_size_unit_value_${tapRowCounter}" value="mm">
+            </td>
+            
+            <!-- Base Price -->
+            <td>
+                <label class="small text-muted mb-1">Base Price</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="number" 
+                           name="taps[${tapRowCounter}][base_price]" 
+                           class="form-control tap-base-price" 
+                           step="0.01" 
+                           value="0.00"
+                           onchange="calculateTapSubTotal(${tapRowCounter})">
+                </div>
+            </td>
         </tr>
-    `);
+        
+        <!-- SECOND ROW -->
+        <tr id="tapRow${tapRowCounter}_2" class="border-top-0">
+            <!-- Chamfer -->
+            <td>
+                <label class="small text-muted mb-1">Chamfer</label>
+                <div class="input-group">
+                    <select name="taps[${tapRowCounter}][chamfer]" 
+                            class="form-control tap-chamfer"
+                            onchange="updateTapChamferPrice(${tapRowCounter})">
+                        <option value="">No Chamfer</option>
+                        <option value="1" data-price="2.50" data-size="0.5">0.5mm × 45°</option>
+                        <option value="2" data-price="3.00" data-size="1.0">1.0mm × 45°</option>
+                        <option value="3" data-price="3.50" data-size="1.5">1.5mm × 45°</option>
+                        <option value="4" data-price="4.00" data-size="2.0">2.0mm × 45°</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button type="button" 
+                                class="btn btn-warning" 
+                                onclick="openAddChamferModal()"
+                                title="Add Chamfer">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </td>
+            
+            <!-- Chamfer Size with Unit Switcher -->
+            <td>
+                <label class="small text-muted mb-1">Chamfer Size</label>
+                <div class="input-group">
+                    <input type="number" 
+                           name="taps[${tapRowCounter}][chamfer_size]" 
+                           id="tap_chamfer_size_${tapRowCounter}"
+                           class="form-control bg-light" 
+                           step="0.001"
+                           readonly>
+                    <div class="input-group-append">
+                        <div class="btn-group">
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary active" 
+                                    id="tap_chamfer_size_unit_mm_${tapRowCounter}"
+                                    onclick="toggleTapChamferSizeUnit(${tapRowCounter}, 'mm')">
+                                mm
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary" 
+                                    id="tap_chamfer_size_unit_inch_${tapRowCounter}"
+                                    onclick="toggleTapChamferSizeUnit(${tapRowCounter}, 'inch')">
+                                inch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="taps[${tapRowCounter}][chamfer_size_unit]" id="tap_chamfer_size_unit_value_${tapRowCounter}" value="mm">
+            </td>
+            
+            <!-- Chamfer Price -->
+            <td>
+                <label class="small text-muted mb-1">Chamfer Price</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="number" 
+                           name="taps[${tapRowCounter}][chamfer_price]" 
+                           id="tap_chamfer_price_${tapRowCounter}"
+                           class="form-control tap-chamfer-price bg-light" 
+                           step="0.01" 
+                           value="0.00"
+                           readonly>
+                </div>
+            </td>
+            
+            <!-- Debur -->
+            <td>
+                <label class="small text-muted mb-1">Debur</label>
+                <div class="input-group">
+                    <select name="taps[${tapRowCounter}][debur]" 
+                            class="form-control tap-debur"
+                            onchange="updateTapDeburPrice(${tapRowCounter})">
+                        <option value="">No Debur</option>
+                        <option value="1" data-price="1.50" data-size="Standard">Standard Debur</option>
+                        <option value="2" data-price="2.00" data-size="Sharp Edge">Sharp Edge Removal</option>
+                        <option value="3" data-price="2.50" data-size="Heavy">Heavy Debur</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button type="button" 
+                                class="btn btn-info" 
+                                onclick="openAddDeburModal()"
+                                title="Add Debur">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </td>
+            
+            <!-- Debur Size with Unit Switcher -->
+            <td>
+                <label class="small text-muted mb-1">Debur Size</label>
+                <div class="input-group">
+                    <input type="text" 
+                           name="taps[${tapRowCounter}][debur_size]" 
+                           id="tap_debur_size_${tapRowCounter}"
+                           class="form-control bg-light" 
+                           readonly>
+                    <div class="input-group-append">
+                        <div class="btn-group">
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary active" 
+                                    id="tap_debur_size_unit_mm_${tapRowCounter}"
+                                    onclick="toggleTapDeburSizeUnit(${tapRowCounter}, 'mm')">
+                                mm
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary" 
+                                    id="tap_debur_size_unit_inch_${tapRowCounter}"
+                                    onclick="toggleTapDeburSizeUnit(${tapRowCounter}, 'inch')">
+                                inch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="taps[${tapRowCounter}][debur_size_unit]" id="tap_debur_size_unit_value_${tapRowCounter}" value="mm">
+            </td>
+            
+            <!-- Debur Price -->
+            <td>
+                <label class="small text-muted mb-1">Debur Price</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="number" 
+                           name="taps[${tapRowCounter}][debur_price]" 
+                           id="tap_debur_price_${tapRowCounter}"
+                           class="form-control tap-debur-price bg-light" 
+                           step="0.01" 
+                           value="0.00"
+                           readonly>
+                </div>
+            </td>
+            
+            <!-- Sub Total -->
+            <td>
+                <label class="small text-muted mb-1">Sub Total</label>
+                <div class="input-group">
+                    <input type="number" 
+                           name="taps[${tapRowCounter}][sub_total]" 
+                           id="tap_subtotal_${tapRowCounter}"
+                           class="form-control tap-subtotal bg-light font-weight-bold" 
+                           step="0.01" 
+                           value="0.00" 
+                           readonly>
+                </div>
+            </td>
+            
+            <!-- Action -->
+            <td>
+                <label class="small text-muted mb-1">Action</label>
+                <div class="text-center">
+                    <button type="button" 
+                            class="btn btn-danger btn-block" 
+                            onclick="removeTapRow(${tapRowCounter})"
+                            title="Remove">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `;
+    
+    $('#tapsTableBody').append(rowHtml);
 }
+
+// Update Tap Price
+function updateTapPrice(rowId) {
+    const select = $(`#tapRow${rowId}_1 .tap-tapped`);
+    const selected = select.find(':selected');
+    const price = selected.data('price') || 0;
+    
+    $(`#tap_price_${rowId}`).val(price.toFixed(2));
+    
+    calculateTapSubTotal(rowId);
+}
+
+// Update Thread Price
+function updateThreadPrice(rowId) {
+    const select = $(`#tapRow${rowId}_1 .tap-thread-option`);
+    const selected = select.find(':selected');
+    const price = selected.data('price') || 0;
+    
+    $(`#thread_price_${rowId}`).val(price.toFixed(2));
+    
+    calculateTapSubTotal(rowId);
+}
+
+// Update Tap Chamfer Price
+function updateTapChamferPrice(rowId) {
+    const select = $(`#tapRow${rowId}_2 .tap-chamfer`);
+    const selected = select.find(':selected');
+    const price = selected.data('price') || 0;
+    const size = selected.data('size') || '';
+    
+    $(`#tap_chamfer_price_${rowId}`).val(price.toFixed(2));
+    $(`#tap_chamfer_size_${rowId}`).val(size);
+    
+    calculateTapSubTotal(rowId);
+}
+
+// Update Tap Debur Price
+function updateTapDeburPrice(rowId) {
+    const select = $(`#tapRow${rowId}_2 .tap-debur`);
+    const selected = select.find(':selected');
+    const price = selected.data('price') || 0;
+    const size = selected.data('size') || '';
+    
+    $(`#tap_debur_price_${rowId}`).val(price.toFixed(2));
+    $(`#tap_debur_size_${rowId}`).val(size);
+    
+    calculateTapSubTotal(rowId);
+}
+
+// Calculate Tap Sub Total
+function calculateTapSubTotal(rowId) {
+    const tapPrice = parseFloat($(`#tap_price_${rowId}`).val()) || 0;
+    const threadPrice = parseFloat($(`#thread_price_${rowId}`).val()) || 0;
+    const basePrice = parseFloat($(`#tapRow${rowId}_1 .tap-base-price`).val()) || 0;
+    const chamferPrice = parseFloat($(`#tap_chamfer_price_${rowId}`).val()) || 0;
+    const deburPrice = parseFloat($(`#tap_debur_price_${rowId}`).val()) || 0;
+    
+    const subTotal = tapPrice + threadPrice + basePrice + chamferPrice + deburPrice;
+    
+    $(`#tap_subtotal_${rowId}`).val(subTotal.toFixed(2));
+    
+    calculateTapsTotal();
+}
+
+// Calculate Taps Total
+function calculateTapsTotal() {
+    let total = 0;
+    
+    $('.tap-subtotal').each(function() {
+        total += parseFloat($(this).val()) || 0;
+    });
+    
+    $('#tapsTotal').text(total.toFixed(2));
+    $('#tapsTotalBadge').text(total.toFixed(2));
+}
+
+// Toggle Thread Size Unit
+function toggleThreadSizeUnit(rowId, unit) {
+    $(`#thread_size_unit_mm_${rowId}`).toggleClass('active', unit === 'mm');
+    $(`#thread_size_unit_inch_${rowId}`).toggleClass('active', unit === 'inch');
+    $(`#thread_size_unit_value_${rowId}`).val(unit);
+}
+
+// Toggle Tap Chamfer Size Unit
+function toggleTapChamferSizeUnit(rowId, unit) {
+    $(`#tap_chamfer_size_unit_mm_${rowId}`).toggleClass('active', unit === 'mm');
+    $(`#tap_chamfer_size_unit_inch_${rowId}`).toggleClass('active', unit === 'inch');
+    $(`#tap_chamfer_size_unit_value_${rowId}`).val(unit);
+    
+    convertTapChamferSizeValue(rowId, unit);
+}
+
+// Toggle Tap Debur Size Unit
+function toggleTapDeburSizeUnit(rowId, unit) {
+    $(`#tap_debur_size_unit_mm_${rowId}`).toggleClass('active', unit === 'mm');
+    $(`#tap_debur_size_unit_inch_${rowId}`).toggleClass('active', unit === 'inch');
+    $(`#tap_debur_size_unit_value_${rowId}`).val(unit);
+}
+
+// Convert Tap Chamfer Size Value
+function convertTapChamferSizeValue(rowId, toUnit) {
+    const input = $(`#tap_chamfer_size_${rowId}`);
+    const currentValue = parseFloat(input.val());
+    
+    if (!currentValue) return;
+    
+    if (toUnit === 'inch') {
+        input.val((currentValue / 25.4).toFixed(4));
+    } else {
+        input.val((currentValue * 25.4).toFixed(3));
+    }
+}
+
+// Remove Tap Row
+function removeTapRow(rowId) {
+    $(`#tapRow${rowId}_1`).remove();
+    $(`#tapRow${rowId}_2`).remove();
+    
+    if ($('#tapsTableBody tr').length === 0) {
+        $('#tapsTableBody').html('<tr><td colspan="8" class="text-center text-muted py-4">No taps added. Click "Add Tap" to start.</td></tr>');
+        tapRowCounter = 0;
+    }
+    
+    calculateTapsTotal();
+}
+
+// Open Add Tapped Modal
+function openAddTappedModal() {
+    $('#addTappedModal').modal('show');
+}
+
 
 // ── Add Thread Row ──
 let threadRowCounter = 0;
