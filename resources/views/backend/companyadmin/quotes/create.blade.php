@@ -483,50 +483,41 @@
                         </button>
                     </div>
 
-                    {{-- ══════ HOLES (Hidden, opens on click) ══════ --}}
-                    <div id="holesPanel" style="display:none;" class="mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="mb-0"><i class="fas fa-circle text-success"></i> Holes</h6>
-                        <div>
-                            <span class="badge badge-success mr-2" style="font-size:14px;">$0.00</span>
-                            <button type="button" class="btn btn-sm btn-success" onclick="addHoleRow()"><i class="fas fa-plus"></i> Add Hole</button>
-                        </div>
-                    </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th width="80">ID</th>
-                                        <th>Quantity</th>
-                                        <th>Drilling Method</th>
-                                        <th>Hole Size</th>
-                                        <th>Tolerance</th>
-                                        <th>Depth</th>
-                                        <th>Hole Price</th>
-                                        <th>Chamfer</th>
-                                        <th>Chamfer Size</th>
-                                        <th>Chamfer Price</th>
-                                        <th>Debur</th>
-                                        <th>Debur Size</th>
-                                        <th>Debur Price</th>
-                                        <th>Hole Sub Total</th>
-                                        <th width="60">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="holesTableBody">
-                                    <tr><td colspan="14" class="text-center text-muted">No holes</td></tr>
-                                </tbody>
-                                <tfoot class="thead-light">
-                                    <tr>
-                                        <th colspan="13" class="text-right">Hole Total:</th>
-                                        <th>$0</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
+{{-- ══════ HOLES (Hidden, opens on click) ══════ --}}
+<div id="holesPanel" style="display:none;" class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0"><i class="fas fa-circle text-success"></i> Holes</h6>
+        <div>
+            <span class="badge badge-success mr-2" style="font-size:14px;">$<span id="holesTotalBadge">0.00</span></span>
+            <button type="button" class="btn btn-sm btn-success" onclick="addHoleRow()">
+                <i class="fas fa-plus"></i> Add Hole
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-success" onclick="$('#holesPanel').slideUp(200)">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            
+            </thead>
+            <tbody id="holesTableBody">
+                <tr><td colspan="8" class="text-center text-muted py-4">No holes added. Click "Add Hole" to start.</td></tr>
+            </tbody>
+            <tfoot class="thead-light">
+                <tr>
+                    <th colspan="6" class="text-right">Holes Total:</th>
+                    <th class="text-center">$<span id="holesTotal">0.00</span></th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
 
                     {{-- ══════ TAPS (Hidden, opens on click) ══════ --}}
                     <div id="tapsPanel" style="display:none;" class="mb-4">
@@ -1044,6 +1035,123 @@
 
 </form>
 
+{{-- ═══════════════════════════════════════════════ --}}
+{{-- MODALS FOR ADDING NEW ITEMS --}}
+{{-- ═══════════════════════════════════════════════ --}}
+
+{{-- Add Drilling Method Modal --}}
+<div class="modal fade" id="addDrillingMethodModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-drill mr-2"></i> Add New Drilling Method
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Method Name <span class="text-danger">*</span></label>
+                    <input type="text" id="new_drilling_method_name" class="form-control" placeholder="e.g., Deep Hole Drilling" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="new_drilling_method_desc" class="form-control" rows="2" placeholder="Optional description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Base Price ($)</label>
+                    <input type="number" id="new_drilling_method_price" class="form-control" step="0.01" value="0.00">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="saveDrillingMethod()">
+                    <i class="fas fa-check mr-1"></i> Add Method
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Add Chamfer Modal --}}
+<div class="modal fade" id="addChamferModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">
+                    <i class="fas fa-draw-polygon mr-2"></i> Add New Chamfer
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Chamfer Size <span class="text-danger">*</span></label>
+                    <input type="text" id="new_chamfer_size" class="form-control" placeholder="e.g., 2.5mm × 45°" required>
+                </div>
+                <div class="form-group">
+                    <label>Chamfer Type</label>
+                    <select id="new_chamfer_type" class="form-control">
+                        <option value="45">45° Chamfer</option>
+                        <option value="30">30° Chamfer</option>
+                        <option value="60">60° Chamfer</option>
+                        <option value="custom">Custom Angle</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price ($)</label>
+                    <input type="number" id="new_chamfer_price" class="form-control" step="0.01" value="0.00">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" onclick="saveChamfer()">
+                    <i class="fas fa-check mr-1"></i> Add Chamfer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Add Debur Modal --}}
+<div class="modal fade" id="addDeburModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-cut mr-2"></i> Add New Debur Method
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Debur Method <span class="text-danger">*</span></label>
+                    <input type="text" id="new_debur_method" class="form-control" placeholder="e.g., Tumble Debur" required>
+                </div>
+                <div class="form-group">
+                    <label>Size/Specification</label>
+                    <input type="text" id="new_debur_size" class="form-control" placeholder="e.g., 0.5mm radius">
+                </div>
+                <div class="form-group">
+                    <label>Price ($)</label>
+                    <input type="number" id="new_debur_price" class="form-control" step="0.01" value="0.00">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-info" onclick="saveDebur()">
+                    <i class="fas fa-check mr-1"></i> Add Debur
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('styles')
@@ -1240,31 +1348,356 @@ function addItemRow() {
     `);
 }
 
-// ── Add Hole Row ──
+// ══════════════════════════════════════════
+// HOLES SECTION - TWO ROW LAYOUT WITH LABELS
+// ══════════════════════════════════════════
+
 let holeRowCounter = 0;
+
+// Add Hole Row (Two-Row Layout with Labels)
 function addHoleRow() {
     holeRowCounter++;
     clearEmpty('holesTableBody');
-    $('#holesTableBody').append(`
-        <tr>
-            <td><input type="text" class="form-control form-control-sm" placeholder="ID"></td>
-            <td><input type="text" class="form-control form-control-sm bg-light" readonly value=""></td>
-            <td><select class="form-control form-control-sm"><option value="">Select</option><option value="1">Drill</option> <option value="2">Ream</option><option value="2">Bore</option></select></td>
-            <td><input type="text" class="form-control form-control-sm bg-light" readonly value=""></td>
-            <td><input type="text" class="form-control form-control-sm bg-light" readonly value=""></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm bg-light" readonly value=""></td>
-            <td><select class="form-control form-control-sm"><option value="">Select</option><option value="1">0.5mm × 45°</option></select></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm bg-light" readonly value="0"></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm bg-light" readonly value="0"></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm bg-light" readonly value="0"></td>
-            <td><select class="form-control form-control-sm"><option value="">Select</option><option value="1">Standard</option></select></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm bg-light" readonly value="0"></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm bg-light" readonly value="0"></td>
-            <td><input type="number" step="0.01" class="form-control form-control-sm bg-light" readonly value="0"></td>
-            <td><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('tr').remove()"><i class="fas fa-trash"></i></button></td>
+    
+    const rowHtml = `
+        <!-- FIRST ROW: ID, Quantity, Drilling Method, Hole Size, Tolerance, Depth, Hole Price -->
+        <tr id="holeRow${holeRowCounter}_1" class="border-bottom-0">
+            <!-- ID -->
+            <td>
+                <label class="small text-muted mb-1">ID</label>
+                <input type="text" 
+                       name="holes[${holeRowCounter}][hole_id]" 
+                       class="form-control text-center font-weight-bold" 
+                       placeholder="H${holeRowCounter}" 
+                       value="H${holeRowCounter}"
+                       required>
+            </td>
+            
+            <!-- Quantity -->
+            <td>
+                <label class="small text-muted mb-1">Quantity</label>
+                <input type="number" 
+                       name="holes[${holeRowCounter}][quantity]" 
+                       class="form-control text-center" 
+                       value="1" 
+                       min="1">
+            </td>
+            
+            <!-- Drilling Method -->
+            <td>
+                <label class="small text-muted mb-1">Drilling Method</label>
+                <div class="input-group">
+                    <select name="holes[${holeRowCounter}][drilling_method]" 
+                            class="form-control">
+                        <option value="">Select Method</option>
+                        <option value="drill">Drill</option>
+                        <option value="ream">Ream</option>
+                        <option value="bore">Bore</option>
+                        <option value="counter_bore">Counter Bore</option>
+                        <option value="counter_sink">Counter Sink</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button type="button" 
+                                class="btn btn-success" 
+                                onclick="openAddDrillingMethodModal()"
+                                title="Add Method">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </td>
+            
+            <!-- Hole Size -->
+            <td>
+                <label class="small text-muted mb-1">Hole Size</label>
+                <div class="input-group">
+                    <input type="number" 
+                           name="holes[${holeRowCounter}][hole_size]" 
+                           class="form-control" 
+                           step="0.001" 
+                           placeholder="2.505">
+                    <div class="input-group-append">
+                        <span class="input-group-text">mm</span>
+                    </div>
+                </div>
+            </td>
+            
+            <!-- Tolerance PLUS (+) -->
+            <td>
+                <label class="small text-muted mb-1">Tolerance (+)</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-success text-white font-weight-bold">+</span>
+                    </div>
+                    <input type="number" 
+                           name="holes[${holeRowCounter}][tolerance_plus]" 
+                           class="form-control" 
+                           step="0.001" 
+                           placeholder=".005"
+                           value=".005">
+                </div>
+            </td>
+            
+            <!-- Tolerance MINUS (-) -->
+            <td>
+                <label class="small text-muted mb-1">Tolerance (-)</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-danger text-white font-weight-bold">-</span>
+                    </div>
+                    <input type="number" 
+                           name="holes[${holeRowCounter}][tolerance_minus]" 
+                           class="form-control" 
+                           step="0.001" 
+                           placeholder=".005"
+                           value=".005">
+                </div>
+            </td>
+            
+            <!-- Depth -->
+            <td>
+                <label class="small text-muted mb-1">Depth</label>
+                <div class="input-group">
+                    <input type="number" 
+                           name="holes[${holeRowCounter}][depth]" 
+                           class="form-control" 
+                           step="0.01" 
+                           placeholder="10.0">
+                    <div class="input-group-append">
+                        <span class="input-group-text">mm</span>
+                    </div>
+                </div>
+            </td>
+            
+            <!-- Hole Price -->
+            <td>
+                <label class="small text-muted mb-1">Hole Price</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="number" 
+                           name="holes[${holeRowCounter}][hole_price]" 
+                           class="form-control hole-price" 
+                           step="0.01" 
+                           value="0.00"
+                           onchange="calculateHoleSubTotal(${holeRowCounter})">
+                </div>
+            </td>
         </tr>
-    `);
+        
+        <!-- SECOND ROW: Chamfer, Chamfer Size, Chamfer Price, Debur, Debur Size, Debur Price, Sub Total, Action -->
+        <tr id="holeRow${holeRowCounter}_2" class="border-top-0">
+            <!-- Chamfer -->
+            <td>
+                <label class="small text-muted mb-1">Chamfer</label>
+                <div class="input-group">
+                    <select name="holes[${holeRowCounter}][chamfer]" 
+                            class="form-control hole-chamfer"
+                            onchange="updateChamferPrice(${holeRowCounter})">
+                        <option value="">No Chamfer</option>
+                        <option value="1" data-price="2.50" data-size="0.5mm × 45°">0.5mm × 45°</option>
+                        <option value="2" data-price="3.00" data-size="1.0mm × 45°">1.0mm × 45°</option>
+                        <option value="3" data-price="3.50" data-size="1.5mm × 45°">1.5mm × 45°</option>
+                        <option value="4" data-price="4.00" data-size="2.0mm × 45°">2.0mm × 45°</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button type="button" 
+                                class="btn btn-warning" 
+                                onclick="openAddChamferModal()"
+                                title="Add Chamfer">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </td>
+            
+            <!-- Chamfer Size -->
+            <td>
+                <label class="small text-muted mb-1">Chamfer Size</label>
+                <input type="text" 
+                       name="holes[${holeRowCounter}][chamfer_size]" 
+                       id="chamfer_size_${holeRowCounter}"
+                       class="form-control bg-light" 
+                       readonly>
+            </td>
+            
+            <!-- Chamfer Price -->
+            <td>
+                <label class="small text-muted mb-1">Chamfer Price</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="number" 
+                           name="holes[${holeRowCounter}][chamfer_price]" 
+                           id="chamfer_price_${holeRowCounter}"
+                           class="form-control hole-chamfer-price bg-light" 
+                           step="0.01" 
+                           value="0.00"
+                           readonly>
+                </div>
+            </td>
+            
+            <!-- Debur -->
+            <td>
+                <label class="small text-muted mb-1">Debur</label>
+                <div class="input-group">
+                    <select name="holes[${holeRowCounter}][debur]" 
+                            class="form-control hole-debur"
+                            onchange="updateDeburPrice(${holeRowCounter})">
+                        <option value="">No Debur</option>
+                        <option value="1" data-price="1.50" data-size="Standard">Standard Debur</option>
+                        <option value="2" data-price="2.00" data-size="Sharp Edge">Sharp Edge Removal</option>
+                        <option value="3" data-price="2.50" data-size="Heavy">Heavy Debur</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button type="button" 
+                                class="btn btn-info" 
+                                onclick="openAddDeburModal()"
+                                title="Add Debur">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </td>
+            
+            <!-- Debur Size -->
+            <td>
+                <label class="small text-muted mb-1">Debur Size</label>
+                <input type="text" 
+                       name="holes[${holeRowCounter}][debur_size]" 
+                       id="debur_size_${holeRowCounter}"
+                       class="form-control bg-light" 
+                       readonly>
+            </td>
+            
+            <!-- Debur Price -->
+            <td>
+                <label class="small text-muted mb-1">Debur Price</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="number" 
+                           name="holes[${holeRowCounter}][debur_price]" 
+                           id="debur_price_${holeRowCounter}"
+                           class="form-control hole-debur-price bg-light" 
+                           step="0.01" 
+                           value="0.00"
+                           readonly>
+                </div>
+            </td>
+            
+            <!-- Sub Total -->
+            <td>
+                <label class="small text-muted mb-1">Sub Total</label>
+                <div class="input-group">
+                    <input type="number" 
+                           name="holes[${holeRowCounter}][sub_total]" 
+                           id="hole_subtotal_${holeRowCounter}"
+                           class="form-control hole-subtotal bg-light font-weight-bold" 
+                           step="0.01" 
+                           value="0.00" 
+                           readonly>
+                </div>
+            </td>
+            
+            <!-- Action -->
+            <td>
+                <label class="small text-muted mb-1">Action</label>
+                <div class="text-center">
+                    <button type="button" 
+                            class="btn btn-danger btn-block" 
+                            onclick="removeHoleRow(${holeRowCounter})"
+                            title="Remove">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `;
+    
+    $('#holesTableBody').append(rowHtml);
 }
+
+// Update Chamfer Price
+function updateChamferPrice(rowId) {
+    const select = $(`#holeRow${rowId}_2 .hole-chamfer`);
+    const selected = select.find(':selected');
+    const price = selected.data('price') || 0;
+    const size = selected.data('size') || '';
+    
+    $(`#chamfer_price_${rowId}`).val(price.toFixed(2));
+    $(`#chamfer_size_${rowId}`).val(size);
+    
+    calculateHoleSubTotal(rowId);
+}
+
+// Update Debur Price
+function updateDeburPrice(rowId) {
+    const select = $(`#holeRow${rowId}_2 .hole-debur`);
+    const selected = select.find(':selected');
+    const price = selected.data('price') || 0;
+    const size = selected.data('size') || '';
+    
+    $(`#debur_price_${rowId}`).val(price.toFixed(2));
+    $(`#debur_size_${rowId}`).val(size);
+    
+    calculateHoleSubTotal(rowId);
+}
+
+// Calculate Hole Sub Total
+function calculateHoleSubTotal(rowId) {
+    const holePrice = parseFloat($(`#holeRow${rowId}_1 .hole-price`).val()) || 0;
+    const chamferPrice = parseFloat($(`#chamfer_price_${rowId}`).val()) || 0;
+    const deburPrice = parseFloat($(`#debur_price_${rowId}`).val()) || 0;
+    
+    const subTotal = holePrice + chamferPrice + deburPrice;
+    
+    $(`#hole_subtotal_${rowId}`).val(subTotal.toFixed(2));
+    
+    calculateHolesTotal();
+}
+
+// Calculate Holes Total
+function calculateHolesTotal() {
+    let total = 0;
+    
+    $('.hole-subtotal').each(function() {
+        total += parseFloat($(this).val()) || 0;
+    });
+    
+    $('#holesTotal').text(total.toFixed(2));
+    $('#holesTotalBadge').text(total.toFixed(2));
+}
+
+// Remove Hole Row (removes both rows)
+function removeHoleRow(rowId) {
+    $(`#holeRow${rowId}_1`).remove();
+    $(`#holeRow${rowId}_2`).remove();
+    
+    if ($('#holesTableBody tr').length === 0) {
+        $('#holesTableBody').html('<tr><td colspan="8" class="text-center text-muted py-4">No holes added. Click "Add Hole" to start.</td></tr>');
+        holeRowCounter = 0;
+    }
+    
+    calculateHolesTotal();
+}
+
+// Modal Functions
+function openAddDrillingMethodModal() {
+    $('#addDrillingMethodModal').modal('show');
+}
+
+function openAddChamferModal() {
+    $('#addChamferModal').modal('show');
+}
+
+function openAddDeburModal() {
+    $('#addDeburModal').modal('show');
+}
+
 
 // ── Add Tap Row ──
 let tapRowCounter = 0;
@@ -1325,6 +1758,111 @@ function addSecondaryRow() {
             <td><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('tr').remove()"><i class="fas fa-trash"></i></button></td>
         </tr>
     `);
+}
+
+// ═══════════════════════════════════════════════
+// MODAL FUNCTIONS
+// ═══════════════════════════════════════════════
+
+// Open Add Drilling Method Modal
+function openAddDrillingMethodModal() {
+    $('#addDrillingMethodModal').modal('show');
+    // Reset form
+    $('#new_drilling_method_name').val('');
+    $('#new_drilling_method_desc').val('');
+    $('#new_drilling_method_price').val('0.00');
+}
+
+// Save Drilling Method (placeholder - will be replaced with AJAX later)
+function saveDrillingMethod() {
+    const name = $('#new_drilling_method_name').val().trim();
+    
+    if (!name) {
+        alert('Please enter a method name');
+        return;
+    }
+    
+    // TODO: Replace with AJAX call to save to database
+    // For now, just add to all dropdowns
+    const newOption = `<option value="${name.toLowerCase().replace(/\s+/g, '_')}">${name}</option>`;
+    
+    $('select[name^="holes"][name$="[drilling_method]"]').each(function() {
+        $(this).append(newOption);
+    });
+    
+    $('#addDrillingMethodModal').modal('hide');
+    
+    // Show success message
+    toastr.success(`Drilling method "${name}" added successfully!`);
+}
+
+// Open Add Chamfer Modal
+function openAddChamferModal() {
+    $('#addChamferModal').modal('show');
+    // Reset form
+    $('#new_chamfer_size').val('');
+    $('#new_chamfer_type').val('45');
+    $('#new_chamfer_price').val('0.00');
+}
+
+// Save Chamfer (placeholder - will be replaced with AJAX later)
+function saveChamfer() {
+    const size = $('#new_chamfer_size').val().trim();
+    const price = $('#new_chamfer_price').val();
+    
+    if (!size) {
+        alert('Please enter chamfer size');
+        return;
+    }
+    
+    // TODO: Replace with AJAX call to save to database
+    // For now, just add to all dropdowns
+    const newOption = `<option value="${size}" data-price="${price}">${size}</option>`;
+    
+    $('select[name^="holes"][name$="[chamfer]"]').each(function() {
+        $(this).append(newOption);
+    });
+    
+    $('#addChamferModal').modal('hide');
+    
+    // Show success message
+    toastr.success(`Chamfer "${size}" added successfully!`);
+}
+
+// Open Add Debur Modal
+function openAddDeburModal() {
+    $('#addDeburModal').modal('show');
+    // Reset form
+    $('#new_debur_method').val('');
+    $('#new_debur_size').val('');
+    $('#new_debur_price').val('0.00');
+}
+
+// Save Debur (placeholder - will be replaced with AJAX later)
+function saveDebur() {
+    const method = $('#new_debur_method').val().trim();
+    const size = $('#new_debur_size').val().trim();
+    const price = $('#new_debur_price').val();
+    
+    if (!method) {
+        alert('Please enter debur method');
+        return;
+    }
+    
+    const displayName = size ? `${method} (${size})` : method;
+    
+    // TODO: Replace with AJAX call to save to database
+    // For now, just add to all dropdowns
+    const newOption = `<option value="${method.toLowerCase().replace(/\s+/g, '_')}" data-price="${price}">${displayName}</option>`;
+    
+    $('select[name^="holes"][name$="[debur]"]').each(function() {
+        $(this).append(newOption);
+    });
+    
+    $('#addDeburModal').modal('hide');
+    
+    // Show success message
+    toastr.success(`Debur method "${displayName}" added successfully!`);
 }
 </script>
 @endpush
