@@ -140,7 +140,8 @@
 .flatpickr-day.selected { background:#667eea; border-color:#667eea; }
 .flatpickr-day.selected:hover { background:#764ba2; border-color:#764ba2; }
 
-/* ──  height normalise ───────────────── */
+/* ── height normalise ───────────────── */
+
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endsection
@@ -153,7 +154,6 @@
 
 {{-- ══ TOTALS BAR ══ --}}
 <div id="stickyHeader">
-
 
 {{-- ══ CARD 1: HEADER ══ --}}
 <div class="card">
@@ -172,7 +172,7 @@
             <div class="col-md-2">
                 <div class="form-group mb-3">
                     <label class="field-label">Type <span class="text-danger">*</span></label>
-                    <select name="type" id="quoteType" class="form-control  @error('type') is-invalid @enderror" onchange="onTypeChange()">
+                    <select name="type" id="quoteType" class="form-control @error('type') is-invalid @enderror" onchange="onTypeChange()">
                         <option value="quote"     {{ old('type','quote')=='quote'     ?'selected':'' }}>Quote</option>
                         <option value="job_order" {{ old('type')=='job_order'         ?'selected':'' }}>Job Order</option>
                         <option value="invoice"   {{ old('type')=='invoice'           ?'selected':'' }}>Invoice</option>
@@ -183,15 +183,15 @@
                 <div class="form-group mb-3">
                     <label class="field-label">Number <span class="text-danger">*</span></label>
                     <input type="text" name="quote_number" id="quoteNumber"
-                           class="form-control  bg-light font-weight-bold @error('quote_number') is-invalid @enderror"
+                           class="form-control bg-light font-weight-bold @error('quote_number') is-invalid @enderror"
                            value="{{ old('quote_number', $quoteNumber) }}" readonly>
                     @error('quote_number')<span class="invalid-feedback">{{ $message }}</span>@enderror
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="form-group mb-3">
                     <label class="field-label">Manufacturing Method</label>
-                    <select name="manufacturing_method" class="form-control ">
+                    <select name="manufacturing_method" class="form-control">
                         <option value="manufacture_in_house" {{ old('manufacturing_method','manufacture_in_house')=='manufacture_in_house'?'selected':'' }}>Manufacture In-House</option>
                         <option value="outsource"            {{ old('manufacturing_method')=='outsource'?'selected':'' }}>Outsource</option>
                         <option value="hybrid"               {{ old('manufacturing_method')=='hybrid'?'selected':'' }}>Hybrid</option>
@@ -201,81 +201,83 @@
             <div class="col-md-1">
                 <div class="form-group mb-3">
                     <label class="field-label">Unit</label>
-                    <select name="unit" id="globalUnit" class="form-control ">
+                    <select name="unit" id="globalUnit" class="form-control">
                         <option value="inch">inch</option>
                         <option value="mm">mm</option>
                     </select>
                 </div>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <div class="form-group mb-3">
                     <label class="field-label">Qty <span class="text-danger">*</span></label>
                     <input type="number" name="quantity" id="globalQty"
-                           class="form-control  text-center font-weight-bold"
+                           class="form-control text-center font-weight-bold"
                            value="{{ old('quantity',1) }}" min="1" onchange="recalcAll()">
                 </div>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <div class="form-group mb-3">
                     <label class="field-label">Setup $</label>
-                    <div class="input-group ">
+                    <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">$</span></div>
                         <input type="number" name="setup_price" step="0.01" class="form-control" value="{{ old('setup_price',0) }}">
                     </div>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <div class="form-group mb-3">
-                    <label class="field-label">Part #</label>
-                    <input type="text" name="part_number" class="form-control " value="{{ old('part_number') }}" placeholder="e.g. P-1001">
-                </div>
-            </div>
-            <div class="col-md-1">
-                <div class="form-group mb-3">
-                    <label class="field-label">Rev</label>
-                    <input type="text" name="revision" class="form-control  text-center" value="{{ old('revision') }}" placeholder="A">
                 </div>
             </div>
         </div>
 
         {{-- ── Row 2: Dates ── --}}
         <div class="row align-items-end">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group mb-2">
                     <label class="field-label"><i class="fas fa-calendar-alt mr-1 text-primary"></i>Quote Date</label>
                     <input type="text" name="quote_date" id="quoteDatePicker"
-                           class="form-control  datepicker"
+                           class="form-control datepicker"
                            value="{{ old('quote_date') ? \Carbon\Carbon::parse(old('quote_date'))->format('m/d/Y') : \Carbon\Carbon::today()->format('m/d/Y') }}"
                            placeholder="MM/DD/YYYY" autocomplete="off">
                     <input type="hidden" name="quote_date_raw" id="quoteDateRaw" value="{{ old('quote_date', date('Y-m-d')) }}">
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group mb-2">
                     <label class="field-label"><i class="fas fa-calendar-check mr-1 text-warning"></i>Due Date</label>
                     <input type="text" name="due_date" id="dueDatePicker"
-                           class="form-control  datepicker"
+                           class="form-control datepicker"
                            value="{{ old('due_date') ? \Carbon\Carbon::parse(old('due_date'))->format('m/d/Y') : '' }}"
                            placeholder="MM/DD/YYYY" autocomplete="off">
                     <input type="hidden" name="due_date_raw" id="dueDateRaw" value="{{ old('due_date') }}">
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group mb-2">
                     <label class="field-label"><i class="fas fa-hourglass-half mr-1 text-success"></i>Valid Until</label>
                     <input type="text" name="valid_until" id="validUntilPicker"
-                           class="form-control  datepicker"
+                           class="form-control datepicker"
                            value="{{ old('valid_until') ? \Carbon\Carbon::parse(old('valid_until'))->format('m/d/Y') : '' }}"
                            placeholder="MM/DD/YYYY" autocomplete="off">
                     <input type="hidden" name="valid_until_raw" id="validUntilRaw" value="{{ old('valid_until') }}">
                 </div>
             </div>
+
+                        <div class="col-md-2">
+                <div class="form-group mb-2">
+                    <label class="field-label">Part #</label>
+                    <input type="text" name="part_number" class="form-control" value="{{ old('part_number') }}" placeholder="e.g. P-1001">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group mb-2">
+                    <label class="field-label">Cage Number</label>
+                    <input type="text" name="cage_number" class="form-control text-center" value="{{ old('cage_number') }}" placeholder="e.g. 1">
+                </div>
+            </div>
+
             {{-- PO Number - shown only for job_order --}}
-            <div class="col-md-3" id="poNumberField" style="display:none;">
+            <div class="col-md-2" id="poNumberField" style="display:none;">
                 <div class="form-group mb-2">
                     <label class="field-label"><i class="fas fa-hashtag mr-1 text-info"></i>PO Number (auto)</label>
                     <input type="text" name="po_number" id="poNumber"
-                           class="form-control  bg-light font-weight-bold"
+                           class="form-control bg-light font-weight-bold"
                            readonly placeholder="Auto-generated">
                 </div>
             </div>
@@ -373,96 +375,78 @@
     <div class="card-header"><h3 class="card-title"><i class="fas fa-cube mr-2"></i>Shape &amp; Material</h3></div>
     <div class="card-body pb-2">
 
-        {{-- ── Material Row 1: Shape + Dimensions + Alloy + Pricing ── --}}
-        <div class="row align-items-end mb-1">
-
+        {{-- ── Row 1: Shape + conditional dimension field ── --}}
+        <div class="row align-items-end">
             <div class="col-md-2">
-                <div class="form-group mb-3">
+                <div class="form-group">
                     <label class="field-label">Shape</label>
-                    <select name="shape" id="shapeSelect" class="form-control " onchange="toggleShapeFields()">
+                    <select name="shape" id="shapeSelect" class="form-control" onchange="toggleShapeFields()">
                         <option value="round">Round</option>
                         <option value="square">Square</option>
                         <option value="hexagon">Hexagon</option>
-                        <option value="width_length_height">W × L × H</option>
+                        <option value="width_length_height">Width x Length x Height</option>
                     </select>
                 </div>
             </div>
 
-            {{-- Pin (round/square/hex) dimensions --}}
-            <div id="pinFields" class="col-md-3">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group mb-3">
-                            <label class="field-label">Diameter</label>
-                            <input type="number" step="0.0001" name="pin_diameter" class="form-control " placeholder="1.5000" onchange="calcVolume()">
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group mb-3">
-                            <label class="field-label">Length</label>
-                            <input type="number" step="0.0001" name="pin_length" class="form-control " placeholder="4.2500" onchange="calcVolume()">
-                        </div>
-                    </div>
+            {{-- Pin Size Diameter + Diameter Adjustment: hidden when W×L×H selected --}}
+            <div id="pinFields" class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Pin Size Diameter</label>
+                    <input type="number" step="0.0001" name="pin_diameter" id="pinDiameter"
+                           class="form-control" placeholder="0" onchange="calcVolume()">
+                </div>
+            </div>
+            <div id="pinLengthField" class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Diameter Adjustment</label>
+                    <input type="number" step="0.0001" name="pin_length_row1" id="pinLengthRow1"
+                           class="form-control" placeholder="0" onchange="syncPinLength()">
                 </div>
             </div>
 
-            {{-- WLH dimensions --}}
+            {{-- WLH: hidden until shape = width_length_height --}}
             <div id="wlhFields" style="display:none;" class="col-md-4">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group mb-3">
-                            <label class="field-label">Width</label>
-                            <input type="number" step="0.0001" name="width" class="form-control " onchange="calcVolume()">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group mb-3">
-                            <label class="field-label">Length</label>
-                            <input type="number" step="0.0001" name="length" class="form-control " onchange="calcVolume()">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group mb-3">
-                            <label class="field-label">Height</label>
-                            <input type="number" step="0.0001" name="height" class="form-control " onchange="calcVolume()">
-                        </div>
-                    </div>
-                </div>
+                {{-- shown below in row 3 --}}
             </div>
+        </div>
 
-            <div class="col-md-3">
-                <div class="form-group mb-3">
-                    <label class="field-label">Metal Alloy</label>
-                    <select name="metal_alloy" id="metalAlloySelect" class="form-control ">
-                        <option value="">-- Select Alloy --</option>
-                        <option value="1018"  data-price="0.65"  data-density="0.284">1018 Steel</option>
-                        <option value="4140"  data-price="0.90"  data-density="0.284">4140 Steel</option>
-                        <option value="4340"  data-price="1.10"  data-density="0.284">4340 Steel</option>
-                        <option value="303ss" data-price="2.50"  data-density="0.290">303 Stainless</option>
-                        <option value="304ss" data-price="2.30"  data-density="0.290">304 Stainless</option>
-                        <option value="316ss" data-price="3.20"  data-density="0.290">316 Stainless</option>
-                        <option value="6061"  data-price="1.80"  data-density="0.098">6061 Aluminum</option>
-                        <option value="7075"  data-price="3.50"  data-density="0.102">7075 Aluminum</option>
-                        <option value="c360"  data-price="3.00"  data-density="0.307">C360 Brass</option>
-                        <option value="ti6al" data-price="18.00" data-density="0.160">Ti-6Al-4V Titanium</option>
+        {{-- ── Row 2: Material Type | Metal Alloy | Block Price | Adj Price | Real Price | Overall Pin Length ── --}}
+        <div class="row align-items-end">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Material Type</label>
+                    <select name="material_type" id="materialType" class="form-control">
+                        <option value="">-- All Types --</option>
+                        <option value="metal_alloy">Metal Alloy</option>
+                        <option value="plastic">Plastic</option>
+                        <option value="composite">Composite</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
             </div>
-
-            <div class="col-md-1">
-                <div class="form-group mb-3">
-                    <label class="field-label">$/lb <span class="text-muted">(base)</span></label>
-                    <div class="input-group ">
-                        <div class="input-group-prepend"><span class="input-group-text bg-light">$</span></div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Material <span id="materialCountBadge" class="badge badge-info ml-1">0</span></label>
+                    <select name="metal_alloy" id="metalAlloySelect" class="form-control">
+                        <option value="">-- Select Material --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Block Price per LB/Kg</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">$</span></div>
                         <input type="number" step="0.0001" name="block_price" id="blockPrice"
-                               class="form-control bg-light" readonly value="0">
+                               class="form-control" value="0" onchange="calcMaterialTotal()">
                     </div>
                 </div>
             </div>
-            <div class="col-md-1">
-                <div class="form-group mb-3">
-                    <label class="field-label">Adj $/lb</label>
-                    <div class="input-group ">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Metal Adjustment Price</label>
+                    <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">$</span></div>
                         <input type="number" step="0.0001" name="metal_adjustment" id="metalAdj"
                                class="form-control" value="0" onchange="calcMaterialTotal()">
@@ -470,75 +454,137 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <div class="form-group mb-3">
-                    <label class="field-label">Real $/lb <span class="badge badge-success badge-sm ml-1">effective</span></label>
-                    <div class="input-group ">
-                        <div class="input-group-prepend"><span class="input-group-text bg-success text-white">$</span></div>
-                        <input type="number" step="0.0001" name="metal_real_price" id="metalRealPrice"
+                <div class="form-group">
+                    <label class="field-label">Metal Real Price</label>
+                    <input type="number" step="0.0001" name="metal_real_price" id="metalRealPrice"
+                           class="form-control bg-light" readonly value="0">
+                </div>
+            </div>
+            <div class="col-md-2" id="overallPinLengthField">
+                <div class="form-group">
+                    <label class="field-label">Over All Pin Length</label>
+                    <input type="number" step="0.0001" name="pin_length" id="pinLength"
+                           class="form-control" placeholder="0.0000" onchange="calcVolume()">
+                </div>
+            </div>
+        </div>
+
+        {{-- ── Row 3: W × L × H (only when shape = width_length_height) ── --}}
+        <div id="wlhRow" style="display:none;">
+            <div class="row align-items-end">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="field-label">Width</label>
+                        <input type="number" step="0.0001" name="width" id="matWidth"
+                               class="form-control" placeholder="0" onchange="calcVolume()">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="field-label">Length</label>
+                        <input type="number" step="0.0001" name="length" id="matLength"
+                               class="form-control" placeholder="0" onchange="calcVolume()">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="field-label">Height</label>
+                        <input type="number" step="0.0001" name="height" id="matHeight"
+                               class="form-control" placeholder="0" onchange="calcVolume()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── Row 4: Volumes & Weights (only for W×L×H) ── --}}
+        <div id="wlhVolumeRow" style="display:none;">
+        <div class="row align-items-end">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Cubic Inch Volume</label>
+                    <input type="number" step="0.0001" name="cubic_inch_volume" id="cubicInch"
+                           class="form-control bg-light" readonly value="0">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Cubic MM Volume</label>
+                    <input type="number" step="0.0001" name="cubic_mm_volume" id="cubicMm"
+                           class="form-control bg-light" readonly value="0">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Weight LB</label>
+                    <input type="number" step="0.0001" name="weight_lb" id="weightLb"
+                           class="form-control bg-light" readonly value="0">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Weight KG</label>
+                    <input type="number" step="0.0001" name="weight_kg_display" id="weightKg"
+                           class="form-control bg-light" readonly value="0">
+                </div>
+            </div>
+        </div>
+        </div>{{-- /wlhVolumeRow --}}
+
+        {{-- ── Row 5: Prices & Total Weights ── --}}
+        <div class="row align-items-end">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Each Pin Price</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">$</span></div>
+                        <input type="number" step="0.0001" name="each_pin_price" id="eachPinPrice"
+                               class="form-control bg-light" readonly value="0">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="field-label">Total Pin Price</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">$</span></div>
+                        <input type="number" step="0.01" name="total_pin_price" id="totalPinPrice"
                                class="form-control bg-light font-weight-bold" readonly value="0">
                     </div>
                 </div>
             </div>
-
-        </div>
-
-        {{-- ── Material Row 2: Calculated weights & costs ── --}}
-        <div class="row align-items-end">
-
             <div class="col-md-2">
-                <div class="form-group mb-3">
-                    <label class="field-label"><i class="fas fa-weight-hanging mr-1 text-muted"></i>Wt / Piece (lb)</label>
-                    <input type="number" step="0.0001" name="weight_lb" id="weightLb"
-                           class="form-control  bg-light text-center" readonly value="0.0000">
+                <div class="form-group">
+                    <label class="field-label">Calculated Weight (kg)</label>
+                    <input type="number" step="0.0001" name="calc_weight_kg" id="calcWeightKg"
+                           class="form-control bg-light" readonly value="0">
                 </div>
             </div>
             <div class="col-md-2">
-                <div class="form-group mb-3">
-                    <label class="field-label"><i class="fas fa-weight-hanging mr-1 text-muted"></i>Wt / Piece (kg)</label>
-                    <input type="number" step="0.0001" name="weight_kg_display" id="weightKg"
-                           class="form-control  bg-light text-center" readonly value="0.0000">
+                <div class="form-group">
+                    <label class="field-label">Calculated Weight (lbs)</label>
+                    <input type="number" step="0.0001" name="calc_weight_lbs" id="calcWeightLbs"
+                           class="form-control bg-light" readonly value="0">
                 </div>
             </div>
             <div class="col-md-2">
-                <div class="form-group mb-3">
-                    <label class="field-label"><i class="fas fa-layer-group mr-1 text-muted"></i>Total Weight (lb)</label>
-                    <input type="number" step="0.0001" name="total_weight_lb" id="totalWeightLb"
-                           class="form-control  bg-light text-center font-weight-bold" readonly value="0.0000">
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group mb-3">
-                    <label class="field-label"><i class="fas fa-layer-group mr-1 text-muted"></i>Total Weight (kg)</label>
+                <div class="form-group">
+                    <label class="field-label">Total Calculated Weight (kg)</label>
                     <input type="number" step="0.0001" name="total_weight_kg_display" id="totalWeightKg"
-                           class="form-control  bg-light text-center font-weight-bold" readonly value="0.0000">
+                           class="form-control bg-light" readonly value="0">
                 </div>
             </div>
             <div class="col-md-2">
-                <div class="form-group mb-3">
-                    <label class="field-label">Mat. Cost / Piece</label>
-                    <div class="input-group ">
-                        <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                        <input type="number" step="0.0001" name="each_pin_price" id="eachPinPrice"
-                               class="form-control bg-light" readonly value="0.000">
-                    </div>
+                <div class="form-group">
+                    <label class="field-label">Total Calculated Weight (lbs)</label>
+                    <input type="number" step="0.0001" name="total_weight_lb" id="totalWeightLb"
+                           class="form-control bg-light font-weight-bold" readonly value="0">
                 </div>
             </div>
-            <div class="col-md-2">
-                <div class="form-group mb-3">
-                    <label class="field-label"><strong>Mat. Total (all qty)</strong></label>
-                    <div class="input-group ">
-                        <div class="input-group-prepend"><span class="input-group-text bg-dark text-white">$</span></div>
-                        <input type="number" step="0.01" name="total_pin_price" id="totalPinPrice"
-                               class="form-control bg-light font-weight-bold text-success" readonly value="0.00">
-                    </div>
-                </div>
-            </div>
-
         </div>
 
-        {{-- hidden raw kg storage --}}
-        <input type="hidden" name="weight_kg"       id="weightKgHidden"       value="0">
-        <input type="hidden" name="total_weight_kg" id="totalWeightKgHidden"  value="0">
+        {{-- hidden storage --}}
+        <input type="hidden" name="weight_kg"       id="weightKgHidden"      value="0">
+        <input type="hidden" name="total_weight_kg" id="totalWeightKgHidden" value="0">
 
         <hr class="mt-1 mb-3">
 
@@ -601,21 +647,22 @@
                 <table class="table table-bordered table-sm mb-0">
                     <thead class="thead-light">
                         <tr>
-                            <th>#</th>
+                            <th class="text-center">#</th>
                             <th style="min-width:200px;">Machine</th>
-                            <th style="min-width:130px;">Model</th>
-                            <th>Labor Mode</th>
+                            <th style="min-width:120px;">Model</th>
+                            <th style="min-width:110px;">Labor Mode</th>
                             <th style="min-width:180px;">Labour</th>
                             <th>Material</th>
                             <th>Complexity</th>
                             <th>Priority</th>
-                            <th>Time (min)</th>
-                            <th>Sub Total</th>
+                            <th class="text-center" style="min-width:90px;">Time<br><small class="font-weight-normal">(min)</small></th>
+                            <th class="text-center" style="min-width:100px;">Rate<br><small class="font-weight-normal">($/hr)</small></th>
+                            <th class="text-center" style="min-width:110px;">Sub Total</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody id="machineBody">
-                        <tr class="empty-row"><td colspan="11" class="text-center text-muted py-3">Click "Add Machine" to begin</td></tr>
+                        <tr class="empty-row"><td colspan="12" class="text-center text-muted py-3">Click "Add Machine" to begin</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -745,21 +792,11 @@
                 </button>
             </div>
         </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-sm mb-0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Ref</th><th style="min-width:130px;">Type</th><th>Thread $</th>
-                            <th>Place</th><th>Option</th><th>Direction</th>
-                            <th>Size</th><th>Base $</th><th>Class $</th><th>Sub Total</th><th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="threadsBody">
-                        <tr class="empty-row"><td colspan="11" class="text-center text-muted py-3">Click "Add Thread" to begin</td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="card-body" id="threadsBody" style="background:#f8f9fa;">
+            <p class="text-muted text-center py-2 mb-0" id="threadsEmpty">Click "Add Thread" to begin</p>
+        </div>
+        <div class="card-footer d-flex justify-content-end">
+            <strong>Thread Total: &nbsp; $<span id="threadsTotalFoot">0.00</span></strong>
         </div>
     </div>
 </div>
@@ -1176,6 +1213,7 @@ var operationsData = @json($operationsJs);
 var itemsData      = @json($itemsJs);
 var vendorsData    = @json($vendorsJs);
 var tapsData       = @json($tapsJs);
+var threadsData    = @json($threadsJs ?? []);
 var operatorsData  = @json($operatorsJs);
 var chamfersData   = @json($chamfersJs);
 var debursData     = @json($debursJs);
@@ -1240,7 +1278,18 @@ $(document).ready(function(){
     });
 
     // Metal alloy dropdown
-    initSelect2('#metalAlloySelect', '-- Select Alloy --', function(){
+    // Load materials from server and filter by current unit + type
+    loadMaterials();
+
+    // Re-filter whenever unit OR material type changes
+    $('#globalUnit').off('change.matfilter').on('change.matfilter', function(){
+        filterMaterials();
+    });
+    $('#materialType').off('change.matfilter').on('change.matfilter', function(){
+        filterMaterials();
+    });
+
+    initSelect2('#metalAlloySelect', '-- Select Material --', function(){
         updateMetalPrice();
     });
 
@@ -1380,14 +1429,94 @@ function syncFileInput(){ var dt=new DataTransfer(); attachedFiles.forEach(funct
 // ══════════════════════════════════════════════════════════
 function toggleShapeFields(){
     var s = $('#shapeSelect').val();
-    $('#pinFields').toggle(s !== 'width_length_height');
-    $('#wlhFields').toggle(s === 'width_length_height');
+    var isWLH = (s === 'width_length_height');
+    // Pin Size Diameter & Diameter Adjustment — hide only for W×L×H
+    $('#pinFields').toggle(!isWLH);
+    $('#pinLengthField').toggle(!isWLH);
+    // W×L×H rows appear only for that shape
+    $('#wlhRow').toggle(isWLH);
+    $('#wlhVolumeRow').toggle(isWLH);
     calcVolume();
 }
+// ── All materials loaded from server once ──────────────────
+var _allMaterials = [];
+
+function loadMaterials(){
+    $.getJSON('{{ route("company.materials.ajax-list") }}', function(data){
+        _allMaterials = data;
+        filterMaterials();
+    }).fail(function(){
+        console.warn('Could not load materials from server.');
+    });
+}
+
+function filterMaterials(){
+    var unit = $('#globalUnit').val();          // 'mm' or 'inch'
+    var type = $('#materialType').val();        // '' | 'metal_alloy' | 'plastic' | etc.
+
+    var filtered = _allMaterials.filter(function(m){
+        var unitMatch = (m.unit === unit);
+        var typeMatch = (!type || m.type === type);
+        return unitMatch && typeMatch;
+    });
+
+    var $sel = $('#metalAlloySelect');
+    var prev = $sel.val();
+    $sel.empty().append('<option value="">-- Select Material --</option>');
+
+    filtered.forEach(function(m){
+        var label = m.name;
+        if(m.diameter_from > 0 || m.diameter_to > 0){
+            label += ' (' + parseFloat(m.diameter_from).toFixed(2)
+                  + ' – ' + parseFloat(m.diameter_to).toFixed(2)
+                  + ' ' + m.unit + ')';
+        }
+        $sel.append(
+            $('<option>', {
+                value: m.id,
+                text:  label
+            })
+            .data('price',   m.real_price)
+            .data('density', m.density)
+            .data('unit',    m.unit)
+            .data('adj',     m.adj)
+            .data('adj_type',m.adj_type)
+        );
+    });
+
+    // Restore previous selection if still available
+    if(prev) $sel.val(prev);
+
+    // Update count badge
+    $('#materialCountBadge').text(filtered.length);
+
+    // Re-init Select2 if active
+    if(typeof $.fn.select2 === 'function' && $sel.hasClass('select2-hidden-accessible')){
+        $sel.trigger('change.select2');
+    }
+
+    updateMetalPrice();
+}
+
 function updateMetalPrice(){
-    var opt = $('#metalAlloySelect').find(':selected');
-    $('#blockPrice').val(parseFloat(opt.data('price')||0).toFixed(4));
+    var opt   = $('#metalAlloySelect').find(':selected');
+    var price = parseFloat(opt.data('price') || 0);
+    if(price > 0){
+        $('#blockPrice').val(price.toFixed(4));
+    }
     calcMaterialTotal();
+}
+
+function syncPinLength(){
+    // Keep row1 pin length in sync with Row2 "Over All Pin Length" field
+    var val = $('#pinLengthRow1').val();
+    $('#pinLength').val(val);
+    calcVolume();
+}
+
+function toggleMaterialType(){
+    // kept for backwards compat — now handled by filterMaterials()
+    filterMaterials();
 }
 function calcMaterialTotal(){
     var block = parseFloat($('#blockPrice').val())||0;
@@ -1397,32 +1526,64 @@ function calcMaterialTotal(){
 }
 function calcVolume(){
     var shape   = $('#shapeSelect').val();
-    var density = parseFloat($('#metalAlloySelect').find(':selected').data('density'))||0.284;
+    var $matOpt  = $('#metalAlloySelect').find(':selected');
+    var matUnit  = $matOpt.data('unit') || unit;
+    var rawDensity = parseFloat($matOpt.data('density')) || 0;
+    // Convert to usable lb/in³:
+    // If material unit is mm → density stored as kg/m³ → convert to lb/in³ (÷ 27679.9)
+    // If material unit is inch → density already in lb/in³
+    var density;
+    if(rawDensity > 100){
+        // kg/m³ — convert to lb/in³
+        density = rawDensity / 27679.9;
+    } else {
+        // already lb/in³
+        density = rawDensity || 0.284;
+    }
     var unit    = $('#globalUnit').val();
     var qty     = parseInt($('#globalQty').val())||1;
     var real    = parseFloat($('#metalRealPrice').val())||0;
+    var volIn3  = 0; // cubic inches
     var weightLb = 0;
+
     if(shape === 'width_length_height'){
-        var w = parseFloat($('input[name="width"]').val())||0;
-        var l = parseFloat($('input[name="length"]').val())||0;
-        var h = parseFloat($('input[name="height"]').val())||0;
-        var vol = unit==='mm' ? (w*l*h)/16387.064 : w*l*h;
-        weightLb = vol * density;
+        var w = parseFloat($('#matWidth').val())||0;
+        var l = parseFloat($('#matLength').val())||0;
+        var h = parseFloat($('#matHeight').val())||0;
+        volIn3   = unit==='mm' ? (w*l*h)/16387.064 : w*l*h;
     } else {
-        var d  = parseFloat($('input[name="pin_diameter"]').val())||0;
-        var pl = parseFloat($('input[name="pin_length"]').val())||0;
-        var vol = unit==='mm' ? (Math.PI*(d/2)*(d/2)*pl)/16387.064 : Math.PI*(d/2)*(d/2)*pl;
-        weightLb = vol * density;
+        // round/square/hex — use diameter adjustment + overall pin length
+        var d  = parseFloat($('#pinDiameter').val())||0;
+        var pl = parseFloat($('#pinLength').val())||0;
+        volIn3 = unit==='mm'
+            ? (Math.PI*(d/2)*(d/2)*pl)/16387.064
+            : Math.PI*(d/2)*(d/2)*pl;
     }
+
+    var volMm3   = volIn3 * 16387.064;
+    weightLb     = volIn3 * density;
     var weightKg = weightLb * 0.453592;
+
+    // Row 4 — volumes & weight per piece
+    $('#cubicInch').val(volIn3.toFixed(4));
+    $('#cubicMm').val(volMm3.toFixed(2));
     $('#weightLb').val(weightLb.toFixed(4));
-    $('#weightKg').val(weightKg.toFixed(4));          // display
-    $('#weightKgHidden').val(weightKg.toFixed(4));    // form submit
+    $('#weightKg').val(weightKg.toFixed(4));
+
+    // Row 5 — prices & total weights
+    var eachPrice  = weightLb * real;
+    var totalPrice = eachPrice * qty;
+    $('#eachPinPrice').val(eachPrice.toFixed(4));
+    $('#totalPinPrice').val(totalPrice.toFixed(2));
+    $('#calcWeightKg').val(weightKg.toFixed(4));
+    $('#calcWeightLbs').val(weightLb.toFixed(4));
+    $('#totalWeightKg').val((weightKg*qty).toFixed(4));
     $('#totalWeightLb').val((weightLb*qty).toFixed(4));
-    $('#totalWeightKg').val((weightKg*qty).toFixed(4));          // display
-    $('#totalWeightKgHidden').val((weightKg*qty).toFixed(4));    // form submit
-    $('#eachPinPrice').val((weightLb*real).toFixed(4));
-    $('#totalPinPrice').val((weightLb*real*qty).toFixed(2));
+
+    // Hidden fields for form submit
+    $('#weightKgHidden').val(weightKg.toFixed(4));
+    $('#totalWeightKgHidden').val((weightKg*qty).toFixed(4));
+
     recalcAll();
 }
 
@@ -1465,26 +1626,36 @@ function addMachineRow(){
         +'<td><select name="machines['+r+'][labor_mode]" class="form-control form-control-sm" style="min-width:110px;"><option>Attended</option><option>Unattended</option><option>Semi-Attended</option></select></td>'
         +'<td style="min-width:220px;">'
         +'  <div class="d-flex align-items-center" style="gap:4px;">'
-        +'    <div style="flex:1;min-width:0;"><select name="machines['+r+'][labour_id]" class="form-control form-control-sm m-labour" onchange="updateMSub('+r+')" style="width:100%">'+lOpts+'</select></div>'
+        +'    <div style="flex:1;min-width:0;"><select name="machines['+r+'][labour_id]" class="form-control form-control-sm m-labour" onchange="updateMSub('+r+',true)" style="width:100%">'+lOpts+'</select></div>'
         +'    <button type="button" class="btn btn-info btn-quickadd flex-shrink-0" onclick="$(\'#modalAddLabour\').modal(\'show\')" title="Add Labour"><i class="fas fa-plus"></i></button>'
         +'  </div>'
         +'</td>'
         +'<td><select name="machines['+r+'][material]" class="form-control form-control-sm"><option>Steel</option><option>Aluminum</option><option>Stainless</option><option>Brass</option><option>Titanium</option></select></td>'
         +'<td><select name="machines['+r+'][complexity]" class="form-control form-control-sm"><option>Simple</option><option>Moderate</option><option>Complex</option><option>Very Complex</option></select></td>'
         +'<td><select name="machines['+r+'][priority]" class="form-control form-control-sm"><option>Normal</option><option>Rush</option><option>Urgent</option></select></td>'
-        +'<td><input type="number" step="0.01" name="machines['+r+'][time]" class="form-control form-control-sm m-time" value="0" onchange="updateMSub('+r+')"></td>'
+        +'<td class="text-center"><input type="number" step="0.01" name="machines['+r+'][time]" class="form-control form-control-sm m-time text-center" value="0" onchange="updateMSub('+r+')"></td>'
         +'<td><div class="input-group input-group-sm"><div class="input-group-prepend"><span class="input-group-text">$</span></div>'
-        +'<input type="number" step="0.01" name="machines['+r+'][sub_total]" id="mst_'+r+'" class="form-control bg-light m-sub" value="0.00" readonly></div></td>'
-        +'<td><button type="button" class="btn btn-sm btn-danger" onclick="rmRow(\'mr_'+r+'\');calcMachineTotal()"><i class="fas fa-trash"></i></button></td>'
+        +'<input type="number" step="0.01" name="machines['+r+'][rate]" id="mrate_'+r+'" class="form-control m-rate text-center" value="0.00" onchange="updateMSub('+r+')"></div></td>'
+        +'<td><div class="input-group input-group-sm"><div class="input-group-prepend"><span class="input-group-text bg-success text-white">$</span></div>'
+        +'<input type="number" step="0.01" name="machines['+r+'][sub_total]" id="mst_'+r+'" class="form-control bg-light m-sub font-weight-bold" value="0.00" readonly></div></td>'
+        +'<td class="text-center"><button type="button" class="btn btn-sm btn-danger" onclick="rmRow(\'mr_'+r+'\');calcMachineTotal()"><i class="fas fa-trash"></i></button></td>'
         +'</tr>'
     );
     // Apply Select2 to new row selects
     s2('#mr_'+r+' select[name*="[machine_id]"]', 'Select machine...');
     s2('#mr_'+r+' select[name*="[labour_id]"]', 'Select labour...');
 }
-function updateMSub(r){
+function updateMSub(r, fromLabour){
     var time = parseFloat($('#mr_'+r+' .m-time').val())||0;
-    var rate = parseFloat($('#mr_'+r+' .m-labour').find(':selected').data('rate'))||0;
+
+    // If called from labour change, pre-fill rate from labour data-rate
+    if(fromLabour){
+        var labourRate = parseFloat($('[name="machines['+r+'][labour_id]"]').find(':selected').data('rate'))||0;
+        if(labourRate > 0) $('#mrate_'+r).val(labourRate.toFixed(2));
+    }
+
+    // Always use the current value of the rate field (user may have overridden it)
+    var rate = parseFloat($('#mrate_'+r).val())||0;
     $('#mst_'+r).val(((time/60)*rate).toFixed(2));
     calcMachineTotal();
 }
@@ -1925,48 +2096,221 @@ function calcTapTotal(){
 function rmTap(r){ $('#tr_'+r).remove(); calcTapTotal(); }
 
 // ══════════════════════════════════════════════════════════
-// THREADS
+// THREADS — 2-row card style matching screenshot
 // ══════════════════════════════════════════════════════════
 var thCnt = 0;
+
 function addThreadRow(){
     thCnt++;
-    clearEmpty('threadsBody');
     var r = thCnt;
-    $('#threadsBody').append(
-        '<tr id="thr_'+r+'">'
-        +'<td><input type="text" name="threads['+r+'][id]" class="form-control form-control-sm" value="TH'+r+'" style="width:55px;"></td>'
-        +'<td><select name="threads['+r+'][type]" class="form-control form-control-sm"><option value="">Select</option><option>External</option><option>Internal</option></select></td>'
-        +'<td><input type="number" step="0.01" name="threads['+r+'][thread_price]" class="form-control form-control-sm th-tp" value="0" onchange="calcThSub('+r+')" style="width:80px;"></td>'
-        +'<td><input type="text" name="threads['+r+'][processed_place]" class="form-control form-control-sm" placeholder="OD/ID" style="width:70px;"></td>'
-        +'<td><select name="threads['+r+'][option]" class="form-control form-control-sm" onchange="calcThSub('+r+')">'
-        +'  <option value="" data-price="0">--</option><option value="full" data-price="2.00">Full</option><option value="partial" data-price="1.50">Partial</option>'
-        +'</select></td>'
-        +'<td><select name="threads['+r+'][direction]" class="form-control form-control-sm"><option>Right</option><option>Left</option></select></td>'
-        +'<td><input type="text" name="threads['+r+'][thread_size]" class="form-control form-control-sm" placeholder="M10×1.5" style="width:80px;"></td>'
-        +'<td><input type="number" step="0.01" name="threads['+r+'][base_price]" class="form-control form-control-sm th-bp" value="0" onchange="calcThSub('+r+')" style="width:80px;"></td>'
-        +'<td><input type="number" step="0.01" name="threads['+r+'][class_price]" class="form-control form-control-sm th-cp" value="0" onchange="calcThSub('+r+')" style="width:80px;"></td>'
-        +'<td><div class="input-group input-group-sm"><div class="input-group-prepend"><span class="input-group-text">$</span></div>'
-        +'<input type="number" step="0.01" name="threads['+r+'][sub_total]" id="thst_'+r+'" class="form-control bg-light th-sub font-weight-bold" value="0.00" readonly style="width:80px;"></div></td>'
-        +'<td><button type="button" class="btn btn-sm btn-danger" onclick="rmRow(\'thr_'+r+'\');calcThTotal()"><i class="fas fa-trash"></i></button></td>'
-        +'</tr>'
-    );
+
+    $('#threadsEmpty').hide();
+
+    // Build thread select options
+    var thrOpts = '<option value="">Select Thread</option>';
+    threadsData.forEach(function(t){
+        var sizes   = JSON.stringify(t.thread_sizes   || []);
+        var options = JSON.stringify(t.thread_options || []);
+        thrOpts += '<option value="' + t.id + '"'
+            + ' data-thread-price="'  + t.thread_price  + '"'
+            + ' data-pitch-price="'   + t.pitch_price   + '"'
+            + ' data-class-price="'   + t.class_price   + '"'
+            + ' data-size-price="'    + t.size_price    + '"'
+            + ' data-option-price="'  + t.option_price  + '"'
+            + ' data-direction="'     + t.direction     + '"'
+            + " data-thread-sizes='"  + sizes.replace(/'/g,"\\'") + "'"
+            + " data-thread-options='" + options.replace(/'/g,"\\'") + "'"
+            + '>' + t.name + '</option>';
+    });
+
+    var stdOpts = ['National Coarse','National Fine','Metric','UNC','UNF','BSP','NPT']
+        .map(function(s){ return '<option>' + s + '</option>'; }).join('');
+
+    var clsOpts = ['1A','2A','3A','1B','2B','3B','6g','6H','6e']
+        .map(function(s){ return '<option>' + s + '</option>'; }).join('');
+
+    // Build row HTML — NO line-continuation backslashes, plain concatenation
+    var h = '';
+    h += '<div class="row-card" id="thr_' + r + '">';
+    h +=   '<div class="row-card-header">';
+    h +=     '<span class="font-weight-bold" style="color:#6f42c1;">TH' + r + '</span>';
+    h +=     '<button type="button" class="btn btn-sm btn-danger" onclick="rmThread(' + r + ')"><i class="fas fa-trash"></i></button>';
+    h +=   '</div>';
+    h +=   '<div class="row-card-body">';
+
+    // ── Row 1 ──
+    h +=     '<div class="row align-items-end">';
+
+    h +=       '<div class="col-auto" style="min-width:90px">';
+    h +=         '<div class="field-label">ID</div>';
+    h +=         '<input type="text" class="form-control form-control-sm" value="TH' + r + '" readonly style="font-weight:700;background:#f8f9fa;">';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Select Thread</div>';
+    h +=         '<div class="input-group input-group-sm" style="min-width:200px">';
+    h +=           '<select name="threads[' + r + '][thread_id]" class="form-control" id="thr_sel_' + r + '" onchange="threadChanged(this,' + r + ')">' + thrOpts + '</select>';
+    h +=           '<div class="input-group-append"><button type="button" class="btn btn-quickadd" style="background:#6f42c1;color:#fff;" title="Add Thread"><i class="fas fa-plus"></i></button></div>';
+    h +=         '</div>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Threaded Price</div>';
+    h +=         '<div class="input-group input-group-sm" style="min-width:120px">';
+    h +=           '<div class="input-group-prepend"><span class="input-group-text">$</span></div>';
+    h +=           '<input type="number" step="0.01" name="threads[' + r + '][thread_price]" id="thr_tp_' + r + '" class="form-control bg-light" value="0.00" readonly>';
+    h +=         '</div>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Option</div>';
+    h +=         '<select name="threads[' + r + '][option]" id="thr_opt_' + r + '" class="form-control form-control-sm" style="min-width:150px" onchange="calcThSub(' + r + ')">';
+    h +=           '<option value="">Select Option</option>';
+    h +=         '</select>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Thread Price</div>';
+    h +=         '<div class="input-group input-group-sm" style="min-width:120px">';
+    h +=           '<div class="input-group-prepend"><span class="input-group-text">$</span></div>';
+    h +=           '<input type="number" step="0.01" name="threads[' + r + '][option_price]" id="thr_op_' + r + '" class="form-control bg-light" value="0.00" readonly>';
+    h +=         '</div>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Direction</div>';
+    h +=         '<select name="threads[' + r + '][direction]" id="thr_dir_' + r + '" class="form-control form-control-sm" style="min-width:100px">';
+    h +=           '<option value="right">Right</option><option value="left">Left</option>';
+    h +=         '</select>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Thread Size</div>';
+    h +=         '<select name="threads[' + r + '][thread_size]" id="thr_sz_' + r + '" class="form-control form-control-sm" style="min-width:130px" onchange="calcThSub(' + r + ')">';
+    h +=           '<option value="">--</option>';
+    h +=         '</select>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Size Price</div>';
+    h +=         '<div class="input-group input-group-sm" style="min-width:110px">';
+    h +=           '<div class="input-group-prepend"><span class="input-group-text">$</span></div>';
+    h +=           '<input type="number" step="0.01" name="threads[' + r + '][size_price]" id="thr_szp_' + r + '" class="form-control bg-light" value="0.00" readonly>';
+    h +=         '</div>';
+    h +=       '</div>';
+
+    h +=     '</div>'; // end row 1
+
+    // ── Row 2 ──
+    h +=     '<div class="row align-items-end mt-2">';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Standard</div>';
+    h +=         '<select name="threads[' + r + '][standard]" id="thr_std_' + r + '" class="form-control form-control-sm" style="min-width:150px">' + stdOpts + '</select>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Pitch</div>';
+    h +=         '<select name="threads[' + r + '][pitch]" id="thr_pitch_' + r + '" class="form-control form-control-sm" style="min-width:100px" onchange="calcThSub(' + r + ')">';
+    h +=           '<option value="4">4</option><option value="8">8</option><option value="12">12</option>';
+    h +=           '<option value="16">16</option><option value="20">20</option><option value="32">32</option>';
+    h +=         '</select>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Pitch Price</div>';
+    h +=         '<div class="input-group input-group-sm" style="min-width:120px">';
+    h +=           '<div class="input-group-prepend"><span class="input-group-text">$</span></div>';
+    h +=           '<input type="number" step="0.01" name="threads[' + r + '][pitch_price]" id="thr_pp_' + r + '" class="form-control bg-light" value="0.00" readonly>';
+    h +=         '</div>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Class</div>';
+    h +=         '<select name="threads[' + r + '][class]" id="thr_cls_' + r + '" class="form-control form-control-sm" style="min-width:100px" onchange="calcThSub(' + r + ')">' + clsOpts + '</select>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Class Price</div>';
+    h +=         '<div class="input-group input-group-sm" style="min-width:120px">';
+    h +=           '<div class="input-group-prepend"><span class="input-group-text">$</span></div>';
+    h +=           '<input type="number" step="0.01" name="threads[' + r + '][class_price]" id="thr_cp_' + r + '" class="form-control bg-light" value="0.00" readonly>';
+    h +=         '</div>';
+    h +=       '</div>';
+
+    h +=       '<div class="col-auto">';
+    h +=         '<div class="field-label">Thread Sub Total</div>';
+    h +=         '<div class="input-group input-group-sm" style="min-width:130px">';
+    h +=           '<div class="input-group-prepend"><span class="input-group-text bg-success text-white">$</span></div>';
+    h +=           '<input type="number" step="0.01" name="threads[' + r + '][sub_total]" id="thr_sub_' + r + '" class="form-control bg-light font-weight-bold th-sub" value="0.00" readonly>';
+    h +=         '</div>';
+    h +=       '</div>';
+
+    h +=     '</div>'; // end row 2
+    h +=   '</div>'; // row-card-body
+    h += '</div>'; // row-card
+
+    $('#threadsBody').append(h);
 }
+
+function threadChanged(sel, r){
+    var opt = $(sel).find(':selected');
+
+    $('#thr_tp_'+r).val(parseFloat(opt.data('thread-price') || 0).toFixed(2));
+    $('#thr_pp_'+r).val(parseFloat(opt.data('pitch-price')  || 0).toFixed(2));
+    $('#thr_cp_'+r).val(parseFloat(opt.data('class-price')  || 0).toFixed(2));
+    $('#thr_szp_'+r).val(parseFloat(opt.data('size-price')  || 0).toFixed(2));
+
+    var dir = opt.data('direction') || 'right';
+    $('#thr_dir_'+r).val(dir);
+
+    // Populate Options dropdown
+    var opts = opt.data('thread-options') || [];
+    if(typeof opts === 'string'){ try{ opts = JSON.parse(opts); }catch(e){ opts=[]; } }
+    var $optSel = $('#thr_opt_'+r);
+    $optSel.empty().append('<option value="">Select Option</option>');
+    (Array.isArray(opts) ? opts : []).forEach(function(o){
+        $optSel.append('<option value="' + o + '">' + o + '</option>');
+    });
+
+    // Populate Sizes dropdown
+    var sizes = opt.data('thread-sizes') || [];
+    if(typeof sizes === 'string'){ try{ sizes = JSON.parse(sizes); }catch(e){ sizes=[]; } }
+    var $szSel = $('#thr_sz_'+r);
+    $szSel.empty();
+    (Array.isArray(sizes) ? sizes : []).forEach(function(s){
+        $szSel.append('<option value="' + s + '">' + s + '</option>');
+    });
+    if(!sizes.length) $szSel.append('<option value="">--</option>');
+
+    calcThSub(r);
+}
+
 function calcThSub(r){
-    var tp  = parseFloat($('#thr_'+r+' .th-tp').val())||0;
-    var opt = parseFloat($('select[name="threads['+r+'][option]"]').find(':selected').data('price'))||0;
-    var bp  = parseFloat($('#thr_'+r+' .th-bp').val())||0;
-    var cp  = parseFloat($('#thr_'+r+' .th-cp').val())||0;
-    $('#thst_'+r).val((tp+opt+bp+cp).toFixed(2));
+    var tp  = parseFloat($('#thr_tp_'+r).val())  || 0;
+    var op  = parseFloat($('#thr_op_'+r).val())  || 0;
+    var pp  = parseFloat($('#thr_pp_'+r).val())  || 0;
+    var cp  = parseFloat($('#thr_cp_'+r).val())  || 0;
+    var szp = parseFloat($('#thr_szp_'+r).val()) || 0;
+    $('#thr_sub_'+r).val((tp + op + pp + cp + szp).toFixed(2));
     calcThTotal();
 }
+
+function rmThread(r){
+    $('#thr_'+r).remove();
+    calcThTotal();
+    if($('#threadsBody .row-card').length === 0) $('#threadsEmpty').show();
+}
+
 function calcThTotal(){
-    var t=0; $('.th-sub').each(function(){t+=parseFloat($(this).val())||0;});
+    var t = 0;
+    $('.th-sub').each(function(){ t += parseFloat($(this).val()) || 0; });
     $('#threadsTotal').text(t.toFixed(2));
-    $('#stab_threads').text('$'+t.toFixed(2));
+    $('#threadsTotalFoot').text(t.toFixed(2));
+    $('#stab_threads').text('$' + t.toFixed(2));
     recalcAll();
 }
 
-// ══════════════════════════════════════════════════════════
 // SECONDARY OPS
 // ══════════════════════════════════════════════════════════
 var scCnt = 0;
@@ -2101,6 +2445,17 @@ function recalcAll(){
     $('#sum_grand_total').text(gTotal.toFixed(2));
     $('#grandEachPrice').val(gEach.toFixed(2));
     $('#grandTotalPrice').val(gTotal.toFixed(2));
+
+    // Update top totals bar
+    $('#tb_material').text(mat.toFixed(2));
+    $('#tb_machine').text(mach.toFixed(2));
+    $('#tb_ops').text(ops.toFixed(2));
+    $('#tb_items').text(itms.toFixed(2));
+    $('#tb_taps').text(taps.toFixed(2));
+    $('#tb_threads').text(thrs.toFixed(2));
+    $('#tb_secondary').text(sec.toFixed(2));
+    $('#tb_plating').text(pl.toFixed(2));
+    $('#tb_grand').text(gTotal.toFixed(2));
 }
 
 // ══════════════════════════════════════════════════════════

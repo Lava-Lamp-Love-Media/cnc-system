@@ -8,6 +8,7 @@ use App\Http\Controllers\CompanyAdmin\HoleController;
 use App\Http\Controllers\CompanyAdmin\InventoryController;
 use App\Http\Controllers\CompanyAdmin\ItemController;
 use App\Http\Controllers\CompanyAdmin\MachineController;
+use App\Http\Controllers\CompanyAdmin\MaterialController;
 use App\Http\Controllers\CompanyAdmin\OperationController;
 use App\Http\Controllers\CompanyAdmin\OperatorController;
 use App\Http\Controllers\CompanyAdmin\PurchaseOrderController;
@@ -96,6 +97,9 @@ Route::middleware('auth')->group(function () {
             Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
             Route::get('inventory/transactions', [InventoryController::class, 'transactions'])->name('inventory.transactions');
             Route::post('inventory/{item}/adjust', [InventoryController::class, 'adjust'])->name('inventory.adjust');
+            Route::resource('materials', MaterialController::class);
+            Route::post('materials/{material}/duplicate', [MaterialController::class, 'duplicate'])->name('materials.duplicate');
+            Route::get('materials-list', [MaterialController::class, 'ajaxList'])->name('materials.ajax-list');
 
 
 

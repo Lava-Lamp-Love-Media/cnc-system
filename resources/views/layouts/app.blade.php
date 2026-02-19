@@ -217,6 +217,11 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
             border-radius: 10px;
             margin-bottom: 1.5rem;
+            overflow: visible !important;
+        }
+        .card .card-footer {
+            border-radius: 0 0 10px 10px;
+            background: #fff;
         }
 
         .card-header {
@@ -706,8 +711,8 @@
                         <!-- Settings Menu -->
                         <li class="nav-header">SETTINGS & CONFIGURATION</li>
 
-                        <li class="nav-item has-treeview {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') ? 'active' : '' }}">
+                        <li class="nav-item has-treeview {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') || request()->routeIs('company.materials.*') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ request()->routeIs('company.holes.*') || request()->routeIs('company.chamfers.*') || request()->routeIs('company.deburs.*') || request()->routeIs('company.taps.*') || request()->routeIs('company.threads.*') || request()->routeIs('company.materials.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-cogs"></i>
                                 <p>
                                     Specifications
@@ -715,6 +720,15 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('company.materials.index') }}" class="nav-link {{ request()->routeIs('company.materials.*') ? 'active' : '' }}">
+                                        <i class="fas fa-layer-group nav-icon text-info"></i>
+                                        <p>
+                                            Materials
+                                            <span class="badge badge-info right">{{ \App\Models\Material::where('company_id', Auth::user()->company_id)->count() }}</span>
+                                        </p>
+                                    </a>
+                                </li>
                                 <li class="nav-item">
                                     <a href="{{ route('company.holes.index') }}" class="nav-link {{ request()->routeIs('company.holes.*') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon text-primary"></i>

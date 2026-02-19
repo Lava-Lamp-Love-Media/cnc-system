@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Debur;
 use App\Models\Item;
 use App\Models\Machine;
+use App\Models\Material;
 use App\Models\Operation;
 use App\Models\Operator;
 use App\Models\Tap;
@@ -20,95 +21,107 @@ use Illuminate\Support\Facades\Log;
 
 class QuoteController extends Controller
 {
-
     public function create()
     {
         $companyId = auth()->user()->company_id;
 
         $customers  = Customer::where('company_id', $companyId)
             ->with(['defaultShippingAddress', 'billingAddress'])
-            ->orderBy('name')
-            ->get();
+            ->orderBy('name')->get();
 
         $machines   = Machine::where('company_id', $companyId)
-            ->where('status', 'active')
-            ->orderBy('name')
-            ->get();
+            ->where('status', 'active')->orderBy('name')->get();
 
         $operations = Operation::where('company_id', $companyId)
-            ->where('status', 'active')
-            ->orderBy('name')
-            ->get();
+            ->where('status', 'active')->orderBy('name')->get();
 
         $items      = Item::where('company_id', $companyId)
-            ->orderBy('name')
-            ->get();
+            ->orderBy('name')->get();
 
         $vendors    = Vendor::where('company_id', $companyId)
-            ->orderBy('name')
-            ->get();
+            ->orderBy('name')->get();
 
         $taps       = Tap::where('company_id', $companyId)
-            ->orderBy('name')
-            ->get();
-
-        $chamfers   = Chamfer::where('company_id', $companyId)
-            ->where('status', 'active')
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get();
-
-        $deburs     = Debur::where('company_id', $companyId)
-            ->where('status', 'active')
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get();
+            ->orderBy('name')->get();
 
         $threads    = Thread::where('company_id', $companyId)
-            ->orderBy('name')
-            ->get();
+            ->where('status', 'active')->orderBy('sort_order')->orderBy('name')->get();
+
+        $chamfers   = Chamfer::where('company_id', $companyId)
+            ->where('status', 'active')->orderBy('sort_order')->orderBy('name')->get();
+
+        $deburs     = Debur::where('company_id', $companyId)
+            ->where('status', 'active')->orderBy('sort_order')->orderBy('name')->get();
 
         $operators  = Operator::where('company_id', $companyId)
-            ->where('status', 'active')
-            ->orderBy('name')
-            ->get();
+            ->where('status', 'active')->orderBy('name')->get();
 
-        // ✅  generateQuoteNumber is defined on the Quote model
-        // $quoteNumber = Quote::generateQuoteNumber($companyId);
         $quoteNumber = 'Q' . time();
 
-        // Pre-built plain arrays for JS – avoids Blade ParseError with @json + closures
-        $machinesJs   = $machines->map(function ($m) {
-            return ['id' => $m->id, 'name' => $m->name, 'code' => $m->machine_code, 'model' => $m->model];
-        })->values()->toArray();
+        // Pre-built plain arrays for JS — avoids Blade ParseError with @json + closures
+        $machinesJs = $machines->map(fn($m) => [
+            'id' => $m->id,
+            'name' => $m->name,
+            'code' => $m->machine_code,
+            'model' => $m->model,
+        ])->values()->toArray();
 
-        $operationsJs = $operations->map(function ($o) {
-            return ['id' => $o->id, 'name' => $o->name, 'rate' => (float) $o->hourly_rate];
-        })->values()->toArray();
+        $operationsJs = $operations->map(fn($o) => [
+            'id' => $o->id,
+            'name' => $o->name,
+            'rate' => (float) $o->hourly_rate,
+        ])->values()->toArray();
 
-        $itemsJs = $items->map(function ($i) {
-            return ['id' => $i->id, 'name' => $i->name, 'sell_price' => (float) $i->sell_price, 'description' => $i->description ?? ''];
-        })->values()->toArray();
+        $itemsJs = $items->map(fn($i) => [
+            'id' => $i->id,
+            'name' => $i->name,
+            'sell_price' => (float) $i->sell_price,
+            'description' => $i->description ?? '',
+        ])->values()->toArray();
 
-        $vendorsJs = $vendors->map(function ($v) {
-            return ['id' => $v->id, 'name' => $v->name];
-        })->values()->toArray();
+        $vendorsJs = $vendors->map(fn($v) => [
+            'id' => $v->id,
+            'name' => $v->name,
+        ])->values()->toArray();
 
-        $tapsJs = $taps->map(function ($t) {
-            return ['id' => $t->id, 'name' => $t->name, 'tap_price' => (float) ($t->tap_price ?? 0)];
-        })->values()->toArray();
+        $tapsJs = $taps->map(fn($t) => [
+            'id' => $t->id,
+            'name' => $t->name,
+            'tap_price' => (float) ($t->tap_price ?? 0),
+        ])->values()->toArray();
 
-        $operatorsJs = $operators->map(function ($o) {
-            return ['id' => $o->id, 'name' => $o->name, 'rate' => 0];
-        })->values()->toArray();
+        $threadsJs = $threads->map(fn($t) => [
+            'id'             => $t->id,
+            'name'           => $t->name,
+            'thread_type'    => $t->thread_type,
+            'thread_standard' => $t->thread_standard,
+            'direction'      => $t->direction,
+            'thread_sizes'   => $t->thread_sizes   ?? [],
+            'thread_options' => $t->thread_options ?? [],
+            'thread_price'   => (float) $t->thread_price,
+            'option_price'   => (float) $t->option_price,
+            'pitch_price'    => (float) $t->pitch_price,
+            'class_price'    => (float) $t->class_price,
+            'size_price'     => (float) $t->size_price,
+        ])->values()->toArray();
 
-        $chamfersJs = $chamfers->map(function ($c) {
-            return ['id' => $c->id, 'name' => $c->name, 'unit_price' => (float) $c->unit_price];
-        })->values()->toArray();
+        $operatorsJs = $operators->map(fn($o) => [
+            'id' => $o->id,
+            'name' => $o->name,
+            'rate' => 0,
+        ])->values()->toArray();
 
-        $debursJs = $deburs->map(function ($d) {
-            return ['id' => $d->id, 'name' => $d->name, 'unit_price' => (float) $d->unit_price];
-        })->values()->toArray();
+        $chamfersJs = $chamfers->map(fn($c) => [
+            'id' => $c->id,
+            'name' => $c->name,
+            'unit_price' => (float) $c->unit_price,
+        ])->values()->toArray();
+
+        $debursJs = $deburs->map(fn($d) => [
+            'id' => $d->id,
+            'name' => $d->name,
+            'unit_price' => (float) $d->unit_price,
+        ])->values()->toArray();
 
         return view('backend.companyadmin.quotes.create', compact(
             'customers',
@@ -127,9 +140,10 @@ class QuoteController extends Controller
             'itemsJs',
             'vendorsJs',
             'tapsJs',
+            'threadsJs',
             'operatorsJs',
             'chamfersJs',
-            'debursJs'
+            'debursJs',
         ));
     }
 
