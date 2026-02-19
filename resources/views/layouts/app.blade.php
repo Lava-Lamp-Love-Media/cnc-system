@@ -17,6 +17,33 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Toastr -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap4-theme@1.0.0/dist/select2-bootstrap4.min.css">
+
+    <!-- Page Loader -->
+    <style>
+    #globalPageLoader {
+        position:fixed; inset:0; background:rgba(255,255,255,.92);
+        z-index:99999; display:flex; flex-direction:column;
+        align-items:center; justify-content:center;
+        transition:opacity .35s ease; pointer-events:none;
+    }
+    #globalPageLoader.hidden { opacity:0; }
+    #globalPageLoader .gpl-spinner {
+        width:48px; height:48px;
+        border:5px solid #e9ecef;
+        border-top-color:#667eea;
+        border-radius:50%;
+        animation:gplSpin .75s linear infinite;
+    }
+    #globalPageLoader .gpl-text {
+        margin-top:12px; font-size:13px; font-weight:600;
+        color:#495057; letter-spacing:.4px;
+        font-family:'Source Sans Pro',sans-serif;
+    }
+    @keyframes gplSpin { to { transform:rotate(360deg); } }
+    </style>
 
     @yield('style')
 
@@ -345,6 +372,12 @@
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
+    <!-- Global Page Loader -->
+    <div id="globalPageLoader">
+        <div class="gpl-spinner"></div>
+        <div class="gpl-text">Loading...</div>
+    </div>
+
     <div class="wrapper">
 
         <!-- ✅ TOP MENUBAR -->
@@ -807,6 +840,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Toastr -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
         // Toastr Configuration
@@ -889,6 +924,59 @@
     </script>
 
     @stack('scripts')
+
+    <script>
+    // ── Global Page Loader ──────────────────────────────
+    (function(){
+        var loader = document.getElementById('globalPageLoader');
+
+        // Hide loader when page is fully loaded
+        function hideGlobalLoader(){
+            if(!loader) return;
+            loader.classList.add('hidden');
+            setTimeout(function(){ loader.style.display='none'; }, 400);
+        }
+
+        // Show loader
+        function showGlobalLoader(msg){
+            if(!loader) return;
+            var t = loader.querySelector('.gpl-text');
+            if(t) t.textContent = msg || 'Loading...';
+            loader.style.display = 'flex';
+            loader.classList.remove('hidden');
+        }
+
+        // Hide after page load
+        if(document.readyState === 'complete'){
+            hideGlobalLoader();
+        } else {
+            window.addEventListener('load', hideGlobalLoader);
+        }
+
+        // Show on any link click (excluding anchors, modals, dropdowns)
+        document.addEventListener('click', function(e){
+            var a = e.target.closest('a[href]');
+            if(!a) return;
+            var href = a.getAttribute('href');
+            if(!href || href === '#' || href.startsWith('javascript') || href.startsWith('mailto')) return;
+            if(a.getAttribute('data-toggle') || a.getAttribute('data-dismiss')) return;
+            if(a.getAttribute('target') === '_blank') return;
+            showGlobalLoader('Loading...');
+        });
+
+        // Show on form submit (except AJAX forms)
+        document.addEventListener('submit', function(e){
+            var form = e.target;
+            // Don't show for AJAX / modal forms
+            if(form.id && (form.id === 'logout-form' || form.id.startsWith('quick'))) return;
+            showGlobalLoader('Saving...');
+        });
+
+        // Expose globally
+        window.showPageLoader = showGlobalLoader;
+        window.hidePageLoader = hideGlobalLoader;
+    })();
+    </script>
 </body>
 
 </html>

@@ -11,6 +11,7 @@ use App\Http\Controllers\CompanyAdmin\MachineController;
 use App\Http\Controllers\CompanyAdmin\OperationController;
 use App\Http\Controllers\CompanyAdmin\OperatorController;
 use App\Http\Controllers\CompanyAdmin\PurchaseOrderController;
+use App\Http\Controllers\CompanyAdmin\QuoteController;
 use App\Http\Controllers\CompanyAdmin\TapController;
 use App\Http\Controllers\CompanyAdmin\ThreadController;
 use App\Http\Controllers\CompanyAdmin\VendorController;
@@ -98,13 +99,8 @@ Route::middleware('auth')->group(function () {
 
 
 
-
-
-
-
-
-            Route::get('quotes/create', function () {
-                return view('backend.companyadmin.quotes.create');
-            })->name('quotes.create');
+            Route::get('quotes/create', [QuoteController::class, 'create'])->name('quotes.create');
+            Route::post('quotes', [QuoteController::class, 'store'])->name('quotes.store');
+            Route::post('index', [QuoteController::class, 'index'])->name('quotes.index');
         });
 });
