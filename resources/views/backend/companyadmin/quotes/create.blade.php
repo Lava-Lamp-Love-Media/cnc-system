@@ -155,6 +155,7 @@
 {{-- ══ TOTALS BAR ══ --}}
 <div id="stickyHeader">
 
+
 {{-- ══ CARD 1: HEADER ══ --}}
 <div class="card">
     <div class="card-header">
@@ -207,7 +208,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <div class="form-group mb-3">
                     <label class="field-label">Qty <span class="text-danger">*</span></label>
                     <input type="number" name="quantity" id="globalQty"
@@ -215,7 +216,7 @@
                            value="{{ old('quantity',1) }}" min="1" onchange="recalcAll()">
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <div class="form-group mb-3">
                     <label class="field-label">Setup $</label>
                     <div class="input-group">
@@ -224,6 +225,7 @@
                     </div>
                 </div>
             </div>
+         
         </div>
 
         {{-- ── Row 2: Dates ── --}}
@@ -259,16 +261,16 @@
                 </div>
             </div>
 
-                        <div class="col-md-2">
-                <div class="form-group mb-2">
+               <div class="col-md-2">
+                <div class="form-group mb-3">
                     <label class="field-label">Part #</label>
                     <input type="text" name="part_number" class="form-control" value="{{ old('part_number') }}" placeholder="e.g. P-1001">
                 </div>
             </div>
             <div class="col-md-2">
-                <div class="form-group mb-2">
+                <div class="form-group mb-3">
                     <label class="field-label">Cage Number</label>
-                    <input type="text" name="cage_number" class="form-control text-center" value="{{ old('cage_number') }}" placeholder="e.g. 1">
+                    <input type="text" name="cage_number" class="form-control text-center" value="{{ old('cage_number') }}" placeholder="A">
                 </div>
             </div>
 
@@ -431,6 +433,7 @@
                     <select name="metal_alloy" id="metalAlloySelect" class="form-control">
                         <option value="">-- Select Material --</option>
                     </select>
+                    <small class="text-muted" id="materialFilterHint">Filtered by unit &amp; type</small>
                 </div>
             </div>
             <div class="col-md-2">
@@ -657,13 +660,21 @@
                             <th>Priority</th>
                             <th class="text-center" style="min-width:90px;">Time<br><small class="font-weight-normal">(min)</small></th>
                             <th class="text-center" style="min-width:100px;">Rate<br><small class="font-weight-normal">($/hr)</small></th>
-                            <th class="text-center" style="min-width:110px;">Sub Total</th>
+                            <th class="text-center" style="min-width:110px;">Total</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody id="machineBody">
                         <tr class="empty-row"><td colspan="12" class="text-center text-muted py-3">Click "Add Machine" to begin</td></tr>
                     </tbody>
+                    <tfoot>
+                        <tr class="table-light">
+                            <td colspan="10" class="text-right font-weight-bold">Sub Total:</td>
+                            <td class="text-right font-weight-bold text-success" colspan="2">
+                                $<span id="machineTotalFoot">0.00</span>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -691,13 +702,21 @@
                             <th style="min-width:180px;">Labour</th>
                             <th>Time (min)</th>
                             <th>Rate ($/hr)</th>
-                            <th>Sub Total</th>
+                            <th>Total</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody id="operationBody">
                         <tr class="empty-row"><td colspan="6" class="text-center text-muted py-3">Click "Add Operation" to begin</td></tr>
                     </tbody>
+                    <tfoot>
+                        <tr class="table-light">
+                            <td colspan="4" class="text-right font-weight-bold">Sub Total:</td>
+                            <td class="text-right font-weight-bold text-success" colspan="2">
+                                $<span id="operationTotalFoot">0.00</span>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -725,13 +744,21 @@
                             <th>Description</th>
                             <th style="width:80px;">Qty</th>
                             <th>Rate ($)</th>
-                            <th>Sub Total</th>
+                            <th>Total</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody id="itemsBody">
                         <tr class="empty-row"><td colspan="6" class="text-center text-muted py-3">Click "Add Item" to begin</td></tr>
                     </tbody>
+                    <tfoot>
+                        <tr class="table-light">
+                            <td colspan="4" class="text-right font-weight-bold">Sub Total:</td>
+                            <td class="text-right font-weight-bold text-success" colspan="2">
+                                $<span id="itemsTotalFoot">0.00</span>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -754,7 +781,7 @@
             <p class="text-muted text-center py-2 mb-0" id="holesEmpty">Click "Add Hole" to begin</p>
         </div>
         <div class="card-footer d-flex justify-content-end">
-            <strong>Holes Total: &nbsp; $<span id="holesTotalFoot">0.00</span></strong>
+            <strong>Sub Total: &nbsp; $<span id="holesTotalFoot">0.00</span></strong>
         </div>
     </div>
 </div>
@@ -775,7 +802,7 @@
             <p class="text-muted text-center py-2 mb-0" id="tapsEmpty">Click "Add Tap" to begin</p>
         </div>
         <div class="card-footer d-flex justify-content-end">
-            <strong>Taps Total: &nbsp; $<span id="tapsTotalFoot">0.00</span></strong>
+            <strong>Sub Total: &nbsp; $<span id="tapsTotalFoot">0.00</span></strong>
         </div>
     </div>
 </div>
@@ -796,7 +823,7 @@
             <p class="text-muted text-center py-2 mb-0" id="threadsEmpty">Click "Add Thread" to begin</p>
         </div>
         <div class="card-footer d-flex justify-content-end">
-            <strong>Thread Total: &nbsp; $<span id="threadsTotalFoot">0.00</span></strong>
+            <strong>Sub Total: &nbsp; $<span id="threadsTotalFoot">0.00</span></strong>
         </div>
     </div>
 </div>
@@ -821,7 +848,7 @@
                             <th style="min-width:180px;">Operation Name</th>
                             <th style="min-width:200px;">Vendor</th>
                             <th>Price Type</th><th style="width:80px;">Qty</th>
-                            <th>Unit Price ($)</th><th>Sub Total</th><th></th>
+                            <th>Unit Price ($)</th><th>Total</th><th></th>
                         </tr>
                     </thead>
                     <tbody id="secondaryBody">
@@ -940,14 +967,91 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-7">
-                <table class="table table-sm table-bordered">
-                    <thead class="thead-dark"><tr><th>Component</th><th>Each</th><th>Total (×qty)</th></tr></thead>
+                <table class="table table-sm table-bordered mb-0" id="summaryTable">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th style="min-width:140px;">Component</th>
+                            <th class="text-right" style="min-width:110px;">Each ($)</th>
+                            <th class="text-center" style="min-width:60px;">Qty</th>
+                            <th class="text-right" style="min-width:120px;">Qty Total ($)</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        @foreach([['material','Material'],['machine','Machine'],['ops','Operations'],['items','Items'],['holes','Holes'],['taps','Taps'],['threads','Threads'],['secondary','Secondary'],['plating','Plating/Heat']] as [$k,$lbl])
-                        <tr><td>{{$lbl}}</td><td>$<span id="sum_{{$k}}_each">0.00</span></td><td>$<span id="sum_{{$k}}_total">0.00</span></td></tr>
-                        @endforeach
+                        <tr>
+                            <td><i class="fas fa-layer-group text-primary mr-1"></i> Material</td>
+                            <td class="text-right">$<span id="sum_material_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-secondary qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold text-dark">$<span id="sum_material_total">0.00</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-industry text-secondary mr-1"></i> Machine</td>
+                            <td class="text-right">$<span id="sum_machine_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-secondary qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold text-dark">$<span id="sum_machine_total">0.00</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-cog text-info mr-1"></i> Operations</td>
+                            <td class="text-right">$<span id="sum_ops_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-secondary qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold text-dark">$<span id="sum_ops_total">0.00</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-boxes text-warning mr-1"></i> Items</td>
+                            <td class="text-right">$<span id="sum_items_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-secondary qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold text-dark">$<span id="sum_items_total">0.00</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="far fa-circle text-primary mr-1"></i> Holes</td>
+                            <td class="text-right">$<span id="sum_holes_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-secondary qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold text-dark">$<span id="sum_holes_total">0.00</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-screwdriver text-danger mr-1"></i> Taps</td>
+                            <td class="text-right">$<span id="sum_taps_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-secondary qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold text-dark">$<span id="sum_taps_total">0.00</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-compress-arrows-alt mr-1" style="color:#6f42c1;"></i> Threads</td>
+                            <td class="text-right">$<span id="sum_threads_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-secondary qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold text-dark">$<span id="sum_threads_total">0.00</span></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-layer-group mr-1" style="color:#fd7e14;"></i> Secondary Ops</td>
+                            <td class="text-right">$<span id="sum_secondary_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-secondary qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold text-dark">$<span id="sum_secondary_total">0.00</span></td>
+                        </tr>
+                        <tr class="table-info">
+                            <td><i class="fas fa-tint mr-1"></i> <strong>Plating</strong></td>
+                            <td class="text-right">$<span id="sum_plating_each">0.00</span></td>
+                            <td class="text-center text-muted">—</td>
+                            <td class="text-right font-weight-bold">$<span id="sum_plating_total">0.00</span></td>
+                        </tr>
+                        <tr class="table-warning">
+                            <td><i class="fas fa-fire mr-1"></i> <strong>Heat Treatment</strong></td>
+                            <td class="text-right">$<span id="sum_heat_each">0.00</span></td>
+                            <td class="text-center text-muted">—</td>
+                            <td class="text-right font-weight-bold">$<span id="sum_heat_total">0.00</span></td>
+                        </tr>
                     </tbody>
-                    <tfoot><tr class="table-dark font-weight-bold"><td>GRAND TOTAL</td><td>$<span id="sum_grand_each">0.00</span></td><td>$<span id="sum_grand_total">0.00</span></td></tr></tfoot>
+                    <tfoot>
+                        <tr class="table-success">
+                            <td class="font-weight-bold">Sub Total</td>
+                            <td class="text-right font-weight-bold">$<span id="sum_subtotal_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-success qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold">$<span id="sum_subtotal_total">0.00</span></td>
+                        </tr>
+                        <tr class="table-dark">
+                            <td class="font-weight-bold"><i class="fas fa-calculator mr-1"></i> GRAND TOTAL</td>
+                            <td class="text-right font-weight-bold">$<span id="sum_grand_each">0.00</span></td>
+                            <td class="text-center"><span class="badge badge-light qty-badge">1</span></td>
+                            <td class="text-right font-weight-bold text-success" style="font-size:15px;">$<span id="sum_grand_total">0.00</span></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
             <div class="col-md-5">
@@ -1662,6 +1766,7 @@ function updateMSub(r, fromLabour){
 function calcMachineTotal(){
     var t=0; $('.m-sub').each(function(){t+=parseFloat($(this).val())||0;});
     $('#machineTotal').text(t.toFixed(2));
+    $('#machineTotalFoot').text(t.toFixed(2));
     $('#stab_machine').text('$'+t.toFixed(2));
     recalcAll();
 }
@@ -1711,6 +1816,7 @@ function updateOpSub(r){
 function calcOpTotal(){
     var t=0; $('.op-sub').each(function(){t+=parseFloat($(this).val())||0;});
     $('#operationTotal').text(t.toFixed(2));
+    $('#operationTotalFoot').text(t.toFixed(2));
     $('#stab_ops').text('$'+t.toFixed(2));
     recalcAll();
 }
@@ -1757,6 +1863,7 @@ function updateItSub(r){
 function calcItemTotal(){
     var t=0; $('.it-sub').each(function(){t+=parseFloat($(this).val())||0;});
     $('#itemsTotal').text(t.toFixed(2));
+    $('#itemsTotalFoot').text(t.toFixed(2));
     $('#stab_items').text('$'+t.toFixed(2));
     recalcAll();
 }
@@ -1897,7 +2004,7 @@ function addHoleRow(){
         +'      </div>'
         +'    </div>'
 
-        +'    <div class="col-auto"><div class="field-label"><strong>Sub Total</strong></div>'
+        +'    <div class="col-auto"><div class="field-label"><strong>Total</strong></div>'
         +'      <input type="number" step="0.01" name="holes['+r+'][sub_total]" id="hst_'+r+'" class="form-control form-control-sm bg-white font-weight-bold h-sub" style="min-width:100px;" value="0.00" readonly>'
         +'    </div>'
 
@@ -2063,7 +2170,7 @@ function addTapRow(){
         +'      </div>'
         +'    </div>'
 
-        +'    <div class="col-auto"><div class="field-label"><strong>Sub Total</strong></div>'
+        +'    <div class="col-auto"><div class="field-label"><strong>Total</strong></div>'
         +'      <input type="number" step="0.01" name="taps['+r+'][sub_total]" id="tst_'+r+'" class="form-control form-control-sm bg-white font-weight-bold tp-sub" style="min-width:100px;" value="0.00" readonly>'
         +'    </div>'
 
@@ -2239,7 +2346,7 @@ function addThreadRow(){
     h +=       '</div>';
 
     h +=       '<div class="col-auto">';
-    h +=         '<div class="field-label">Thread Sub Total</div>';
+    h +=         '<div class="field-label">Total</div>';
     h +=         '<div class="input-group input-group-sm" style="min-width:130px">';
     h +=           '<div class="input-group-prepend"><span class="input-group-text bg-success text-white">$</span></div>';
     h +=           '<input type="number" step="0.01" name="threads[' + r + '][sub_total]" id="thr_sub_' + r + '" class="form-control bg-light font-weight-bold th-sub" value="0.00" readonly>';
@@ -2414,39 +2521,80 @@ function updatePlatingHeatBadge(){
 // GRAND TOTAL
 // ══════════════════════════════════════════════════════════
 function recalcAll(){
-    var qty = parseInt($('#globalQty').val())||1;
-    var mat  = parseFloat($('#totalPinPrice').val())||0;
-    var mach = parseFloat($('#machineTotal').text())||0;
-    var ops  = parseFloat($('#operationTotal').text())||0;
-    var itms = parseFloat($('#itemsTotal').text())||0;
-    var holes= parseFloat($('#holesTotal').text())||0;
-    var taps = parseFloat($('#tapsTotal').text())||0;
-    var thrs = parseFloat($('#threadsTotal').text())||0;
-    var sec  = parseFloat($('#secondaryTotal').text())||0;
-    var pl   = (parseFloat($('#platingTotal').val())||0) + (parseFloat($('#heatTotal').val())||0);
-    var brk  = parseFloat($('#breakInCharge').val())||0;
+    var qty = parseInt($('#globalQty').val()) || 1;
 
-    var parts = {material:mat, machine:mach, ops:ops, items:itms, holes:holes,
-                  taps:taps, threads:thrs, secondary:sec, plating:pl};
+    // ── Section sub-totals (sum of all row sub-totals in each section) ──
+    var mat  = parseFloat($('#totalPinPrice').val())    || 0;
+    var mach = parseFloat($('#machineTotal').text())    || 0;
+    var ops  = parseFloat($('#operationTotal').text())  || 0;
+    var itms = parseFloat($('#itemsTotal').text())      || 0;
+    var holes= parseFloat($('#holesTotal').text())      || 0;
+    var taps = parseFloat($('#tapsTotal').text())       || 0;
+    var thrs = parseFloat($('#threadsTotal').text())    || 0;
+    var sec  = parseFloat($('#secondaryTotal').text())  || 0;
+    // Plating and Heat Treatment are standalone (not ×qty)
+    var plat = parseFloat($('#platingTotal').val())     || 0;
+    var heat = parseFloat($('#heatTotal').val())        || 0;
+    var brk  = parseFloat($('#breakInCharge').val())    || 0;
 
-    var sum = 0;
-    for(var k in parts){
-        sum += parts[k];
-        $('#sum_'+k+'_each').text((parts[k]/qty).toFixed(2));
-        $('#sum_'+k+'_total').text(parts[k].toFixed(2));
+    // ── Update Qty display everywhere ──
+    $('#sum_qty_display').text('×' + qty);
+    $('.qty-ref').text(qty);
+
+    // ── Sections that multiply by Qty ──
+    // Sections that multiply by qty
+    // each = section sub total (for 1 piece)
+    // total = each × qty
+    var sections = {
+        material:  mat,
+        machine:   mach,
+        ops:       ops,
+        items:     itms,
+        holes:     holes,
+        taps:      taps,
+        threads:   thrs,
+        secondary: sec,
+    };
+
+    var sumEach  = 0;  // total each (1 piece cost)
+    var sumTotal = 0;  // total × qty
+
+    for (var k in sections) {
+        var each  = sections[k];          // sub total = cost for 1 piece
+        var total = each * qty;           // × qty
+        sumEach  += each;
+        sumTotal += total;
+        $('#sum_' + k + '_each').text(each.toFixed(2));
+        $('#sum_' + k + '_total').text(total.toFixed(2));
     }
-    sum += brk;
 
-    var override = parseFloat($('#overridePrice').val())||0;
-    var gEach    = override > 0 ? override : (sum/qty);
-    var gTotal   = gEach * qty;
+    // Plating — not × qty, shown as fixed cost
+    $('#sum_plating_each').text(plat.toFixed(2));
+    $('#sum_plating_total').text(plat.toFixed(2));
+
+    // Heat Treatment — not × qty, shown as fixed cost
+    $('#sum_heat_each').text(heat.toFixed(2));
+    $('#sum_heat_total').text(heat.toFixed(2));
+
+    // Sub Total row
+    $('#sum_subtotal_each').text(sumEach.toFixed(2));
+    $('#sum_subtotal_total').text(sumTotal.toFixed(2));
+
+    // Grand Total = (sections × qty) + plating + heat + break-in
+    var grandTotal = sumTotal + plat + heat + brk;
+    var override   = parseFloat($('#overridePrice').val()) || 0;
+    var gTotal     = override > 0 ? (override * qty) : grandTotal;
+    var gEach      = gTotal / qty;
+
+    // Update Qty badges everywhere
+    $('.qty-badge').text(qty);
 
     $('#sum_grand_each').text(gEach.toFixed(2));
     $('#sum_grand_total').text(gTotal.toFixed(2));
     $('#grandEachPrice').val(gEach.toFixed(2));
     $('#grandTotalPrice').val(gTotal.toFixed(2));
 
-    // Update top totals bar
+    // Update sticky top totals bar
     $('#tb_material').text(mat.toFixed(2));
     $('#tb_machine').text(mach.toFixed(2));
     $('#tb_ops').text(ops.toFixed(2));
@@ -2454,7 +2602,7 @@ function recalcAll(){
     $('#tb_taps').text(taps.toFixed(2));
     $('#tb_threads').text(thrs.toFixed(2));
     $('#tb_secondary').text(sec.toFixed(2));
-    $('#tb_plating').text(pl.toFixed(2));
+    $('#tb_plating').text((plat + heat).toFixed(2));
     $('#tb_grand').text(gTotal.toFixed(2));
 }
 
