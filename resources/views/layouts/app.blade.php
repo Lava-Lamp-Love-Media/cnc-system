@@ -395,10 +395,22 @@
 
             <ul class="navbar-nav">
                 <!-- CNC Quote -->
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('company.quotes.create') }}">
-                        <i class="fas fa-file-invoice"></i> CNC Quote
+  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fas fa-file-invoice"></i> Quote
                     </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ route('company.quotes.create') }}">
+                            <i class="fas fa-plus text-success"></i> Create Quote
+                        </a>
+                        <a class="dropdown-item" href="{{ route('company.quotes.index') }}">
+                            <i class="fas fa-list text-primary"></i> Quote List
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ route('company.director.index') }}">
+                            <i class="fas fa-industry text-warning"></i> Shop Director
+                        </a>
+                    </div>
                 </li>
 
                 <!-- Customer -->

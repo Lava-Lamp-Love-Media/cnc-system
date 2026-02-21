@@ -4,6 +4,7 @@ use App\Http\Controllers\CompanyAdmin\ChamferController;
 use App\Http\Controllers\CompanyAdmin\CompanyUserController;
 use App\Http\Controllers\CompanyAdmin\CustomerController;
 use App\Http\Controllers\CompanyAdmin\DeburController;
+use App\Http\Controllers\CompanyAdmin\DirectorController;
 use App\Http\Controllers\CompanyAdmin\HoleController;
 use App\Http\Controllers\CompanyAdmin\InventoryController;
 use App\Http\Controllers\CompanyAdmin\ItemController;
@@ -114,5 +115,6 @@ Route::middleware('auth')->group(function () {
 
             // ── Main resource ──
             Route::resource('quotes', QuoteController::class);
+            Route::get('director', [DirectorController::class, 'index'])->name('director.index');
         });
 });
