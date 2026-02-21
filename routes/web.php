@@ -102,9 +102,17 @@ Route::middleware('auth')->group(function () {
             Route::get('materials-list', [MaterialController::class, 'ajaxList'])->name('materials.ajax-list');
 
 
+            // ── Extra routes BEFORE resource (prevents naming conflicts) ──
+            Route::patch('quotes/bulk-status',          [QuoteController::class, 'bulkStatus'])->name('quotes.bulk-status');
+            Route::delete('quotes/bulk-delete',         [QuoteController::class, 'bulkDelete'])->name('quotes.bulk-delete');
+            Route::patch('quotes/reorder-children',     [QuoteController::class, 'reorderChildren'])->name('quotes.reorder-children');
+            Route::patch('quotes/{quote}/status',       [QuoteController::class, 'changeStatus'])->name('quotes.status');
+            Route::post('quotes/{quote}/reorder',       [QuoteController::class, 'reorder'])->name('quotes.reorder');
+            Route::patch('quotes/{quote}/move-parent',  [QuoteController::class, 'moveParent'])->name('quotes.move-parent');
+            Route::post('quotes/{quote}/duplicate',     [QuoteController::class, 'duplicate'])->name('quotes.duplicate');
+            Route::get('quotes/materials',              [QuoteController::class, 'ajaxList'])->name('quotes.materials');
 
-            Route::get('quotes/create', [QuoteController::class, 'create'])->name('quotes.create');
-            Route::post('quotes', [QuoteController::class, 'store'])->name('quotes.store');
-            Route::post('index', [QuoteController::class, 'index'])->name('quotes.index');
+            // ── Main resource ──
+            Route::resource('quotes', QuoteController::class);
         });
 });

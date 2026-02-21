@@ -225,7 +225,7 @@
                     </div>
                 </div>
             </div>
-         
+           
         </div>
 
         {{-- ── Row 2: Dates ── --}}
@@ -261,7 +261,7 @@
                 </div>
             </div>
 
-               <div class="col-md-2">
+             <div class="col-md-2">
                 <div class="form-group mb-3">
                     <label class="field-label">Part #</label>
                     <input type="text" name="part_number" class="form-control" value="{{ old('part_number') }}" placeholder="e.g. P-1001">
@@ -283,6 +283,8 @@
                            readonly placeholder="Auto-generated">
                 </div>
             </div>
+
+            
         </div>
 
     </div>
@@ -1074,6 +1076,19 @@
 </form>
 </div>
 </div>
+
+{{-- ══ FLOATING TEST DATA BUTTON ══ --}}
+<div id="testDataBtn" style="position:fixed;bottom:24px;right:24px;z-index:9999;">
+    <button type="button" class="btn btn-warning btn-lg shadow"
+            style="border-radius:50px;font-weight:700;padding:12px 22px;letter-spacing:.3px;"
+            onclick="fillTestData()" title="Fill form with test data">
+        <i class="fas fa-flask mr-2"></i> Fill Test Data
+    </button>
+    <button type="button" class="btn btn-danger btn-sm ml-1 shadow"
+            style="border-radius:50px;" onclick="clearTestData()" title="Clear all data">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
 {{-- ══════════════════════════════════════════════════
      MODALS
 ══════════════════════════════════════════════════ --}}
@@ -1546,7 +1561,7 @@ function toggleShapeFields(){
 var _allMaterials = [];
 
 function loadMaterials(){
-    $.getJSON('{{ route("company.materials.ajax-list") }}', function(data){
+    $.getJSON("{{ route('company.materials.ajax-list') }}", function(data){
         _allMaterials = data;
         filterMaterials();
     }).fail(function(){
@@ -2216,8 +2231,8 @@ function addThreadRow(){
     // Build thread select options
     var thrOpts = '<option value="">Select Thread</option>';
     threadsData.forEach(function(t){
-        var sizes   = JSON.stringify(t.thread_sizes   || []);
-        var options = JSON.stringify(t.thread_options || []);
+        var sizesEnc   = encodeURIComponent(JSON.stringify(t.thread_sizes   || []));
+        var optionsEnc = encodeURIComponent(JSON.stringify(t.thread_options || []));
         thrOpts += '<option value="' + t.id + '"'
             + ' data-thread-price="'  + t.thread_price  + '"'
             + ' data-pitch-price="'   + t.pitch_price   + '"'
@@ -2225,8 +2240,8 @@ function addThreadRow(){
             + ' data-size-price="'    + t.size_price    + '"'
             + ' data-option-price="'  + t.option_price  + '"'
             + ' data-direction="'     + t.direction     + '"'
-            + " data-thread-sizes='"  + sizes.replace(/'/g,"\\'") + "'"
-            + " data-thread-options='" + options.replace(/'/g,"\\'") + "'"
+            + ' data-thread-sizes="'  + sizesEnc   + '"'
+            + ' data-thread-options="' + optionsEnc + '"'
             + '>' + t.name + '</option>';
     });
 
@@ -2372,8 +2387,8 @@ function threadChanged(sel, r){
     $('#thr_dir_'+r).val(dir);
 
     // Populate Options dropdown
-    var opts = opt.data('thread-options') || [];
-    if(typeof opts === 'string'){ try{ opts = JSON.parse(opts); }catch(e){ opts=[]; } }
+    var optsRaw = opt.attr('data-thread-options') || '[]';
+    var opts = []; try{ opts = JSON.parse(decodeURIComponent(optsRaw)); }catch(e){ opts=[]; }
     var $optSel = $('#thr_opt_'+r);
     $optSel.empty().append('<option value="">Select Option</option>');
     (Array.isArray(opts) ? opts : []).forEach(function(o){
@@ -2381,8 +2396,8 @@ function threadChanged(sel, r){
     });
 
     // Populate Sizes dropdown
-    var sizes = opt.data('thread-sizes') || [];
-    if(typeof sizes === 'string'){ try{ sizes = JSON.parse(sizes); }catch(e){ sizes=[]; } }
+    var sizesRaw = opt.attr('data-thread-sizes') || '[]';
+    var sizes = []; try{ sizes = JSON.parse(decodeURIComponent(sizesRaw)); }catch(e){ sizes=[]; }
     var $szSel = $('#thr_sz_'+r);
     $szSel.empty();
     (Array.isArray(sizes) ? sizes : []).forEach(function(s){
@@ -2793,6 +2808,233 @@ function saveTapAjax(){
 }
 
 
+
+// ══════════════════════════════════════════════════════════
+// TEST DATA FILLER — fills entire form with dummy data
+// Does NOT modify the form HTML, only sets values via JS
+// ══════════════════════════════════════════════════════════
+function fillTestData(){
+
+    // ── Header ──
+    $('#quoteType').val('quote').trigger('change');
+    $('#globalUnit').val('inch').trigger('change').trigger('change.matfilter');
+    $('#globalQty').val(10).trigger('change');
+    $('input[name="setup_price"]').val('150.00');
+    $('input[name="part_number"]').val('P-TEST-001');
+    $('input[name="cage_number"]').val('A');
+
+    // Dates via flatpickr
+    var today = new Date();
+    var fmt = function(d){ return (d.getMonth()+1)+'/'+d.getDate()+'/'+d.getFullYear(); };
+    var due  = new Date(today); due.setDate(due.getDate()+30);
+    var valid= new Date(today); valid.setDate(valid.getDate()+60);
+    if(window._flatpickrQuote) window._flatpickrQuote.setDate(today);
+    else $('#quoteDatePicker').val(fmt(today));
+    if(window._flatpickrDue)   window._flatpickrDue.setDate(due);
+    else $('#dueDatePicker').val(fmt(due));
+    if(window._flatpickrValid) window._flatpickrValid.setDate(valid);
+    else $('#validUntilPicker').val(fmt(valid));
+
+    // ── Customer — pick first available ──
+    var firstCust = $('#customerSelect option[value!=""]').first();
+    if(firstCust.length){
+        $('#customerSelect').val(firstCust.val()).trigger('change');
+    }
+    $('textarea[name="ship_to"]').val('123 Main St\nNew York, NY 10001');
+    $('textarea[name="bill_to"]').val('456 Corp Ave\nNew York, NY 10002');
+
+    // ── Material ──
+    $('#shapeSelect').val('round').trigger('change');
+    toggleShapeFields();
+    $('#pinDiameter').val('0.7500');
+    $('#pinLengthRow1').val('0.0200');
+    syncPinLength();
+    $('#materialType').val('metal_alloy').trigger('change.matfilter');
+
+    // Wait for material filter then pick first option
+    setTimeout(function(){
+        var firstMat = $('#metalAlloySelect option[value!=""]').first();
+        if(firstMat.length){
+            $('#metalAlloySelect').val(firstMat.val()).trigger('change');
+            updateMetalPrice();
+        } else {
+            // No DB materials — set manually
+            $('#blockPrice').val('2.5000');
+            $('#metalAdj').val('0.1000');
+            calcMaterialTotal();
+        }
+    }, 600);
+
+    // ── Machine row ──
+    if($('#machineBody .empty-row').length || $('#machineBody tr').length <= 1){
+        addMachineRow();
+    }
+    setTimeout(function(){
+        var r = mCnt;
+        // Pick first machine if available
+        var firstM = $('select[name="machines['+r+'][machine_id]"] option[value!=""]').first();
+        if(firstM.length) $('select[name="machines['+r+'][machine_id]"]').val(firstM.val()).trigger('change');
+        $('input[name="machines['+r+'][model]"]').val('CNC-V5');
+        $('select[name="machines['+r+'][labor_mode]"]').val('Attended');
+        $('select[name="machines['+r+'][complexity]"]').val('Moderate');
+        $('select[name="machines['+r+'][priority]"]').val('Normal');
+        $('#mr_'+r+' .m-time').val('45');
+        $('#mrate_'+r).val('85.00');
+        updateMSub(r);
+    }, 200);
+
+    // ── Operations row ──
+    showSection('ops', document.querySelector('.tab-ops'));
+    setTimeout(function(){
+        addOperationRow();
+        var r = opCnt;
+        var firstOp = $('select[name="operations['+r+'][operation_id]"] option[value!=""]').first();
+        if(firstOp.length){
+            $('select[name="operations['+r+'][operation_id]"]').val(firstOp.val()).trigger('change');
+        }
+        $('#opr_'+r+' .op-time').val('30');
+        var firstLab = $('select[name="operations['+r+'][labour_id]"] option[value!=""]').first();
+        if(firstLab.length){
+            $('select[name="operations['+r+'][labour_id]"]').val(firstLab.val()).trigger('change');
+        }
+        updateOpSub(r);
+    }, 300);
+
+    // ── Items row ──
+    setTimeout(function(){
+        showSection('items', document.querySelector('.tab-items'));
+        addItemRow();
+        var r = itCnt;
+        var firstItem = $('select[name="items['+r+'][item_id]"] option[value!=""]').first();
+        if(firstItem.length){
+            $('select[name="items['+r+'][item_id]"]').val(firstItem.val());
+            itemChanged($('select[name="items['+r+'][item_id]"]')[0], r);
+        } else {
+            // No DB items — set manually
+            $('input[name="items['+r+'][rate]"]').length ?
+                $('#itr_'+r+' .it-rate').val('25.00') : null;
+        }
+        $('#itr_'+r+' .it-qty').val('2');
+        updateItSub(r);
+    }, 400);
+
+    // ── Holes row ──
+    setTimeout(function(){
+        showSection('holes', document.querySelector('.tab-holes'));
+        addHoleRow();
+        var r = hCnt;
+        $('select[name="holes['+r+'][drilling_method]"]').val('Drill');
+        $('input[name="holes['+r+'][hole_size]"]').val('0.250');
+        $('input[name="holes['+r+'][hole_price]"]').val('3.50');
+        $('input[name="holes['+r+'][qty]"]').val('4');
+        $('input[name="holes['+r+'][tol_plus]"]').val('0.005');
+        $('input[name="holes['+r+'][tol_minus]"]').val('0.005');
+        calcHoleSub(r);
+    }, 500);
+
+    // ── Taps row ──
+    setTimeout(function(){
+        showSection('taps', document.querySelector('.tab-taps'));
+        addTapRow();
+        var r = tpCnt;
+        var firstTap = $('select[name="taps['+r+'][tap_id]"] option[value!=""]').first();
+        if(firstTap.length){
+            $('select[name="taps['+r+'][tap_id]"]').val(firstTap.val());
+            tapChanged($('select[name="taps['+r+'][tap_id]"]')[0], r);
+        } else {
+            $('#tpp_'+r).val('8.00');
+        }
+        $('select[name="taps['+r+'][thread_option]"]').val('internal');
+        $('#tr_'+r+' .tp-base').val('2.00');
+        calcTapSub(r);
+    }, 600);
+
+    // ── Threads row ──
+    setTimeout(function(){
+        showSection('threads', document.querySelector('.tab-threads'));
+        addThreadRow();
+        var r = thCnt;
+        var firstThr = $('#thr_sel_'+r+' option[value!=""]').first();
+        if(firstThr.length){
+            $('#thr_sel_'+r).val(firstThr.val());
+            threadChanged($('#thr_sel_'+r)[0], r);
+        } else {
+            $('#thr_tp_'+r).val('12.00');
+            $('#thr_pp_'+r).val('2.00');
+            $('#thr_cp_'+r).val('1.50');
+            calcThSub(r);
+        }
+    }, 700);
+
+    // ── Plating ──
+    setTimeout(function(){
+        showSection('plating', document.querySelector('.tab-plating'));
+        $('input[name="plating_count"]').val('10');
+        $('input[name="plating_price_each"]').val('3.50');
+        $('input[name="plating_salt_testing"]').val('25.00');
+        $('input[name="plating_surcharge"]').val('10.00');
+        calcPlatingTotal();
+
+        // Heat treat
+        $('input[name="heat_count"]').val('10');
+        $('input[name="heat_price_each"]').val('5.00');
+        $('input[name="heat_testing"]').val('15.00');
+        calcHeatTotal();
+    }, 800);
+
+    // ── Final fields ──
+    setTimeout(function(){
+        $('#breakInCharge').val('50.00');
+        $('textarea[name="engineer_notes"]').val('Test quote generated automatically. All values are sample data for testing purposes.');
+        recalcAll();
+
+        // Switch back to machine tab to show result
+        showSection('machine', document.querySelector('.tab-machine'));
+        toastr.success('Test data filled! Check all sections.', 'Test Data Loaded');
+    }, 1000);
+}
+
+function clearTestData(){
+    if(!confirm('Clear all test data from the form?')) return;
+
+    // Reset header
+    $('#globalQty').val(1);
+    $('input[name="setup_price"]').val('0');
+    $('input[name="part_number"]').val('');
+    $('input[name="cage_number"]').val('');
+    $('#quoteDatePicker,#dueDatePicker,#validUntilPicker').val('');
+    if(typeof $.fn.select2 === 'function') $('#customerSelect').val(null).trigger('change');
+    else $('#customerSelect').val('');
+    $('textarea[name="ship_to"],textarea[name="bill_to"]').val('');
+
+    // Reset material
+    $('#pinDiameter,#pinLengthRow1,#pinLength').val('0');
+    $('#blockPrice,#metalAdj').val('0');
+    $('#metalRealPrice,#totalPinPrice,#eachPinPrice').val('0');
+
+    // Clear all dynamic rows
+    $('#machineBody').html('<tr class="empty-row"><td colspan="12" class="text-center text-muted py-3">Click "Add Machine" to begin</td></tr>');
+    $('#operationBody').html('<tr class="empty-row"><td colspan="6" class="text-center text-muted py-3">Click "Add Operation" to begin</td></tr>');
+    $('#itemsBody').html('<tr class="empty-row"><td colspan="6" class="text-center text-muted py-3">Click "Add Item" to begin</td></tr>');
+    $('#holesBody').html('<p class="text-muted text-center py-2 mb-0" id="holesEmpty">Click "Add Hole" to begin</p>');
+    $('#tapsBody').html('<p class="text-muted text-center py-2 mb-0" id="tapsEmpty">Click "Add Tap" to begin</p>');
+    $('#threadsBody').html('<p class="text-muted text-center py-2 mb-0" id="threadsEmpty">Click "Add Thread" to begin</p>');
+    $('#secondaryBody').html('<tr class="empty-row"><td colspan="7" class="text-center text-muted py-3">Click "Add Operation" to begin</td></tr>');
+
+    // Reset plating/heat
+    $('input[name="plating_count"],input[name="plating_price_each"],input[name="plating_salt_testing"],input[name="plating_surcharge"],input[name="plating_standards_price"]').val('0');
+    $('input[name="heat_count"],input[name="heat_price_each"],input[name="heat_testing"],input[name="heat_surcharge"]').val('0');
+    $('#platingTotal,#heatTotal').val('0');
+
+    // Reset counters
+    mCnt=0; opCnt=0; itCnt=0; hCnt=0; tpCnt=0; thCnt=0; scCnt=0;
+
+    $('#breakInCharge,#overridePrice').val('0');
+    $('textarea[name="engineer_notes"]').val('');
+
+    recalcAll();
+    toastr.info('Form cleared.', 'Cleared');
+}
 </script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 @endpush

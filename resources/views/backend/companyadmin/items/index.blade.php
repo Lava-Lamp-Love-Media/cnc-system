@@ -40,13 +40,13 @@
                             @foreach($items as $item)
                             <tr>
                                 <td>
-                                    <img src="{{ $item->image_url }}" alt="{{ $item->name }}" 
+                                    <img src="{{ $item->image_url }}" alt="{{ $item->name }}"
                                          class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
                                 </td>
                                 <td>
                                     <strong>{{ $item->name }}</strong>
                                     @if($item->description)
-                                    <br><small class="text-muted">{{ Str::limit($item->description, 50) }}</small>
+                                        <br><small class="text-muted">{{ Str::limit($item->description, 50) }}</small>
                                     @endif
                                 </td>
                                 <td><span class="badge badge-secondary">{{ $item->sku }}</span></td>
@@ -79,23 +79,31 @@
                                 <td>${{ number_format($item->sell_price, 2) }}</td>
                                 <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
                                 <td>
-                                    @if($item->is_inventory)
-                                        <span class="badge badge-success">Tracked</span>
-                                    @else
-                                        <span class="badge badge-secondary">Not Tracked</span>
-                                    @endif
+                                    @switch($item->status)
+                                        @case('active')
+                                            <span class="badge badge-success">Active</span>
+                                            @break
+                                        @case('inactive')
+                                            <span class="badge badge-secondary">Inactive</span>
+                                            @break
+                                        @case('discontinued')
+                                            <span class="badge badge-danger">Discontinued</span>
+                                            @break
+                                        @default
+                                            <span class="badge badge-light">{{ ucfirst($item->status) }}</span>
+                                    @endswitch
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="{{ route('company.items.show', $item) }}" 
+                                        <a href="{{ route('company.items.show', $item) }}"
                                            class="btn btn-sm btn-info" title="View">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('company.items.edit', $item) }}" 
+                                        <a href="{{ route('company.items.edit', $item) }}"
                                            class="btn btn-sm btn-warning" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('company.items.destroy', $item) }}" 
+                                        <form action="{{ route('company.items.destroy', $item) }}"
                                               method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')

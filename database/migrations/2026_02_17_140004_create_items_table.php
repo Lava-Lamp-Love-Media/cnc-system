@@ -27,6 +27,7 @@ return new class extends Migration
             $table->boolean('is_inventory')->default(true);
             $table->boolean('is_taxable')->default(true);
             $table->text('notes')->nullable();
+            $table->enum('status', ['active', 'inactive', 'discontinued'])->default('active');
             $table->timestamps();
             $table->softDeletes();
         });

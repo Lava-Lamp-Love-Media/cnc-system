@@ -28,16 +28,22 @@ class Item extends Model
         'is_inventory',
         'is_taxable',
         'notes',
+        'status',       // ← added
     ];
 
     protected $casts = [
         'is_inventory' => 'boolean',
-        'is_taxable' => 'boolean',
-        'cost_price' => 'decimal:2',
-        'sell_price' => 'decimal:2',
+        'is_taxable'   => 'boolean',
+        'cost_price'   => 'decimal:2',
+        'sell_price'   => 'decimal:2',
+        'count'        => 'integer',
+        'stock_min'    => 'integer',
+        'reorder_level' => 'integer',
+        'current_stock' => 'integer',
     ];
 
-    // Relationships
+    // ── Relationships ──────────────────────────────────────
+
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -58,37 +64,58 @@ class Item extends Model
         return $this->hasMany(PurchaseOrderItem::class);
     }
 
-    // Accessors
-    public function getImageUrlAttribute()
+    // ── Scopes ─────────────────────────────────────────────
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function scopeForCompany($query, $companyId)
+    {
+        return $query->where('company_id', $companyId);
+    }
+
+    // ── Accessors ──────────────────────────────────────────
+
+    public function getImageUrlAttribute(): string
     {
         if ($this->image) {
             return asset('storage/' . $this->image);
         }
 
-        // Check if local default exists
         if (file_exists(public_path('images/no-image.png'))) {
             return asset('images/no-image.png');
         }
 
-        // Fallback to UI Avatars API
         return $this->getDefaultImage();
     }
 
-    // Get default image based on item class
-    public function getDefaultImage()
+    public function getDefaultImage(): string
     {
-        $defaultImages = [
-            'tooling' => 'https://ui-avatars.com/api/?name=Tooling&size=200&background=17a2b8&color=fff&bold=true',
-            'sellable' => 'https://ui-avatars.com/api/?name=Sellable&size=200&background=28a745&color=fff&bold=true',
-            'raw_stock' => 'https://ui-avatars.com/api/?name=Raw+Stock&size=200&background=ffc107&color=000&bold=true',
+        $map = [
+            'tooling'     => 'https://ui-avatars.com/api/?name=Tooling&size=200&background=17a2b8&color=fff&bold=true',
+            'sellable'    => 'https://ui-avatars.com/api/?name=Sellable&size=200&background=28a745&color=fff&bold=true',
+            'raw_stock'   => 'https://ui-avatars.com/api/?name=Raw+Stock&size=200&background=ffc107&color=000&bold=true',
             'consommable' => 'https://ui-avatars.com/api/?name=Consumable&size=200&background=007bff&color=fff&bold=true',
         ];
 
-        return $defaultImages[$this->class] ?? 'https://ui-avatars.com/api/?name=Item&size=200&background=6c757d&color=fff&bold=true';
+        return $map[$this->class] ?? 'https://ui-avatars.com/api/?name=Item&size=200&background=6c757d&color=fff&bold=true';
     }
 
-    // Methods
-    public function updateStock($quantity, $type = 'add')
+    public function getStatusBadgeAttribute(): string
+    {
+        return match ($this->status) {
+            'active'       => '<span class="badge badge-success">Active</span>',
+            'inactive'     => '<span class="badge badge-secondary">Inactive</span>',
+            'discontinued' => '<span class="badge badge-danger">Discontinued</span>',
+            default        => '<span class="badge badge-light">' . ucfirst($this->status) . '</span>',
+        };
+    }
+
+    // ── Methods ────────────────────────────────────────────
+
+    public function updateStock(int $quantity, string $type = 'add'): void
     {
         if ($type === 'add') {
             $this->increment('current_stock', $quantity);
@@ -97,8 +124,13 @@ class Item extends Model
         }
     }
 
-    public function isLowStock()
+    public function isLowStock(): bool
     {
         return $this->current_stock <= $this->reorder_level;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
     }
 }

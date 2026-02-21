@@ -13,6 +13,7 @@ class ItemController extends Controller
     public function index()
     {
         $companyId = auth()->user()->company_id;
+
         $items = Item::where('company_id', $companyId)
             ->with(['warehouse'])
             ->latest()
@@ -23,7 +24,7 @@ class ItemController extends Controller
 
     public function create()
     {
-        $companyId = auth()->user()->company_id;
+        $companyId  = auth()->user()->company_id;
         $warehouses = Warehouse::where('company_id', $companyId)->get();
 
         return view('backend.companyadmin.items.create', compact('warehouses'));
@@ -32,47 +33,47 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'sku' => 'required|string|unique:items,sku',
-            'class' => 'required|in:tooling,sellable,raw_stock,consommable',
-            'unit' => 'required|in:each,kg,lb,meter,foot,liter,gallon',
-            'count' => 'nullable|integer|min:0',
-            'cost_price' => 'nullable|numeric|min:0',
-            'sell_price' => 'nullable|numeric|min:0',
-            'stock_min' => 'nullable|integer|min:0',
+            'name'          => 'required|string|max:255',
+            'description'   => 'nullable|string',
+            'sku'           => 'required|string|unique:items,sku',
+            'class'         => 'required|in:tooling,sellable,raw_stock,consommable',
+            'unit'          => 'required|in:each,kg,lb,meter,foot,liter,gallon',
+            'status'        => 'required|in:active,inactive,discontinued',
+            'count'         => 'nullable|integer|min:0',
+            'cost_price'    => 'nullable|numeric|min:0',
+            'sell_price'    => 'nullable|numeric|min:0',
+            'stock_min'     => 'nullable|integer|min:0',
             'reorder_level' => 'nullable|integer|min:0',
-            'warehouse_id' => 'nullable|exists:warehouses,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_inventory' => 'nullable|boolean',
-            'is_taxable' => 'nullable|boolean',
-            'notes' => 'nullable|string',
+            'warehouse_id'  => 'nullable|exists:warehouses,id',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_inventory'  => 'nullable|boolean',
+            'is_taxable'    => 'nullable|boolean',
+            'notes'         => 'nullable|string',
         ]);
 
-        $validated['company_id'] = auth()->user()->company_id;
+        $validated['company_id']   = auth()->user()->company_id;
         $validated['is_inventory'] = $request->has('is_inventory');
-        $validated['is_taxable'] = $request->has('is_taxable');
+        $validated['is_taxable']   = $request->has('is_taxable');
         $validated['current_stock'] = $validated['count'] ?? 0;
 
-        // Handle image upload
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('items', 'public');
         }
 
         $item = Item::create($validated);
 
-        // Check if request wants JSON (AJAX request)
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Item created successfully!',
-                'item' => [
-                    'id' => $item->id,
-                    'name' => $item->name,
-                    'sku' => $item->sku,
-                    'unit' => $item->unit,
+                'item'    => [
+                    'id'         => $item->id,
+                    'name'       => $item->name,
+                    'sku'        => $item->sku,
+                    'unit'       => $item->unit,
                     'cost_price' => $item->cost_price,
-                ]
+                    'status'     => $item->status,
+                ],
             ]);
         }
 
@@ -95,7 +96,7 @@ class ItemController extends Controller
     {
         $this->authorize('update', $item);
 
-        $companyId = auth()->user()->company_id;
+        $companyId  = auth()->user()->company_id;
         $warehouses = Warehouse::where('company_id', $companyId)->get();
 
         return view('backend.companyadmin.items.edit', compact('item', 'warehouses'));
@@ -106,29 +107,28 @@ class ItemController extends Controller
         $this->authorize('update', $item);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'sku' => 'required|string|unique:items,sku,' . $item->id,
-            'class' => 'required|in:tooling,sellable,raw_stock,consommable',
-            'unit' => 'required|in:each,kg,lb,meter,foot,liter,gallon',
-            'count' => 'nullable|integer|min:0',
-            'cost_price' => 'nullable|numeric|min:0',
-            'sell_price' => 'nullable|numeric|min:0',
-            'stock_min' => 'nullable|integer|min:0',
+            'name'          => 'required|string|max:255',
+            'description'   => 'nullable|string',
+            'sku'           => 'required|string|unique:items,sku,' . $item->id,
+            'class'         => 'required|in:tooling,sellable,raw_stock,consommable',
+            'unit'          => 'required|in:each,kg,lb,meter,foot,liter,gallon',
+            'status'        => 'required|in:active,inactive,discontinued',
+            'count'         => 'nullable|integer|min:0',
+            'cost_price'    => 'nullable|numeric|min:0',
+            'sell_price'    => 'nullable|numeric|min:0',
+            'stock_min'     => 'nullable|integer|min:0',
             'reorder_level' => 'nullable|integer|min:0',
-            'warehouse_id' => 'nullable|exists:warehouses,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_inventory' => 'nullable|boolean',
-            'is_taxable' => 'nullable|boolean',
-            'notes' => 'nullable|string',
+            'warehouse_id'  => 'nullable|exists:warehouses,id',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_inventory'  => 'nullable|boolean',
+            'is_taxable'    => 'nullable|boolean',
+            'notes'         => 'nullable|string',
         ]);
 
         $validated['is_inventory'] = $request->has('is_inventory');
-        $validated['is_taxable'] = $request->has('is_taxable');
+        $validated['is_taxable']   = $request->has('is_taxable');
 
-        // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete old image
             if ($item->image) {
                 Storage::disk('public')->delete($item->image);
             }
@@ -145,7 +145,6 @@ class ItemController extends Controller
     {
         $this->authorize('delete', $item);
 
-        // Delete image
         if ($item->image) {
             Storage::disk('public')->delete($item->image);
         }

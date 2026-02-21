@@ -39,14 +39,15 @@
 
                     <!-- Tab Content -->
                     <div class="tab-content">
+
                         <!-- Basic Info Tab -->
                         <div class="tab-pane fade show active" id="basic-info">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name">Item Name <span class="text-danger">*</span></label>
-                                        <input type="text" name="name" id="name" 
-                                               class="form-control @error('name') is-invalid @enderror" 
+                                        <input type="text" name="name" id="name"
+                                               class="form-control @error('name') is-invalid @enderror"
                                                value="{{ old('name') }}" required>
                                         @error('name')
                                             <span class="invalid-feedback">{{ $message }}</span>
@@ -57,8 +58,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="sku">SKU <span class="text-danger">*</span></label>
-                                        <input type="text" name="sku" id="sku" 
-                                               class="form-control @error('sku') is-invalid @enderror" 
+                                        <input type="text" name="sku" id="sku"
+                                               class="form-control @error('sku') is-invalid @enderror"
                                                value="{{ old('sku') }}" required>
                                         @error('sku')
                                             <span class="invalid-feedback">{{ $message }}</span>
@@ -69,7 +70,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="description">Description</label>
-                                        <textarea name="description" id="description" rows="3" 
+                                        <textarea name="description" id="description" rows="3"
                                                   class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                                         @error('description')
                                             <span class="invalid-feedback">{{ $message }}</span>
@@ -83,7 +84,7 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="custom-control custom-radio">
-                                                    <input type="radio" id="class_tooling" name="class" value="tooling" 
+                                                    <input type="radio" id="class_tooling" name="class" value="tooling"
                                                            class="custom-control-input" {{ old('class') == 'tooling' ? 'checked' : '' }} required>
                                                     <label class="custom-control-label" for="class_tooling">
                                                         <i class="fas fa-tools text-info"></i> Tooling
@@ -92,7 +93,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="custom-control custom-radio">
-                                                    <input type="radio" id="class_sellable" name="class" value="sellable" 
+                                                    <input type="radio" id="class_sellable" name="class" value="sellable"
                                                            class="custom-control-input" {{ old('class') == 'sellable' ? 'checked' : '' }}>
                                                     <label class="custom-control-label" for="class_sellable">
                                                         <i class="fas fa-shopping-cart text-success"></i> Sellable
@@ -101,7 +102,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="custom-control custom-radio">
-                                                    <input type="radio" id="class_raw_stock" name="class" value="raw_stock" 
+                                                    <input type="radio" id="class_raw_stock" name="class" value="raw_stock"
                                                            class="custom-control-input" {{ old('class') == 'raw_stock' ? 'checked' : '' }}>
                                                     <label class="custom-control-label" for="class_raw_stock">
                                                         <i class="fas fa-cubes text-warning"></i> Raw Stock
@@ -110,7 +111,7 @@
                                             </div>
                                             <div class="col-6">
                                                 <div class="custom-control custom-radio">
-                                                    <input type="radio" id="class_consommable" name="class" value="consommable" 
+                                                    <input type="radio" id="class_consommable" name="class" value="consommable"
                                                            class="custom-control-input" {{ old('class') == 'consommable' ? 'checked' : '' }}>
                                                     <label class="custom-control-label" for="class_consommable">
                                                         <i class="fas fa-box text-primary"></i> Consommable
@@ -129,15 +130,30 @@
                                         <label for="unit">Unit <span class="text-danger">*</span></label>
                                         <select name="unit" id="unit" class="form-control @error('unit') is-invalid @enderror" required>
                                             <option value="">Select Unit</option>
-                                            <option value="each" {{ old('unit') == 'each' ? 'selected' : '' }}>Each</option>
-                                            <option value="kg" {{ old('unit') == 'kg' ? 'selected' : '' }}>Kilogram (kg)</option>
-                                            <option value="lb" {{ old('unit') == 'lb' ? 'selected' : '' }}>Pound (lb)</option>
-                                            <option value="meter" {{ old('unit') == 'meter' ? 'selected' : '' }}>Meter</option>
-                                            <option value="foot" {{ old('unit') == 'foot' ? 'selected' : '' }}>Foot</option>
-                                            <option value="liter" {{ old('unit') == 'liter' ? 'selected' : '' }}>Liter</option>
+                                            <option value="each"   {{ old('unit') == 'each'   ? 'selected' : '' }}>Each</option>
+                                            <option value="kg"     {{ old('unit') == 'kg'     ? 'selected' : '' }}>Kilogram (kg)</option>
+                                            <option value="lb"     {{ old('unit') == 'lb'     ? 'selected' : '' }}>Pound (lb)</option>
+                                            <option value="meter"  {{ old('unit') == 'meter'  ? 'selected' : '' }}>Meter</option>
+                                            <option value="foot"   {{ old('unit') == 'foot'   ? 'selected' : '' }}>Foot</option>
+                                            <option value="liter"  {{ old('unit') == 'liter'  ? 'selected' : '' }}>Liter</option>
                                             <option value="gallon" {{ old('unit') == 'gallon' ? 'selected' : '' }}>Gallon</option>
                                         </select>
                                         @error('unit')
+                                            <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- ── STATUS ── -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="status">Status <span class="text-danger">*</span></label>
+                                        <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
+                                            <option value="active"       {{ old('status', 'active') == 'active'       ? 'selected' : '' }}>Active</option>
+                                            <option value="inactive"     {{ old('status') == 'inactive'               ? 'selected' : '' }}>Inactive</option>
+                                            <option value="discontinued" {{ old('status') == 'discontinued'           ? 'selected' : '' }}>Discontinued</option>
+                                        </select>
+                                        @error('status')
                                             <span class="invalid-feedback">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -147,8 +163,8 @@
                                     <div class="form-group">
                                         <label for="image">Item Image</label>
                                         <div class="custom-file">
-                                            <input type="file" name="image" id="image" 
-                                                   class="custom-file-input @error('image') is-invalid @enderror" 
+                                            <input type="file" name="image" id="image"
+                                                   class="custom-file-input @error('image') is-invalid @enderror"
                                                    accept="image/*">
                                             <label class="custom-file-label" for="image">Choose file</label>
                                         </div>
@@ -172,8 +188,8 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
                                             </div>
-                                            <input type="number" name="cost_price" id="cost_price" step="0.01" 
-                                                   class="form-control @error('cost_price') is-invalid @enderror" 
+                                            <input type="number" name="cost_price" id="cost_price" step="0.01"
+                                                   class="form-control @error('cost_price') is-invalid @enderror"
                                                    value="{{ old('cost_price', 0) }}">
                                         </div>
                                         @error('cost_price')
@@ -189,8 +205,8 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
                                             </div>
-                                            <input type="number" name="sell_price" id="sell_price" step="0.01" 
-                                                   class="form-control @error('sell_price') is-invalid @enderror" 
+                                            <input type="number" name="sell_price" id="sell_price" step="0.01"
+                                                   class="form-control @error('sell_price') is-invalid @enderror"
                                                    value="{{ old('sell_price', 0) }}">
                                         </div>
                                         @error('sell_price')
@@ -201,8 +217,8 @@
 
                                 <div class="col-md-12">
                                     <div class="custom-control custom-switch">
-                                        <input type="checkbox" name="is_taxable" id="is_taxable" 
-                                               class="custom-control-input" value="1" 
+                                        <input type="checkbox" name="is_taxable" id="is_taxable"
+                                               class="custom-control-input" value="1"
                                                {{ old('is_taxable', true) ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="is_taxable">
                                             This item is taxable
@@ -217,8 +233,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="custom-control custom-switch mb-3">
-                                        <input type="checkbox" name="is_inventory" id="is_inventory" 
-                                               class="custom-control-input" value="1" 
+                                        <input type="checkbox" name="is_inventory" id="is_inventory"
+                                               class="custom-control-input" value="1"
                                                {{ old('is_inventory', true) ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="is_inventory">
                                             <strong>Track inventory for this item</strong>
@@ -246,8 +262,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="count">Initial Stock Count</label>
-                                        <input type="number" name="count" id="count" 
-                                               class="form-control @error('count') is-invalid @enderror" 
+                                        <input type="number" name="count" id="count"
+                                               class="form-control @error('count') is-invalid @enderror"
                                                value="{{ old('count', 0) }}" min="0">
                                         @error('count')
                                             <span class="invalid-feedback">{{ $message }}</span>
@@ -258,8 +274,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="stock_min">Minimum Stock</label>
-                                        <input type="number" name="stock_min" id="stock_min" 
-                                               class="form-control @error('stock_min') is-invalid @enderror" 
+                                        <input type="number" name="stock_min" id="stock_min"
+                                               class="form-control @error('stock_min') is-invalid @enderror"
                                                value="{{ old('stock_min', 0) }}" min="0">
                                         <small class="form-text text-muted">Alert when stock reaches this level</small>
                                         @error('stock_min')
@@ -271,8 +287,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="reorder_level">Re-order Level</label>
-                                        <input type="number" name="reorder_level" id="reorder_level" 
-                                               class="form-control @error('reorder_level') is-invalid @enderror" 
+                                        <input type="number" name="reorder_level" id="reorder_level"
+                                               class="form-control @error('reorder_level') is-invalid @enderror"
                                                value="{{ old('reorder_level', 0) }}" min="0">
                                         <small class="form-text text-muted">Automatically create purchase order</small>
                                         @error('reorder_level')
@@ -284,8 +300,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="notes">Notes</label>
-                                        <textarea name="notes" id="notes" rows="3" 
-                                                  class="form-control @error('notes') is-invalid @enderror" 
+                                        <textarea name="notes" id="notes" rows="3"
+                                                  class="form-control @error('notes') is-invalid @enderror"
                                                   placeholder="Additional notes about this item...">{{ old('notes') }}</textarea>
                                         @error('notes')
                                             <span class="invalid-feedback">{{ $message }}</span>
@@ -294,7 +310,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                    </div>{{-- /tab-content --}}
                 </div>
 
                 <div class="card-footer">
@@ -315,23 +332,20 @@
 
 @push('scripts')
 <script>
-    // Image preview
     document.getElementById('image').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const preview = document.getElementById('imagePreview');
-        
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 preview.innerHTML = `<img src="${e.target.result}" class="img-thumbnail" style="max-width: 200px;">`;
-            }
+            };
             reader.readAsDataURL(file);
         } else {
             preview.innerHTML = '';
         }
     });
 
-    // Custom file input label
     $('.custom-file-input').on('change', function() {
         let fileName = $(this).val().split('\\').pop();
         $(this).next('.custom-file-label').html(fileName);
