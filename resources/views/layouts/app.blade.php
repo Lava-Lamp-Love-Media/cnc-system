@@ -410,6 +410,9 @@
                         <a class="dropdown-item" href="{{ route('company.director.index') }}">
                             <i class="fas fa-industry text-warning"></i> Shop Director
                         </a>
+                        <a class="dropdown-item" href="{{ route('company.director.show') }}">
+                            <i class="fas fa-industry text-warning"></i> Shop Director Two
+                        </a>
                     </div>
                 </li>
 

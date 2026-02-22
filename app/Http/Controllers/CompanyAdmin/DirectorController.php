@@ -15,4 +15,8 @@ class DirectorController extends Controller
     {
         return view('backend.companyadmin.director.index');
     }
+    public function show()
+    {
+        return view('backend.companyadmin.director.show');
+    }
 }

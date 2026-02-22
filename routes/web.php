@@ -116,5 +116,6 @@ Route::middleware('auth')->group(function () {
             // ── Main resource ──
             Route::resource('quotes', QuoteController::class);
             Route::get('director', [DirectorController::class, 'index'])->name('director.index');
+            Route::get('director/show', [DirectorController::class, 'show'])->name('director.show');
         });
 });
