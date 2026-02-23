@@ -323,6 +323,124 @@ body.director-page .main-footer    { display: none; }
 /* Add row button */
 .dc-addrow { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 11px; font-weight: 700; background: #c0d0e0; border: 2px dashed #88a0b8; color: #3a5070; cursor: pointer; transition: all .12s; }
 .dc-addrow:hover { background: #a8c0d8; }
+/* ══ SWIM POOL & LANES ══ */
+.swim-pool {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: max-content;
+    padding-bottom: 20px;
+}
+
+/* Each swim lane */
+.swim-lane {
+    border: 2px solid #c0ccd8;
+    border-radius: 0;
+    background: #e8f0f8;
+    border-bottom: none;
+    transition: background .15s, border-color .15s;
+    min-width: max-content;
+}
+.swim-lane:first-child { border-radius: 8px 8px 0 0; }
+.swim-lane:last-child  { border-radius: 0 0 8px 8px; border-bottom: 2px solid #c0ccd8; }
+.swim-lane:only-child  { border-radius: 8px; border-bottom: 2px solid #c0ccd8; }
+.swim-lane.lane-focus  { background: #f0f6ff; border-color: #3a70c8; z-index: 1; position: relative; box-shadow: 0 0 0 2px rgba(58,112,200,.18); }
+
+/* Lane header */
+.lane-hd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background: rgba(0,0,0,.06);
+    border-bottom: 1px solid rgba(0,0,0,.08);
+    cursor: pointer;
+    min-height: 34px;
+    flex-shrink: 0;
+}
+.swim-lane.lane-focus .lane-hd { background: rgba(58,112,200,.1); }
+.lane-hd:hover { background: rgba(0,0,0,.1); }
+.lane-hd-left  { display: flex; align-items: center; gap: 7px; flex: 1; overflow: hidden; }
+.lane-hd-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; margin-left: 10px; }
+
+.lane-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.lane-jnum  { font-family: 'DM Mono', monospace; font-size: 10px; color: #3a70c8; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 3px; padding: 1px 5px; flex-shrink: 0; }
+.lane-jname { font-size: 12px; font-weight: 700; color: #1a2540; white-space: nowrap; }
+.lane-qname { font-size: 10px; color: #7a8898; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lane-status { font-size: 10px; font-weight: 700; white-space: nowrap; }
+
+.lane-assign-btn {
+    padding: 3px 9px; border-radius: 4px; font-size: 10px; font-weight: 700;
+    background: #1a2540; color: #fff; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; display: flex; align-items: center; gap: 4px;
+    transition: background .1s; white-space: nowrap;
+}
+.lane-assign-btn:hover { background: #3a70c8; }
+.lane-rm-btn {
+    width: 22px; height: 22px; border-radius: 4px; border: 1px solid #d0daea;
+    background: rgba(0,0,0,.07); color: #607080; cursor: pointer; font-size: 10px;
+    display: flex; align-items: center; justify-content: center; transition: all .1s;
+}
+.lane-rm-btn:hover { background: #d82020; color: #fff; border-color: #d82020; }
+
+/* Lane steps row */
+.lane-steps {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    gap: 0;
+    overflow-x: auto;
+    min-height: 66px;
+    flex-wrap: nowrap;
+}
+.lane-steps::-webkit-scrollbar { height: 4px; }
+.lane-steps::-webkit-scrollbar-thumb { background: #a0b0c4; border-radius: 2px; }
+.lane-steps.ldov { background: rgba(58,112,200,.08); }
+
+/* Add slot (last blank) */
+.dstep.add-slot {
+    min-width: 44px; opacity: .6;
+    display: flex; align-items: center; justify-content: center;
+}
+.dstep.add-slot:hover { opacity: 1; background: #c8d8f8; }
+.dstep.last-step { }
+
+/* Empty state */
+.canvas-empty {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; height: 220px;
+    color: #8898aa; font-size: 13px; font-weight: 600; gap: 12px;
+}
+
+/* Override dstep to fit lanes */
+.lane-steps .dstep {
+    height: 40px;
+    min-width: 70px;
+    font-size: 10px;
+}
+.lane-steps .dstep span { white-space: nowrap; pointer-events: none; }
+
+/* Locked step (Start/Ship) — no drop cursor */
+.dstep.step-locked { cursor: default; opacity: .95; }
+.dstep.step-locked:hover { filter: none; transform: none; }
+
+/* Blank drop slot — clearly a target */
+.dstep.step-blank {
+    background: repeating-linear-gradient(
+        -45deg,
+        #dce8f8,
+        #dce8f8 4px,
+        #e8f0fc 4px,
+        #e8f0fc 12px
+    ) !important;
+    color: #90a8c8;
+    border: 2px dashed #90a8c8 !important;
+    min-width: 80px;
+    opacity: .7;
+}
+.dstep.step-blank:hover { opacity: 1; border-color: #3a70c8 !important; background: #dbeafe !important; }
+.dstep.step-blank.dov   { opacity: 1; border-color: #3a70c8 !important; background: #bfdbfe !important; border-style: solid !important; }
+
 
 /* ══ ASSIGN MODAL ══ */
 .dir-overlay { position: fixed; inset: 0; background: rgba(10,20,40,.45); z-index: 1060; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
@@ -354,8 +472,8 @@ body.director-page .main-footer    { display: none; }
 <script>document.body.classList.add('director-page');</script>
 
 {{-- Director Sub-Header --}}
-<div class="dir-topbar">
-    <a href="{{ route('company.director.show') }}" class="dtbtn">← Back</a>
+<div class="dir-topbar mt-5">
+    <a href="{{ route('company.director.index') }}" class="dtbtn">← Back</a>
     <div class="dt-title">The Director Main Screen — Parent or Child Item #</div>
     <button class="dtbtn">Save Draft</button>
     <button class="dtbtn blue">Preview</button>
@@ -555,82 +673,100 @@ var DIR_QUOTES = [
     }
 ];
 
-var DIR_ROWS = [
-    { id:'r1', lbl:'JO-003', actor:false, showBubble:true, showTracking:true,
-      steps:[
-        {type:'start',    label:'start',         cls:'ss-start',   icon:''},
-        {type:'inventory',label:'Inventory',     cls:'ss-inv',     icon:'fa-boxes'},
-        {type:'pick',     label:'pick material', cls:'ss-pick',    icon:''},
-        {type:'hole',     label:'Hole',          cls:'ss-hole',    icon:'fa-circle-notch'},
-        {type:'ship',     label:'Ship',          cls:'ss-ship',    icon:'fa-truck'},
-      ]},
-    { id:'r2', lbl:'JO-004', actor:false,
-      steps:[
-        {type:'start',label:'start',cls:'ss-start',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-      ]},
-    { id:'r3', lbl:'JO-005', actor:true, actorAt:5,
-      steps:[
-        {type:'start',   label:'start',   cls:'ss-start',   icon:''},
-        {type:'blank',   label:'',        cls:'ss-blank',   icon:''},
-        {type:'blank',   label:'',        cls:'ss-blank',   icon:''},
-        {type:'blank',   label:'',        cls:'ss-blank',   icon:''},
-        {type:'machine', label:'Machine', cls:'ss-machine', icon:'fa-cog'},
-        {type:'blank',   label:'',        cls:'ss-blank',   icon:''},
-        {type:'blank',   label:'',        cls:'ss-blank',   icon:''},
-      ]},
-    { id:'r4', lbl:'JO-006', actor:true, actorAt:4,
-      steps:[
-        {type:'start',label:'start',cls:'ss-start',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'op',   label:'Oper', cls:'ss-op',  icon:'fa-tools'},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-      ]},
-    { id:'r5', lbl:'JO-007', actor:true, actorAt:5,
-      steps:[
-        {type:'start',label:'start',cls:'ss-start',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-        {type:'blank',label:'',cls:'ss-blank',icon:''},
-      ]},
-];
-
-var DIR_QITEMS = [
-    {type:'hole',   label:'Hole',          icon:'fa-circle-notch', cls:'ss-hole'},
-    {type:'hole',   label:'Hole',          icon:'fa-circle-notch', cls:'ss-hole'},
-    {type:'hole',   label:'Hole',          icon:'fa-circle-notch', cls:'ss-hole'},
-    {type:'op',     label:'Operation',     icon:'fa-tools',        cls:'ss-op'},
-    {type:'machine',label:'Machine',       icon:'fa-cog',          cls:'ss-machine'},
-    {type:'tap',    label:'Tap',           icon:'fa-screwdriver',  cls:'ss-tap'},
-    {type:'item',   label:'Item',          icon:'fa-box',          cls:'ss-item'},
-    {type:'plating',label:'Plating',       icon:'fa-paint-brush',  cls:'ss-plating'},
-    {type:'heat',   label:'Heat Treating', icon:'fa-fire',         cls:'ss-heat'},
-    {type:'secop',  label:'Second Op',     icon:'fa-redo',         cls:'ss-op'},
-    {type:'thread', label:'Threading',     icon:'fa-ring',         cls:'ss-thread'},
-    {type:'due',    label:'Due Date',      icon:'fa-calendar-alt', cls:'ss-blank'},
-    {type:'start',  label:'Start',         icon:'fa-play',         cls:'ss-start'},
-];
-
-var DIR_DRAG     = {};
+/* ════════════════════════════════
+   STATE
+════════════════════════════════ */
+var DIR_LANES    = {};    // keyed by JO id
+var DIR_LANE_ORD = [];    // display order
+var DIR_DRAG     = null;  // current drag payload (object, not string)
 var dirTreeOpen  = {};
 var dirChildOpen = {};
 var dirTreeCol   = false;
-var dirActiveId  = '';
+var dirActiveJO  = null;
+var dirSelLane   = null;
 
-/* ── TREE RENDER ── */
+/* ════════════════════════════════
+   STEP DEFINITIONS
+   Each item type maps to {cls, icon, label}
+════════════════════════════════ */
+var STEP_DEF = {
+    start:    {cls:'ss-start',   icon:'fa-play',         label:'Start'},
+    hole:     {cls:'ss-hole',    icon:'fa-circle-notch', label:'Hole'},
+    tap:      {cls:'ss-tap',     icon:'fa-screwdriver',  label:'Tap'},
+    machine:  {cls:'ss-machine', icon:'fa-cog',          label:'Machine'},
+    op:       {cls:'ss-op',      icon:'fa-tools',        label:'Operation'},
+    thread:   {cls:'ss-thread',  icon:'fa-ring',         label:'Thread'},
+    item:     {cls:'ss-item',    icon:'fa-box',          label:'Item'},
+    inventory:{cls:'ss-inv',     icon:'fa-boxes',        label:'Inventory'},
+    plating:  {cls:'ss-plating', icon:'fa-paint-brush',  label:'Plating'},
+    heat:     {cls:'ss-heat',    icon:'fa-fire',         label:'Heat Treat'},
+    inspect:  {cls:'ss-inspect', icon:'fa-search',       label:'Inspect'},
+    approve:  {cls:'ss-approve', icon:'fa-check',        label:'Approve'},
+    pack:     {cls:'ss-pack',    icon:'fa-box-open',     label:'Pack'},
+    ship:     {cls:'ss-ship',    icon:'fa-truck',        label:'Ship'},
+    cert:     {cls:'ss-approve', icon:'fa-certificate',  label:'Cert'},
+    control:  {cls:'ss-stop',    icon:'fa-stop-circle',  label:'Control'},
+    hold:     {cls:'ss-stop',    icon:'fa-pause',        label:'Hold'}
+};
+
+/* Make a locked step object */
+function mkLocked(type) {
+    var d = STEP_DEF[type] || {cls:'ss-start', icon:'fa-play', label:type};
+    return {type:type, label:d.label, cls:d.cls, icon:d.icon, locked:true};
+}
+
+/* Make a blank slot */
+function mkBlank() {
+    return {type:'blank', label:'', cls:'ss-blank', icon:'', locked:false};
+}
+
+/* Make a step from a palette/input drag item */
+function mkStep(type, label, cls, icon) {
+    return {type:type, label:label, cls:cls, icon:icon, locked:false};
+}
+
+/* ════════════════════════════════
+   BUILD LANE STEPS
+   START (locked) + N blank slots (one per JO item) + SHIP (locked)
+   User drags items from col-3 into the blank slots.
+════════════════════════════════ */
+function dirBuildSteps(jo) {
+    var steps = [];
+    /* LOCKED first: Start */
+    steps.push(mkLocked('start') );
+    /* One blank slot for each item in this JO */
+    var n = jo.holes + jo.taps + jo.machines + jo.ops + jo.threads + jo.items;
+    if(n < 1) n = 3;
+    for(var i = 0; i < n; i++) steps.push(mkBlank());
+    /* LOCKED last: Ship */
+    steps.push(mkLocked('ship'));
+    return steps;
+}
+
+/* ════════════════════════════════
+   BUILD INPUT PANEL ITEMS
+   Shown in col-3, one per JO item — drag these into the lane blanks
+════════════════════════════════ */
+function dirBuildInputItems(jo) {
+    var items = [];
+    var i;
+    for(i=0;i<jo.holes;i++)    items.push({type:'hole',    label:'Hole '+(i+1),     icon:'fa-circle-notch', cls:'ss-hole'});
+    for(i=0;i<jo.taps;i++)     items.push({type:'tap',     label:'Tap '+(i+1),      icon:'fa-screwdriver',  cls:'ss-tap'});
+    for(i=0;i<jo.machines;i++) items.push({type:'machine', label:'Machine '+(i+1),  icon:'fa-cog',          cls:'ss-machine'});
+    for(i=0;i<jo.ops;i++)      items.push({type:'op',      label:'Op '+(i+1),       icon:'fa-tools',        cls:'ss-op'});
+    for(i=0;i<jo.threads;i++)  items.push({type:'thread',  label:'Thread '+(i+1),   icon:'fa-ring',         cls:'ss-thread'});
+    for(i=0;i<jo.items;i++)    items.push({type:'item',    label:'Item '+(i+1),      icon:'fa-box',          cls:'ss-item'});
+    return items;
+}
+
+/* ════════════════════════════════
+   TREE RENDER
+════════════════════════════════ */
 function dirRenderTree() {
     var h = '';
     DIR_QUOTES.forEach(function(q) {
         var pOpen = !!dirTreeOpen[q.id];
-        var isAct = dirActiveId === q.id;
+        var isAct = dirActiveJO && dirActiveJO._quoteId === q.id;
 
         h += '<div class="tp">';
         h += '<div class="tp-hd' + (isAct?' act':'') + '" onclick="dirClickParent(\'' + q.id + '\')">';
@@ -640,32 +776,32 @@ function dirRenderTree() {
         h += '<span class="tp-st ' + q.status + '">' + q.status + '</span>';
         h += '</div>';
 
-        /* parent info */
         h += '<div class="tp-info' + (pOpen?' open':'') + '">';
         h += '<div class="ti-row"><span class="ti-lbl">Customer</span><span class="ti-val">' + q.customer + '</span></div>';
-        h += '<div class="ti-row"><span class="ti-lbl">Qty / Material</span><span class="ti-val">×' + q.qty + ' ' + q.mat + '</span></div>';
+        h += '<div class="ti-row"><span class="ti-lbl">Qty / Material</span><span class="ti-val">\xd7' + q.qty + ' ' + q.mat + '</span></div>';
         h += '<div class="ti-row"><span class="ti-lbl">Job Orders</span><span class="ti-val">' + q.children.length + '</span></div>';
         h += '<div class="ti-chips">';
-        if(q.holes)    h += '<span class="tic h"><i class="fas fa-circle-notch"></i>' + q.holes + ' Holes</span>';
-        if(q.taps)     h += '<span class="tic t"><i class="fas fa-screwdriver"></i>' + q.taps + ' Taps</span>';
-        if(q.machines) h += '<span class="tic mc"><i class="fas fa-cog"></i>' + q.machines + ' Mach</span>';
-        if(q.ops)      h += '<span class="tic op"><i class="fas fa-tools"></i>' + q.ops + ' Ops</span>';
-        if(q.threads)  h += '<span class="tic th"><i class="fas fa-ring"></i>' + q.threads + ' Thr</span>';
-        if(q.items)    h += '<span class="tic it"><i class="fas fa-box"></i>' + q.items + ' Items</span>';
+        if(q.holes)    h += '<span class="tic h"><i class="fas fa-circle-notch"></i> ' + q.holes + ' Holes</span>';
+        if(q.taps)     h += '<span class="tic t"><i class="fas fa-screwdriver"></i> ' + q.taps + ' Taps</span>';
+        if(q.machines) h += '<span class="tic mc"><i class="fas fa-cog"></i> ' + q.machines + ' Mach</span>';
+        if(q.ops)      h += '<span class="tic op"><i class="fas fa-tools"></i> ' + q.ops + ' Ops</span>';
+        if(q.threads)  h += '<span class="tic th"><i class="fas fa-ring"></i> ' + q.threads + ' Thr</span>';
+        if(q.items)    h += '<span class="tic it"><i class="fas fa-box"></i> ' + q.items + ' Items</span>';
         h += '</div></div>';
 
-        /* children */
         h += '<div class="tc-wrap' + (pOpen?' open':'') + '">';
         q.children.forEach(function(jo) {
-            var cOpen = !!dirChildOpen[jo.id];
-            var cAct  = dirActiveId === jo.id;
-            var stCol = jo.status==='released' ? '#16a34a' : jo.status==='assigned' ? '#3a70c8' : '#d97706';
+            var cOpen   = !!dirChildOpen[jo.id];
+            var cAct    = dirActiveJO && dirActiveJO.id === jo.id;
+            var hasLane = !!DIR_LANES[jo.id];
+            var stCol   = jo.status==='released'?'#16a34a':jo.status==='assigned'?'#3a70c8':'#d97706';
 
             h += '<div class="tc' + (cAct?' act':'') + '">';
             h += '<div class="tc-hd" onclick="dirClickChild(\'' + jo.id + '\',\'' + q.id + '\')">';
             h += '<div class="tc-dot ' + jo.status + '"></div>';
             h += '<span class="tc-jnum">' + jo.id + '</span>';
             h += '<span class="tc-name">' + jo.name + '</span>';
+            if(hasLane) h += '<span style="font-size:8px;background:#dcfce7;color:#16a34a;border-radius:4px;padding:1px 4px;flex-shrink:0;font-weight:700;margin-left:2px;">LANE</span>';
             h += '<i class="fas fa-chevron-right tc-chv' + (cOpen?' open':'') + '"></i>';
             h += '</div>';
 
@@ -675,22 +811,29 @@ function dirRenderTree() {
                 h += '<div class="ci-row"><span class="ci-lbl">Operator</span><span class="ci-val">' + jo.operator + '</span></div>';
                 h += '<div class="ci-row"><span class="ci-lbl">Machine</span><span class="ci-val">' + jo.machine + '</span></div>';
                 h += '<div class="ci-row"><span class="ci-lbl">Start</span><span class="ci-val">' + jo.date + '</span></div>';
-                h += '<div class="ci-row"><span class="ci-lbl">Priority</span><span class="ci-val">' + jo.priority + '</span></div>';
             } else {
                 h += '<div class="no-assign"><i class="fas fa-exclamation-triangle"></i> Not assigned yet</div>';
             }
             h += '<div class="ci-chips">';
-            if(jo.holes)    h += '<span class="cic h"><i class="fas fa-circle-notch"></i>' + jo.holes + '</span>';
-            if(jo.taps)     h += '<span class="cic t"><i class="fas fa-screwdriver"></i>' + jo.taps + '</span>';
-            if(jo.machines) h += '<span class="cic m"><i class="fas fa-cog"></i>' + jo.machines + '</span>';
-            if(jo.ops)      h += '<span class="cic o"><i class="fas fa-tools"></i>' + jo.ops + '</span>';
-            if(jo.threads)  h += '<span class="cic th"><i class="fas fa-ring"></i>' + jo.threads + '</span>';
+            if(jo.holes)    h += '<span class="cic h"><i class="fas fa-circle-notch"></i> ' + jo.holes + '</span>';
+            if(jo.taps)     h += '<span class="cic t"><i class="fas fa-screwdriver"></i> ' + jo.taps + '</span>';
+            if(jo.machines) h += '<span class="cic m"><i class="fas fa-cog"></i> ' + jo.machines + '</span>';
+            if(jo.ops)      h += '<span class="cic o"><i class="fas fa-tools"></i> ' + jo.ops + '</span>';
+            if(jo.threads)  h += '<span class="cic th"><i class="fas fa-ring"></i> ' + jo.threads + '</span>';
             h += '</div>';
-            h += '<button class="load-btn" onclick="dirLoadJO(\'' + jo.id + '\',\'' + q.id + '\')">';
-            h += '<i class="fas fa-arrow-right"></i> Load to Canvas</button>';
+
+            if(!hasLane) {
+                h += '<button class="load-btn" onclick="dirAddLane(\'' + jo.id + '\',\'' + q.id + '\')">';
+                h += '<i class="fas fa-plus-circle"></i> Add Lane</button>';
+            } else {
+                h += '<button class="load-btn" style="background:#059669;" onclick="dirFocusLane(\'' + jo.id + '\')">';
+                h += '<i class="fas fa-eye"></i> Focus Lane</button>';
+                h += '<button class="load-btn amber" style="margin-top:4px;" onclick="dirRemoveLane(\'' + jo.id + '\')">';
+                h += '<i class="fas fa-times"></i> Remove Lane</button>';
+            }
             if(jo.status !== 'released') {
-                h += '<button class="load-btn amber" onclick="dirShowModal(\'' + jo.id + ' — ' + jo.name + '\')">';
-                h += '<i class="fas fa-hard-hat"></i> Assign Workflow</button>';
+                h += '<button class="load-btn amber" style="margin-top:4px;" onclick="dirShowModal(\'' + jo.id + '\')">';
+                h += '<i class="fas fa-hard-hat"></i> Assign</button>';
             }
             h += '</div></div>';
         });
@@ -701,181 +844,332 @@ function dirRenderTree() {
 
 function dirClickParent(qid) {
     dirTreeOpen[qid] = !dirTreeOpen[qid];
-    dirActiveId = qid;
-    var q = DIR_QUOTES.find(function(x){ return x.id===qid; });
-    if(q) {
-        document.getElementById('dirActiveRef').textContent  = q.id;
-        document.getElementById('dirActiveName').textContent = q.name;
-        document.getElementById('dirActiveJOs').textContent  = q.children.length + ' Job Order' + (q.children.length!==1?'s':'');
-    }
     dirRenderTree();
 }
 
 function dirClickChild(joid, qid) {
     dirTreeOpen[qid]   = true;
     dirChildOpen[joid] = !dirChildOpen[joid];
-    dirActiveId = joid;
+    var q  = DIR_QUOTES.find(function(x){ return x.id === qid; });
+    var jo = q ? q.children.find(function(x){ return x.id === joid; }) : null;
+    if(jo) {
+        jo._quoteId = qid; jo._quoteName = q.name;
+        dirActiveJO = jo;
+        dirRenderInputPanel(jo);
+        document.getElementById('dirActiveRef').textContent  = jo.id;
+        document.getElementById('dirActiveName').textContent = jo.name;
+        document.getElementById('dirActiveJOs').textContent  = q.name;
+    }
     dirRenderTree();
 }
 
-function dirLoadJO(joid, qid) {
-    var q  = DIR_QUOTES.find(function(x){ return x.id===qid; });
-    var jo = q ? q.children.find(function(x){ return x.id===joid; }) : null;
+function dirAddLane(joid, qid) {
+    var q  = DIR_QUOTES.find(function(x){ return x.id === qid; });
+    var jo = q ? q.children.find(function(x){ return x.id === joid; }) : null;
     if(!jo) return;
-    var items = [];
-    for(var i=0;i<jo.holes;i++)    items.push({type:'hole',   label:'Hole',       icon:'fa-circle-notch',cls:'ss-hole'});
-    for(var i=0;i<jo.taps;i++)     items.push({type:'tap',    label:'Tap',        icon:'fa-screwdriver', cls:'ss-tap'});
-    for(var i=0;i<jo.machines;i++) items.push({type:'machine',label:'Machine',    icon:'fa-cog',         cls:'ss-machine'});
-    for(var i=0;i<jo.ops;i++)      items.push({type:'op',     label:'Operation',  icon:'fa-tools',       cls:'ss-op'});
-    for(var i=0;i<jo.threads;i++)  items.push({type:'thread', label:'Threading',  icon:'fa-ring',        cls:'ss-thread'});
-    for(var i=0;i<jo.items;i++)    items.push({type:'item',   label:'Item',       icon:'fa-box',         cls:'ss-item'});
-    DIR_QITEMS = items;
-    dirRenderInputList();
+    jo._quoteId = qid; jo._quoteName = q.name;
+    dirActiveJO = jo;
+
+    DIR_LANES[joid] = {
+        joId:      jo.id,
+        joName:    jo.name,
+        quoteId:   qid,
+        quoteName: q.name,
+        status:    jo.status,
+        steps:     dirBuildSteps(jo)
+    };
+    if(DIR_LANE_ORD.indexOf(joid) === -1) DIR_LANE_ORD.push(joid);
+
+    dirRenderInputPanel(jo);
+    dirRenderCanvas();
+    dirRenderTree();
+    dirFocusLane(joid);
     document.getElementById('dirActiveRef').textContent  = jo.id;
     document.getElementById('dirActiveName').textContent = jo.name;
     document.getElementById('dirActiveJOs').textContent  = q.name;
-    dirToast('Loaded ' + jo.id + ' → input panel', '#2563eb');
+    dirToast(jo.id + ' lane added', '#16a34a');
 }
 
+function dirFocusLane(joid) {
+    dirSelLane = joid;
+    document.querySelectorAll('.swim-lane').forEach(function(el){
+        el.classList.toggle('lane-focus', el.dataset.laneid === joid);
+    });
+    var el = document.getElementById('lane-' + joid);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function dirRemoveLane(joid) {
+    delete DIR_LANES[joid];
+    DIR_LANE_ORD = DIR_LANE_ORD.filter(function(id){ return id !== joid; });
+    if(dirSelLane === joid) dirSelLane = null;
+    dirRenderCanvas();
+    dirRenderTree();
+    dirToast('Lane removed', '#d97706');
+}
+
+/* ════════════════════════════════
+   INPUT PANEL (col 3)
+   Shows items for the selected JO — drag into lane blanks
+════════════════════════════════ */
+function dirRenderInputPanel(jo) {
+    var items = dirBuildInputItems(jo);
+    var h = '<div style="font-size:9px;font-weight:800;color:#1a2540;padding:4px 4px 3px;border-bottom:1px solid #a8b8cc;margin-bottom:4px;">'
+          + jo.id + '</div>';
+    items.forEach(function(item, idx) {
+        /* Store item index so drag carries the right data */
+        h += '<div class="qi" draggable="true" data-idx="' + idx + '"';
+        h += ' ondragstart="dirDnItem(event,' + idx + ')">';
+        h += '<i class="fas ' + item.icon + '" style="font-size:9px;opacity:.7;margin-right:3px;"></i>' + item.label;
+        h += '</div>';
+    });
+    if(items.length === 0) h += '<div style="font-size:10px;color:#9aaabb;text-align:center;padding:10px 4px;">No items</div>';
+    document.getElementById('dirInList').innerHTML = h;
+    /* store items on active JO for drag lookup */
+    dirActiveJO._inputItems = items;
+}
+
+/* ════════════════════════════════
+   CANVAS — SWIM LANES
+════════════════════════════════ */
+function dirRenderCanvas() {
+    var wrap = document.getElementById('dirFlowWrap');
+    if(DIR_LANE_ORD.length === 0) {
+        wrap.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:220px;color:#8898aa;font-size:13px;font-weight:600;gap:12px;">'
+            + '<i class="fas fa-swimming-pool" style="font-size:34px;opacity:.25;"></i>'
+            + '<span>Click a Job Order in the tree then press <b>Add Lane</b></span>'
+            + '</div>';
+        return;
+    }
+
+    var h = '<div class="swim-pool">';
+    DIR_LANE_ORD.forEach(function(joid) {
+        var lane = DIR_LANES[joid];
+        if(!lane) return;
+        var isFocus = dirSelLane === joid;
+        var stDot = lane.status==='released'?'#16a34a':lane.status==='assigned'?'#3a70c8':'#f59e0b';
+
+        h += '<div class="swim-lane' + (isFocus?' lane-focus':'') + '"';
+        h += ' id="lane-' + joid + '" data-laneid="' + joid + '">';
+
+        /* Lane header */
+        h += '<div class="lane-hd" onclick="dirFocusLane(\'' + joid + '\')">';
+        h += '<div class="lane-hd-left">';
+        h += '<span class="lane-dot" style="background:' + stDot + ';"></span>';
+        h += '<span class="lane-jnum">' + lane.joId + '</span>';
+        h += '<span class="lane-jname">' + lane.joName + '</span>';
+        h += '<span class="lane-qname">\u2190 ' + lane.quoteName + '</span>';
+        h += '</div>';
+        h += '<div class="lane-hd-right">';
+        h += '<span class="lane-status" style="color:' + stDot + ';">' + (lane.status||'pending') + '</span>';
+        h += '<button class="lane-assign-btn" onclick="event.stopPropagation();dirShowModal(\'' + lane.joId + '\')"><i class="fas fa-hard-hat"></i> Assign</button>';
+        h += '<button class="lane-rm-btn" onclick="event.stopPropagation();dirRemoveLane(\'' + joid + '\')"><i class="fas fa-times"></i></button>';
+        h += '</div></div>';
+
+        /* Lane steps row */
+        /*
+         * The lane-steps div is the DROP ZONE for the whole lane.
+         * Each individual blank slot ALSO intercepts drops (stopPropagation)
+         * so we know exactly which slot was targeted.
+         * Start (index 0) and Ship (last) are LOCKED — no drop, no drag.
+         */
+        h += '<div class="lane-steps" id="lsteps-' + joid + '"';
+        h += ' ondragover="dirLaneDragOver(event,\'' + joid + '\')"';
+        h += ' ondragleave="dirLaneDragLeave(event,\'' + joid + '\')"';
+        h += ' ondrop="dirLaneDrop(event,\'' + joid + '\')">';
+
+        lane.steps.forEach(function(s, si) {
+            var isLocked = !!s.locked;
+            var isBlank  = s.type === 'blank';
+            var isFirst  = si === 0;
+
+            h += '<div';
+            h += ' class="dstep ' + s.cls + (isFirst?' fs':'') + (isLocked?' step-locked':'') + (isBlank?' step-blank':'') + '"';
+            h += ' data-si="' + si + '"';
+
+            if(isLocked) {
+                /* Locked: no drag, no drop */
+                h += ' draggable="false"';
+            } else if(isBlank) {
+                /* Blank: is a drop target, not draggable */
+                h += ' draggable="false"';
+                h += ' ondragover="dirSlotOver(event,' + si + ')"';
+                h += ' ondragleave="dirSlotLeave(event)"';
+                h += ' ondrop="dirSlotDrop(event,\'' + joid + '\',' + si + ')"';
+            } else {
+                /* Filled non-locked: draggable AND droppable (swap) */
+                h += ' draggable="true"';
+                h += ' ondragstart="dirStepDragStart(event,\'' + joid + '\',' + si + ')"';
+                h += ' ondragover="dirSlotOver(event,' + si + ')"';
+                h += ' ondragleave="dirSlotLeave(event)"';
+                h += ' ondrop="dirSlotDrop(event,\'' + joid + '\',' + si + ')"';
+            }
+            h += '>';
+            /* Children have pointer-events:none so events land on the div */
+            if(s.icon) h += '<i class="fas ' + s.icon + '" style="pointer-events:none;"></i>';
+            if(s.label) h += '<span style="pointer-events:none;margin-left:3px;">' + s.label + '</span>';
+            if(isBlank)  h += '<span style="pointer-events:none;opacity:.35;font-size:9px;">drop</span>';
+            h += '</div>';
+        });
+
+        h += '</div>'; /* /lane-steps */
+        h += '</div>'; /* /swim-lane */
+    });
+    h += '</div>'; /* /swim-pool */
+    wrap.innerHTML = h;
+}
+
+/* ════════════════════════════════
+   DRAG — SOURCES
+════════════════════════════════ */
+
+/* Drag from palette (col 1) */
+function dirDn(e, type, label, cls, icon) {
+    DIR_DRAG = {src:'palette', type:type, label:label, cls:cls, icon:icon};
+    e.dataTransfer.setData('text/plain', 'drag');
+    e.dataTransfer.effectAllowed = 'copy';
+}
+
+/* Drag from input panel (col 3) — use stored index */
+function dirDnItem(e, idx) {
+    if(!dirActiveJO || !dirActiveJO._inputItems) return;
+    var item = dirActiveJO._inputItems[idx];
+    if(!item) return;
+    DIR_DRAG = {src:'input', type:item.type, label:item.label, cls:item.cls, icon:item.icon};
+    e.dataTransfer.setData('text/plain', 'drag');
+    e.dataTransfer.effectAllowed = 'copy';
+}
+
+/* Drag a filled step OUT of a lane (to move) */
+function dirStepDragStart(e, joid, si) {
+    var lane = DIR_LANES[joid];
+    if(!lane) return;
+    var s = lane.steps[si];
+    if(!s || s.locked || s.type === 'blank') { e.preventDefault(); return; }
+    DIR_DRAG = {src:'lane', type:s.type, label:s.label, cls:s.cls, icon:s.icon, fromLane:joid, fromIdx:si};
+    e.dataTransfer.setData('text/plain', 'drag');
+    e.dataTransfer.effectAllowed = 'move';
+    /* mark source slot visually */
+    e.target.style.opacity = '0.4';
+}
+
+/* ════════════════════════════════
+   DRAG — LANE ZONE (background drop)
+   Fires when dropped on the lane-steps background (missed all slots)
+════════════════════════════════ */
+function dirLaneDragOver(e, joid) {
+    /* Only accept if the drag came from palette or input */
+    e.preventDefault();
+    document.getElementById('lsteps-' + joid).classList.add('ldov');
+}
+function dirLaneDragLeave(e, joid) {
+    /* Only remove highlight if leaving the container itself */
+    if(e.currentTarget.contains(e.relatedTarget)) return;
+    document.getElementById('lsteps-' + joid).classList.remove('ldov');
+}
+function dirLaneDrop(e, joid) {
+    e.preventDefault();
+    document.getElementById('lsteps-' + joid).classList.remove('ldov');
+    if(!DIR_DRAG) return;
+    /* Dropped on background — fill the first blank slot */
+    var lane = DIR_LANES[joid];
+    if(!lane) return;
+    var blankIdx = -1;
+    for(var i = 1; i < lane.steps.length - 1; i++) {
+        if(lane.steps[i].type === 'blank') { blankIdx = i; break; }
+    }
+    if(blankIdx >= 0) {
+        lane.steps[blankIdx] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon);
+        /* If moving from another lane, blank that slot */
+        if(DIR_DRAG.src === 'lane' && DIR_DRAG.fromLane !== joid) {
+            var fl = DIR_LANES[DIR_DRAG.fromLane];
+            if(fl) fl.steps[DIR_DRAG.fromIdx] = mkBlank();
+        }
+        DIR_DRAG = null;
+        dirRenderCanvas();
+        dirFocusLane(joid);
+        dirToast('Step added to ' + joid, '#2563eb');
+    } else {
+        dirToast('All slots filled — drop on a specific slot to replace', '#d97706');
+    }
+}
+
+/* ════════════════════════════════
+   DRAG — SLOT (specific step drop)
+════════════════════════════════ */
+function dirSlotOver(e, si) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.classList.add('dov');
+}
+function dirSlotLeave(e) {
+    e.currentTarget.classList.remove('dov');
+}
+function dirSlotDrop(e, joid, si) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.classList.remove('dov');
+    document.getElementById('lsteps-' + joid).classList.remove('ldov');
+    if(!DIR_DRAG) return;
+    var lane = DIR_LANES[joid];
+    if(!lane) return;
+    var target = lane.steps[si];
+    /* Never overwrite locked slots */
+    if(target && target.locked) {
+        dirToast('Start and Ship are locked', '#d97706');
+        DIR_DRAG = null;
+        return;
+    }
+    /* Place the step */
+    lane.steps[si] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon);
+    /* If moving from another slot in same or different lane — blank the source */
+    if(DIR_DRAG.src === 'lane') {
+        var fl = DIR_LANES[DIR_DRAG.fromLane];
+        if(fl && !(DIR_DRAG.fromLane === joid && DIR_DRAG.fromIdx === si)) {
+            fl.steps[DIR_DRAG.fromIdx] = mkBlank();
+        }
+    }
+    DIR_DRAG = null;
+    /* restore opacity on all steps */
+    document.querySelectorAll('.dstep').forEach(function(el){ el.style.opacity = ''; });
+    dirRenderCanvas();
+    dirFocusLane(joid);
+    dirToast('Placed: ' + lane.steps[si].label, '#2563eb');
+}
+
+/* ════════════════════════════════
+   TOGGLE TREE PANEL
+════════════════════════════════ */
 function dirToggleTree() {
     dirTreeCol = !dirTreeCol;
     document.getElementById('dirTree').classList.toggle('collapsed', dirTreeCol);
     document.getElementById('dirTreeIco').className = 'fas fa-chevron-' + (dirTreeCol?'right':'left');
 }
 
-/* ── INPUT LIST ── */
-function dirRenderInputList() {
-    var h = '';
-    DIR_QITEMS.forEach(function(q) {
-        h += '<div class="qi" draggable="true"';
-        h += ' ondragstart="dirDn(event,\'' + q.type + '\',\'' + q.label + '\',\'' + q.cls + '\',\'' + q.icon + '\')"';
-        h += ' ondblclick="dirAutoPlace(\'' + q.type + '\',\'' + q.label + '\',\'' + q.cls + '\',\'' + q.icon + '\')">';
-        h += '<i class="fas ' + q.icon + '" style="font-size:9px;opacity:.7;margin-right:3px;"></i>' + q.label;
-        h += '</div>';
-    });
-    document.getElementById('dirInList').innerHTML = h;
-}
-
-/* ── CANVAS ── */
-function dirRenderCanvas() {
-    var h = '';
-    DIR_ROWS.forEach(function(row, ri) {
-        if(ri>0) h += '<div class="dc-gap"><i class="fas fa-arrow-down"></i></div>';
-        h += '<div class="dc-row" id="' + row.id + '"';
-        h += ' ondragover="event.preventDefault();this.classList.add(\'rdov\');"';
-        h += ' ondragleave="this.classList.remove(\'rdov\');"';
-        h += ' ondrop="dirDropRow(event,\'' + row.id + '\')">';
-        h += '<div class="dc-lbl">' + row.lbl + '</div>';
-        row.steps.forEach(function(s, si) {
-            var ico = s.icon ? '<i class="fas ' + s.icon + '"></i>' : '';
-            h += '<div class="dstep ' + s.cls + (si===0?' fs':'') + '"';
-            h += ' onclick="dirSelStep(this)"';
-            h += ' ondragover="event.preventDefault();event.stopPropagation();this.classList.add(\'dov\');"';
-            h += ' ondragleave="this.classList.remove(\'dov\');"';
-            h += ' ondrop="dirDropStep(event,\'' + row.id + '\',' + si + ')"';
-            h += ' draggable="' + (s.type!=='blank') + '"';
-            h += ' title="' + (s.label||'Drop a step here') + '">';
-            h += ico + s.label + '</div>';
-            if(row.actor && row.actorAt && si===row.actorAt-1) h += dirActorHtml('Actor');
-        });
-        if(row.actor && !row.actorAt) h += dirActorHtml('Actor');
-        if(row.showBubble && ri===0) h += '<div class="dbbl">Drag nodes here<br>from left palette</div>';
-        if(row.showTracking) h += '<div class="d-tracking">we can add this to tracking area</div>';
-        h += '</div>';
-    });
-    h += '<div style="display:flex;gap:22px;margin-top:14px;padding-left:42px;">' + dirActorHtml('Actor') + dirActorHtml('Actor') + dirActorHtml('Actor') + '</div>';
-    h += '<div style="margin-top:10px;padding-left:42px;"><div class="dc-addrow" onclick="dirAddRow()"><i class="fas fa-plus"></i> Add Job Order Row</div></div>';
-    document.getElementById('dirFlowWrap').innerHTML = h;
-}
-
-function dirActorHtml(lbl) {
-    return '<div class="dactor" onclick="dirShowModal(null)">'
-        + '<div class="da-head"></div>'
-        + '<div class="da-torso"><div class="da-arms"></div><div class="da-body"></div></div>'
-        + '<div class="da-legs"><div class="da-leg l"></div><div class="da-leg r"></div></div>'
-        + '<div class="da-name">' + lbl + '</div></div>';
-}
-
-/* ── DRAG & DROP ── */
-function dirDn(e, type, label, cls, icon) {
-    DIR_DRAG = {type:type, label:label, cls:cls||'ss-op', icon:icon||''};
-    e.dataTransfer.setData('text/plain', JSON.stringify(DIR_DRAG));
-    e.dataTransfer.effectAllowed = 'copy';
-}
-function dirDropRow(e, rowId) {
-    e.preventDefault();
-    document.getElementById(rowId).classList.remove('rdov');
-    var data = JSON.parse(e.dataTransfer.getData('text/plain'));
-    if(!data.type) return;
-    var row = DIR_ROWS.find(function(r){ return r.id===rowId; });
-    if(!row) return;
-    var blank = row.steps.find(function(s){ return s.type==='blank'; });
-    if(blank){ blank.type=data.type; blank.label=data.label; blank.cls=data.cls; blank.icon=data.icon; }
-    else row.steps.push({type:data.type, label:data.label, cls:data.cls, icon:data.icon});
-    dirRenderCanvas();
-    dirToast('Added: ' + data.label, '#2563eb');
-}
-function dirDropStep(e, rowId, si) {
-    e.preventDefault(); e.stopPropagation();
-    document.querySelectorAll('.dstep').forEach(function(s){ s.classList.remove('dov'); });
-    var data = JSON.parse(e.dataTransfer.getData('text/plain'));
-    if(!data.type) return;
-    var row = DIR_ROWS.find(function(r){ return r.id===rowId; });
-    if(!row) return;
-    row.steps[si] = {type:data.type, label:data.label, cls:data.cls, icon:data.icon};
-    dirRenderCanvas();
-    dirToast('Placed: ' + data.label, '#2563eb');
-}
-function dirAutoPlace(type, label, cls, icon) {
-    for(var i=0;i<DIR_ROWS.length;i++){
-        var b = DIR_ROWS[i].steps.find(function(s){ return s.type==='blank'; });
-        if(b){ b.type=type; b.label=label; b.cls=cls; b.icon=icon; dirRenderCanvas(); dirToast('Added: '+label,'#2563eb'); return; }
-    }
-}
-function dirSelStep(el) {
-    document.querySelectorAll('.dstep').forEach(function(s){ s.classList.remove('sel'); });
-    el.classList.add('sel');
-}
-function dirAddRow() {
-    var n = DIR_ROWS.length + 3;
-    DIR_ROWS.push({ id:'r'+(DIR_ROWS.length+1), lbl:'JO-00'+n, actor:false,
-        steps:[
-            {type:'start',label:'start',cls:'ss-start',icon:''},
-            {type:'blank',label:'',cls:'ss-blank',icon:''},
-            {type:'blank',label:'',cls:'ss-blank',icon:''},
-            {type:'blank',label:'',cls:'ss-blank',icon:''},
-            {type:'blank',label:'',cls:'ss-blank',icon:''},
-            {type:'blank',label:'',cls:'ss-blank',icon:''},
-        ]});
-    dirRenderCanvas();
-}
-function dirRemoveRow() {
-    if(DIR_ROWS.length>1){ DIR_ROWS.pop(); dirRenderCanvas(); }
-}
-
-/* ── MODAL ── */
+/* ════════════════════════════════
+   MODAL & TOAST
+════════════════════════════════ */
 function dirShowModal(ref) {
-    var label = ref || document.getElementById('dirActiveRef').textContent;
-    document.getElementById('dirModalRef').textContent = label;
+    document.getElementById('dirModalRef').textContent = ref || '\u2014';
     document.getElementById('dirModal').classList.add('on');
 }
 function dirCloseModal() { document.getElementById('dirModal').classList.remove('on'); }
 document.getElementById('dirModal').addEventListener('click', function(e){ if(e.target===this) dirCloseModal(); });
 
-/* ── TOAST ── */
 function dirToast(msg, col) {
     var t = document.getElementById('dir-toast');
     t.style.borderLeftColor = col || '#22c55e';
     document.getElementById('dir-toast-txt').textContent = msg;
     t.classList.add('on');
     clearTimeout(t._t);
-    t._t = setTimeout(function(){ t.classList.remove('on'); }, 2400);
+    t._t = setTimeout(function(){ t.classList.remove('on'); }, 2600);
 }
 
-/* ── INIT ── */
+/* ════════════════════════════════
+   INIT
+════════════════════════════════ */
 dirTreeOpen['Q-000002'] = true;
 dirRenderTree();
-dirRenderInputList();
 dirRenderCanvas();
 </script>
 @endverbatim
