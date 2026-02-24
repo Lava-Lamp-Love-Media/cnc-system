@@ -125,6 +125,24 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 .dir-pal::-webkit-scrollbar-thumb { background: #a0b0c4; border-radius: 2px; }
 
 .dp-sec { background: #b0c0d4; border: 1px solid #90a4b8; border-radius: 3px; padding: 3px 0; font-size: 11px; font-weight: 800; color: #1a2540; text-align: center; margin-bottom: 4px; letter-spacing: .5px; }
+/* Shape legend tooltip on palette nodes */
+.dpn[data-shape]::after {
+    content: attr(data-shapelabel);
+    position: absolute;
+    bottom: -18px; left: 50%;
+    transform: translateX(-50%);
+    background: #1a2540;
+    color: #fff;
+    font-size: 8px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s;
+    z-index: 10;
+}
+.dpn[data-shape]:hover::after { opacity: 1; }
 .dp-cg  { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-bottom: 3px; }
 .dp-cb  { padding: 4px 4px; border-radius: 4px; font-size: 10px; font-weight: 700; border: 1px solid #90a4b8; background: #c0d0e0; color: #1a2540; cursor: pointer; text-align: center; font-family: 'DM Sans', sans-serif; transition: background .1s; }
 .dp-cb:hover     { background: #a8bcd0; }
@@ -132,12 +150,90 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 .dp-cb.full      { grid-column: 1/-1; background: #58aa72; color: #fff; border-color: #469a60; }
 .dp-divider      { height: 1px; background: #90a4b8; margin: 5px 2px; }
 
-.dpn { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 18px; font-size: 11px; font-weight: 700; cursor: grab; border: 2px solid rgba(0,0,0,.2); box-shadow: 0 1px 3px rgba(0,0,0,.18); margin-bottom: 3px; user-select: none; transition: filter .1s, transform .1s; }
-.dpn:hover   { filter: brightness(.88); transform: translateX(2px); }
-.dpn:active  { cursor: grabbing; }
-.dpn i       { font-size: 9px; opacity: .8; }
-.dpn-row     { display: flex; gap: 3px; margin-bottom: 3px; }
-.dpn-row .dpn { flex: 1; margin-bottom: 0; padding: 5px 4px; justify-content: center; }
+/* ── Palette base node (col 1) ── */
+.dpn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 12px;
+    border-radius: 18px;          /* default pill — overridden by shape classes */
+    font-size: 11px; font-weight: 700;
+    cursor: grab; border: 2px solid rgba(0,0,0,.2);
+    box-shadow: 0 2px 5px rgba(0,0,0,.22);
+    margin-bottom: 4px; user-select: none;
+    transition: filter .12s, transform .12s;
+    position: relative;
+}
+.dpn:hover  { filter: brightness(.88); transform: translateX(3px); }
+.dpn:active { cursor: grabbing; opacity:.8; }
+.dpn i      { font-size: 10px; opacity: .85; pointer-events:none; }
+.dpn-row    { display: flex; gap: 4px; margin-bottom: 4px; }
+.dpn-row .dpn { flex: 1; margin-bottom: 0; padding: 5px 6px; justify-content: center; }
+
+/* ════════ PALETTE SHAPE CLASSES ════════
+   6 distinct shapes so col1 visually previews how item looks in the lane
+═══════════════════════════════════════ */
+
+/* ARROW — Operation/Process group */
+.dpn.shape-arrow {
+    border-radius: 0;
+    clip-path: polygon(0% 0%, calc(100% - 14px) 0%, 100% 50%, calc(100% - 14px) 100%, 0% 100%);
+    padding-right: 22px;
+}
+
+/* HEXAGON — Machine group */
+.dpn.shape-hexagon {
+    border-radius: 0;
+    clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%);
+    padding: 6px 20px;
+    justify-content: center;
+}
+
+/* TRAPEZOID — Material/Inventory group */
+.dpn.shape-trap {
+    border-radius: 0;
+    clip-path: polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%);
+    padding: 4px 18px 8px;
+    height: 42px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+/* FLAG — Inspect/Control group */
+.dpn.shape-flag {
+    border-radius: 0;
+    clip-path: polygon(0% 50%, 14px 0%, 100% 0%, 100% 100%, 14px 100%);
+    padding-left: 22px;
+    padding-right: 12px;
+}
+
+/* SHIELD — Quality/Approve group */
+.dpn.shape-shield {
+    border-radius: 0;
+    clip-path: polygon(15% 0%, 85% 0%, 100% 25%, 100% 65%, 50% 100%, 0% 65%, 0% 25%);
+    height: 48px;
+    padding: 4px 14px 8px;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 10px;
+}
+
+/* ROUND-RECT — Output/Ship group */
+.dpn.shape-round {
+    border-radius: 12px;
+    /* pill but more rounded than default */
+}
+/* Shape indicator badge on each palette pill */
+.dpn .shape-badge {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    font-size: 7px; font-weight: 800; opacity: .55;
+    pointer-events: none; letter-spacing: .3px;
+    text-transform: uppercase;
+}
+/* Shape legend at bottom of palette */
+.pal-shape-legend { padding: 4px 6px; margin-top: 6px; border-top: 1px solid #90a4b8; }
+.pal-shape-legend .psl-title { font-size: 9px; font-weight: 800; color: #3a5070; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; text-align: center; }
+.psl-row { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
+.psl-icon { width: 26px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #fff; border-radius: 2px; }
+.psl-label { font-size: 9px; color: #2a3a50; font-weight: 600; }
 
 /* Node colors */
 .n-op  { background: #6ec86e; color: #0a2a0a; }
@@ -277,44 +373,68 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 .load-btn.amber { background: #d97706; }
 .load-btn.amber:hover { background: #b45309; }
 
-/* ══ COL 3 — QUOTE INPUT ══ */
+/* ══ COL 3 — QUOTE INPUT ══
+   Deliberately different look from palette (col1):
+   diagonal stripe pattern + warm amber tone = "from quote/order data"
+   Palette is cool grey/blue = "structure nodes"
+══ */
 .dir-in {
-    width: 100px;
+    width: 110px;
     flex-shrink: 0;
-    background: #c0ccd8;
-    border-right: 2px solid #a8b8cc;
+    /* diagonal stripe background — visually distinct from palette */
+    background:
+        repeating-linear-gradient(
+            -45deg,
+            #f5e8c8,
+            #f5e8c8 5px,
+            #eed8a0 5px,
+            #eed8a0 10px
+        );
+    border-right: 3px solid #c8a840;
+    border-left: 2px solid #d4b050;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
-.di-hd { background: #8898b0; border-bottom: 1px solid #7888a0; padding: 5px 6px; font-size: 9px; font-weight: 700; color: #0a1828; text-align: center; line-height: 1.4; flex-shrink: 0; }
-.di-list { overflow-y: auto; flex: 1; padding: 4px; }
+.di-hd {
+    background: #b8860a;
+    border-bottom: 2px solid #9a7000;
+    padding: 6px 6px;
+    font-size: 9px;
+    font-weight: 800;
+    color: #fff;
+    text-align: center;
+    line-height: 1.4;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+.di-list { overflow-y: auto; flex: 1; padding: 5px 4px; }
 .di-list::-webkit-scrollbar { width: 3px; }
-.di-list::-webkit-scrollbar-thumb { background: #9aaabe; border-radius: 2px; }
+.di-list::-webkit-scrollbar-thumb { background: #c8a840; border-radius: 2px; }
 .qi {
     padding: 5px 10px;
-    border-radius: 20px;          /* PILL shape — matches lane steps */
+    border-radius: 20px;    /* OVAL/PILL — stays pill in col3, becomes arrow in lane */
     font-size: 10px;
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     cursor: grab;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,.15);
+    box-shadow: 0 2px 6px rgba(0,0,0,.18);
     user-select: none;
-    transition: filter .1s, transform .1s;
-    border: 2px solid rgba(0,0,0,.18);
+    transition: filter .12s, transform .12s;
+    border: 2px solid rgba(0,0,0,.2);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    /* default colour — overridden per-type below */
-    background: #c0d0e0;
+    background: #fff;
     color: #1a2540;
 }
 .qi:hover  { filter: brightness(.88); transform: translateY(-1px); }
 .qi:active { cursor: grabbing; opacity: .7; }
 
-/* Per-type colors matching lane pill colors */
+/* Per-type colors — FULL color pill (col3 items match their type color) */
 .qi[data-type="hole"]    { background: #3090e8; color: #fff;    border-color: #1870c8; }
 .qi[data-type="tap"]     { background: #d83060; color: #fff;    border-color: #b01848; }
 .qi[data-type="machine"] { background: #2860b8; color: #fff;    border-color: #1040a0; }
@@ -322,14 +442,14 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 .qi[data-type="thread"]  { background: #38a068; color: #fff;    border-color: #208050; }
 .qi[data-type="item"]    { background: #f0c040; color: #3a2000; border-color: #d0a020; }
 
-/* Used / placed — greyed pill */
+/* Used/placed — strikethrough, semi-transparent */
 .qi.qi-used {
     cursor: default;
-    background: #e8eef4 !important;
-    border-color: #c0ccd8 !important;
-    color: #9aaabb !important;
+    background: rgba(255,255,255,.5) !important;
+    border-color: #c8b880 !important;
+    color: #a08840 !important;
     pointer-events: none;
-    opacity: .6;
+    opacity: .55;
     box-shadow: none;
 }
 
@@ -423,19 +543,36 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
     padding-bottom: 20px;
 }
 
-/* Each swim lane */
+/* Each swim lane — strong dividers so lanes cannot be crossed */
 .swim-lane {
-    border: 2px solid #c0ccd8;
-    border-radius: 0;
-    background: #e8f0f8;
-    border-bottom: none;
+    border-left:   3px solid #8098b8;
+    border-right:  3px solid #8098b8;
+    border-top:    none;
+    border-bottom: 3px solid #5a7090;   /* thick bottom = hard lane boundary */
+    background: #eaf0f8;
     transition: background .15s, border-color .15s;
     width: 100%;
+    position: relative;
 }
-.swim-lane:first-child { border-radius: 8px 8px 0 0; }
-.swim-lane:last-child  { border-radius: 0 0 8px 8px; border-bottom: 2px solid #c0ccd8; }
-.swim-lane:only-child  { border-radius: 8px; border-bottom: 2px solid #c0ccd8; }
-.swim-lane.lane-focus  { background: #f0f6ff; border-color: #3a70c8; z-index: 1; position: relative; box-shadow: 0 0 0 2px rgba(58,112,200,.18); }
+/* Top border on first lane */
+.swim-lane:first-child { border-top: 3px solid #8098b8; }
+/* Focused lane highlight */
+.swim-lane.lane-focus {
+    background: #f0f6ff;
+    border-color: #3a70c8;
+    border-bottom-color: #2050a0;
+    z-index: 1;
+    box-shadow: inset 0 0 0 2px rgba(58,112,200,.2);
+}
+/* Lane label tab on the left edge */
+.swim-lane::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #6a88b8, #4a6890);
+}
+.swim-lane.lane-focus::before { background: linear-gradient(to bottom, #3a70c8, #2050a0); }
 
 /* Lane header */
 .lane-hd {
@@ -474,15 +611,15 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 }
 .lane-rm-btn:hover { background: #d82020; color: #fff; border-color: #d82020; }
 
-/* Lane steps row — horizontal scroll, all steps in one line */
+/* Lane steps row — horizontal scroll, shapes need gap so clips don't overlap */
 .lane-steps {
     display: flex;
     align-items: center;
-    padding: 10px 14px 12px;
-    gap: 6px;
+    padding: 14px 16px 16px;
+    gap: 10px;           /* wider gap — shapes like diamond/hexagon need space */
     overflow-x: auto;
-    overflow-y: hidden;
-    min-height: 64px;
+    overflow-y: visible; /* allow tall shapes like diamond to show */
+    min-height: 72px;
     flex-wrap: nowrap;
     width: 100%;
     box-sizing: border-box;
@@ -521,106 +658,207 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
     color: #8898aa; font-size: 13px; font-weight: 600; gap: 12px;
 }
 
-/* ══════════════════════════════════════════════
-   LANE STEPS — pill shape matching palette buttons
-   Start & Ship keep the pentagon (clip-path).
-   All other steps = rounded pill, same colors as palette.
-══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   LANE STEPS — MULTI-SHAPE SYSTEM
+   Base has NO clip-path. Each shape class sets its own clip-path.
+   This fixes CSS specificity so shapes actually apply.
+══════════════════════════════════════════════════════════════ */
 
-/* Base override for steps inside a lane */
+/* ── BASE: layout only, NO clip-path here ── */
 .lane-steps .dstep {
-    height: 36px;
-    min-width: 80px;
+    height: 44px;
+    min-width: 88px;
     font-size: 11px;
     font-weight: 700;
-    /* ── PILL SHAPE (override pentagon clip-path) ── */
-    clip-path: none !important;
-    border-radius: 20px;
-    padding: 0 14px;
-    border: 2px solid rgba(0,0,0,.18);
-    box-shadow: 0 2px 5px rgba(0,0,0,.15);
+    padding: 0 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
     flex-shrink: 0;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    transition: filter .12s, transform .12s;
+    box-shadow: 0 3px 8px rgba(0,0,0,.25);
+    /* NO clip-path here — set in shape classes below */
 }
 .lane-steps .dstep span { white-space: nowrap; pointer-events: none; }
-.lane-steps .dstep i    { pointer-events: none; margin-right: 4px; font-size: 10px; }
+.lane-steps .dstep i    { pointer-events: none; font-size: 11px; opacity: .92; }
 
-/* Start and Ship stay as left/right-capped pill (flat on one side) */
-.lane-steps .dstep.step-locked {
-    clip-path: none !important;
-    border-radius: 20px;
-    cursor: default;
-    opacity: 1;
-    border-color: rgba(0,0,0,.25);
-    box-shadow: 0 2px 6px rgba(0,0,0,.2);
+/* ════════════════════════
+   SHAPE CLASSES
+   Each has full specificity: .lane-steps .dstep.ss-shape-*
+════════════════════════ */
+
+/* ARROW chevron → Operation, Start default */
+.lane-steps .dstep.ss-shape-arrow {
+    clip-path: polygon(0% 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 0% 100%);
+    padding: 0 24px 0 14px;
+    border-radius: 0;
 }
+
+/* ARROW-FIRST flat-left pointed-right → Start */
+.lane-steps .dstep.ss-shape-arrow-first {
+    clip-path: polygon(0% 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 0% 100%);
+    padding: 0 24px 0 12px;
+    border-radius: 0;
+}
+
+/* ARROW-END notched-left flat-right → Ship */
+.lane-steps .dstep.ss-shape-arrow-end {
+    clip-path: polygon(16px 0%, 100% 0%, 100% 100%, 16px 100%, 0% 50%);
+    padding: 0 14px 0 26px;
+    border-radius: 0;
+}
+
+/* CIRCLE pill → Hole */
+.lane-steps .dstep.ss-shape-circle {
+    clip-path: none;
+    border-radius: 999px;
+    min-width: 90px;
+    border: 2px solid rgba(255,255,255,.4) !important;
+}
+
+/* DIAMOND → Tap */
+.lane-steps .dstep.ss-shape-diamond {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    height: 62px;
+    min-width: 62px;
+    padding: 0 6px;
+    font-size: 9px;
+    border-radius: 0;
+}
+
+/* HEXAGON → Machine */
+.lane-steps .dstep.ss-shape-hexagon {
+    clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%);
+    padding: 0 22px;
+    min-width: 92px;
+    border-radius: 0;
+}
+
+/* PARALLELOGRAM slanted → Thread */
+.lane-steps .dstep.ss-shape-parallelogram {
+    clip-path: polygon(14% 0%, 100% 0%, 86% 100%, 0% 100%);
+    padding: 0 22px 0 20px;
+    min-width: 92px;
+    border-radius: 0;
+}
+
+/* FLAG notched-left banner → Inspect */
+.lane-steps .dstep.ss-shape-flag {
+    clip-path: polygon(0% 50%, 16px 0%, 100% 0%, 100% 100%, 16px 100%);
+    padding: 0 16px 0 28px;
+    min-width: 92px;
+    border-radius: 0;
+}
+
+/* SHIELD badge → Approve, Cert */
+.lane-steps .dstep.ss-shape-shield {
+    clip-path: polygon(15% 0%, 85% 0%, 100% 25%, 100% 65%, 50% 100%, 0% 65%, 0% 25%);
+    height: 56px;
+    min-width: 64px;
+    padding: 4px 10px 0;
+    font-size: 9px;
+    border-radius: 0;
+    align-items: flex-start;
+}
+
+/* HOUSE pointed-top → Inventory */
+.lane-steps .dstep.ss-shape-house {
+    clip-path: polygon(50% 0%, 100% 35%, 100% 100%, 0% 100%, 0% 35%);
+    height: 56px;
+    min-width: 64px;
+    padding: 10px 10px 4px;
+    font-size: 9px;
+    border-radius: 0;
+    align-items: flex-end;
+}
+
+/* TRAPEZOID wide-bottom → Heat Treat */
+.lane-steps .dstep.ss-shape-trapezoid {
+    clip-path: polygon(12% 0%, 88% 0%, 100% 100%, 0% 100%);
+    padding: 0 18px;
+    min-width: 88px;
+    border-radius: 0;
+}
+
+/* ROUND-RECT → Plating, Pack */
+.lane-steps .dstep.ss-shape-round-rect {
+    clip-path: none;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,.3) !important;
+}
+
+/* STOP square → Control, Hold */
+.lane-steps .dstep.ss-shape-stop {
+    clip-path: none;
+    border-radius: 4px;
+    border: 3px solid rgba(255,255,255,.25) !important;
+    min-width: 76px;
+}
+
+/* OCTAGON cut-corners → Item */
+.lane-steps .dstep.ss-shape-octagon {
+    clip-path: polygon(12% 0%,88% 0%,100% 12%,100% 88%,88% 100%,12% 100%,0% 88%,0% 12%);
+    padding: 0 14px;
+    min-width: 84px;
+    border-radius: 0;
+}
+
+/* ── COLORS ── */
+.lane-steps .ss-start   { background: #b0c0d0; color: #1a2a3a; }
+.lane-steps .ss-ship    { background: #c0306a; color: #fff; }
+.lane-steps .ss-pack    { background: #8030a0; color: #fff; }
+.lane-steps .ss-hole    { background: #3090e8; color: #fff; }
+.lane-steps .ss-tap     { background: #d83060; color: #fff; }
+.lane-steps .ss-machine { background: #2860b8; color: #fff; }
+.lane-steps .ss-op      { background: #50a850; color: #fff; }
+.lane-steps .ss-item    { background: #f0c040; color: #3a2000; }
+.lane-steps .ss-thread  { background: #38a068; color: #fff; }
+.lane-steps .ss-inv     { background: #e08030; color: #fff; }
+.lane-steps .ss-plating { background: #b878d0; color: #fff; }
+.lane-steps .ss-heat    { background: #d86020; color: #fff; }
+.lane-steps .ss-inspect { background: #90c860; color: #0a2a0a; }
+.lane-steps .ss-approve { background: #30a050; color: #fff; }
+.lane-steps .ss-stop    { background: #d82020; color: #fff; }
+.lane-steps .ss-cert    { background: #3060b8; color: #fff; }
+
+/* Locked */
+.lane-steps .dstep.step-locked { cursor: default; }
 .lane-steps .dstep.step-locked:hover { filter: none; transform: none; }
 
-/* Remove first-step flat-left override inside lanes */
-.lane-steps .dstep.fs {
-    clip-path: none !important;
-    border-radius: 20px;
-    padding-left: 14px;
-}
-
-/* ── PILL COLORS (match palette n-* colors exactly) ── */
-.lane-steps .ss-start   { background: #b0c0d0; color: #1a2a3a; border-color: #8090a0; }
-.lane-steps .ss-ship    { background: #7030b8; color: #fff;    border-color: #5020a0; }
-.lane-steps .ss-pack    { background: #8030a0; color: #fff;    border-color: #601888; }
-.lane-steps .ss-hole    { background: #3090e8; color: #fff;    border-color: #1870c8; }  /* blue */
-.lane-steps .ss-tap     { background: #d83060; color: #fff;    border-color: #b01848; }  /* pink-red */
-.lane-steps .ss-machine { background: #2860b8; color: #fff;    border-color: #1040a0; }  /* dark blue */
-.lane-steps .ss-op      { background: #6ec86e; color: #0a2a0a; border-color: #469846; }  /* green (matches n-op) */
-.lane-steps .ss-item    { background: #f0c040; color: #3a2000; border-color: #d0a020; }  /* yellow (matches n-mat/n-rwk) */
-.lane-steps .ss-thread  { background: #38a068; color: #fff;    border-color: #208050; }  /* teal */
-.lane-steps .ss-inv     { background: #e08030; color: #fff;    border-color: #c06010; }  /* orange (matches n-inv) */
-.lane-steps .ss-plating { background: #b878d0; color: #fff;    border-color: #9858b0; }  /* purple */
-.lane-steps .ss-heat    { background: #d86020; color: #fff;    border-color: #b84000; }  /* dark orange */
-.lane-steps .ss-inspect { background: #90c860; color: #0a2a0a; border-color: #68a840; }  /* light green (matches n-ins) */
-.lane-steps .ss-approve { background: #30a050; color: #fff;    border-color: #208038; }  /* green */
-.lane-steps .ss-stop    { background: #d82020; color: #fff;    border-color: #b00000; }  /* red (matches n-ctl) */
-
-/* Hover & selected on lane pills */
+/* Hover/drag */
 .lane-steps .dstep:not(.step-locked):not(.step-blank):hover {
-    filter: brightness(.88);
-    transform: translateY(-2px);
-    cursor: grab;
-}
-.lane-steps .dstep.sel {
-    outline: 3px solid #fff;
-    outline-offset: 1px;
-    box-shadow: 0 0 0 5px rgba(58,112,200,.5), 0 2px 8px rgba(0,0,0,.2);
+    filter: brightness(.88); transform: translateY(-2px); cursor: grab; z-index: 2;
 }
 .lane-steps .dstep.dov {
-    outline: 3px dashed #3060c8;
-    filter: brightness(.82);
+    filter: brightness(.72); z-index: 3; outline: 3px dashed #3a70c8; outline-offset: 3px;
 }
 
-/* ── BLANK DROP SLOT ── */
+/* ── BLANK DROP SLOT — always visible rectangle ── */
+.lane-steps .dstep.step-blank,
 .dstep.step-blank {
     clip-path: none !important;
-    border-radius: 20px;
-    background: #fff !important;
+    border-radius: 8px !important;
+    background: rgba(255,255,255,.7) !important;
     border: 2px dashed #90a8c8 !important;
-    color: #90a8c8;
-    min-width: 90px;
-    width: 90px;
-    opacity: .7;
-    box-shadow: none;
+    color: #90a8c8 !important;
+    min-width: 80px !important;
+    width: 80px !important;
+    height: 40px !important;
+    opacity: .8;
+    box-shadow: none !important;
     font-size: 10px;
     justify-content: center;
+    flex-shrink: 0;
 }
-.dstep.step-blank:hover {
-    opacity: 1;
-    border-color: #3a70c8 !important;
-    background: #eff6ff !important;
-    box-shadow: 0 0 0 3px rgba(58,112,200,.15);
+.lane-steps .dstep.step-blank:hover, .dstep.step-blank:hover {
+    opacity: 1; border-color: #3a70c8 !important; background: #eff6ff !important;
 }
-.dstep.step-blank.dov {
-    opacity: 1;
-    border-color: #3a70c8 !important;
-    border-style: solid !important;
-    background: #dbeafe !important;
-    box-shadow: 0 0 0 3px rgba(58,112,200,.25);
+.lane-steps .dstep.step-blank.dov, .dstep.step-blank.dov {
+    opacity: 1; border-color: #3a70c8 !important; border-style: solid !important; background: #dbeafe !important;
 }
 
 
@@ -687,56 +925,98 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
             <button class="dp-cb">⟳ MERGE</button>
             <button class="dp-cb">↕ REORDER</button>
         </div>
-        <button class="dp-cb full" style="width:100%;margin-bottom:5px;">PROCESS GREEN</button>
 
-        <div class="dpn-row">
-            <div class="dpn n-op"  draggable="true" ondragstart="dirDn(event,'op','Operation','ss-op','fa-tools')"><i class="fas fa-tools"></i>Operation</div>
-            <div class="dpn n-ins" draggable="true" ondragstart="dirDn(event,'inspect','Inspect','ss-inspect','fa-search')"><i class="fas fa-search"></i>Inspect</div>
+        {{-- ══ GROUP 1: ARROW shape — Process/Operation (green) ══ --}}
+        <div class="dp-sec" style="background:#3a7a3a;color:#fff;border-color:#2a6a2a;">▶ PROCESS</div>
+        <div class="dpn n-op shape-arrow" draggable="true" ondragstart="dirDn(event,'op','Operation','ss-op','fa-tools')">
+            <i class="fas fa-tools"></i> Operation
         </div>
         <div class="dpn-row">
-            <div class="dpn n-cal" draggable="true" ondragstart="dirDn(event,'cal','Calibrate','ss-op','fa-sliders-h')"><i class="fas fa-sliders-h"></i>Calibrate</div>
-            <div class="dpn n-asm" draggable="true" ondragstart="dirDn(event,'asm','Assemble','ss-op','fa-puzzle-piece')"><i class="fas fa-puzzle-piece"></i>Assemble</div>
+            <div class="dpn n-cal shape-arrow" draggable="true" ondragstart="dirDn(event,'op','Calibrate','ss-op','fa-sliders-h')"><i class="fas fa-sliders-h"></i>Calibrate</div>
+            <div class="dpn n-asm shape-arrow" draggable="true" ondragstart="dirDn(event,'op','Assemble','ss-op','fa-puzzle-piece')"><i class="fas fa-puzzle-piece"></i>Assemble</div>
         </div>
-        <div class="dpn n-rwk" draggable="true" ondragstart="dirDn(event,'rework','Rework','ss-op','fa-redo')"><i class="fas fa-redo"></i>Rework</div>
-        <div class="dpn n-mat" style="justify-content:center;" draggable="true" ondragstart="dirDn(event,'material','MATERIAL ABER','ss-item','fa-cube')">MATERIAL ABER</div>
-        <div class="dpn-row">
-            <div class="dpn n-inv" draggable="true" ondragstart="dirDn(event,'inventory','Inventory','ss-inv','fa-boxes')"><i class="fas fa-boxes"></i>Inventory</div>
-            <div class="dpn n-sb1" draggable="true" ondragstart="dirDn(event,'sub','Substitute','ss-inv','fa-exchange-alt')">Substitute</div>
+        <div class="dpn n-rwk shape-arrow" draggable="true" ondragstart="dirDn(event,'op','Rework','ss-op','fa-redo')">
+            <i class="fas fa-redo"></i> Rework
         </div>
-        <div class="dpn-row">
-            <div class="dpn n-sb2" draggable="true" ondragstart="dirDn(event,'sub','Substitute','ss-machine','fa-exchange-alt')">Substitute</div>
-            <div class="dpn n-trc" draggable="true" ondragstart="dirDn(event,'trace','Trace','ss-op','fa-route')"><i class="fas fa-route"></i>Trace</div>
-        </div>
-        <div class="dp-divider"></div>
-        <div class="dpn n-ctl" style="justify-content:center;" draggable="true" ondragstart="dirDn(event,'control','Control (Red)','ss-stop','fa-stop-circle')">Control (Red)</div>
-        <div class="dpn-row">
-            <div class="dpn n-hld" draggable="true" ondragstart="dirDn(event,'hold','Hold','ss-stop','fa-pause')"><i class="fas fa-pause"></i>Hold</div>
-            <div class="dpn n-pri" draggable="true" ondragstart="dirDn(event,'priority','Priority','ss-stop','fa-flag')"><i class="fas fa-flag"></i>Priority</div>
+
+        {{-- ══ GROUP 2: HEXAGON — Machine/Equipment (blue) ══ --}}
+        <div class="dp-sec" style="background:#2050a0;color:#fff;border-color:#104088;">⬡ MACHINE</div>
+        <div class="dpn n-machine shape-hexagon" style="background:#2860b8;color:#fff;" draggable="true" ondragstart="dirDn(event,'machine','Machine','ss-machine','fa-cog')">
+            <i class="fas fa-cog"></i> Machine
         </div>
         <div class="dpn-row">
-            <div class="dpn n-cap" draggable="true" ondragstart="dirDn(event,'capacity','Capacity','ss-machine','fa-chart-bar')"><i class="fas fa-chart-bar"></i>Capacity</div>
-            <div class="dpn n-sim" draggable="true" ondragstart="dirDn(event,'simulate','Simulate','ss-op','fa-play')"><i class="fas fa-play"></i>Simulate</div>
+            <div class="dpn n-cap shape-hexagon" style="background:#3878c8;color:#fff;" draggable="true" ondragstart="dirDn(event,'machine','Capacity','ss-machine','fa-chart-bar')"><i class="fas fa-chart-bar"></i>Capacity</div>
+            <div class="dpn n-sim shape-hexagon" style="background:#3060b8;color:#fff;" draggable="true" ondragstart="dirDn(event,'machine','Simulate','ss-machine','fa-play')"><i class="fas fa-play"></i>Simulate</div>
         </div>
-        <div class="dp-divider"></div>
-        <div class="dpn n-qnv" style="justify-content:center;">
+
+        {{-- ══ GROUP 3: TRAPEZOID — Material/Inventory (orange) ══ --}}
+        <div class="dp-sec" style="background:#c07010;color:#fff;border-color:#a05800;">⬠ MATERIAL</div>
+        <div class="dpn n-mat shape-trap" style="background:#f0c040;color:#3a2000;" draggable="true" ondragstart="dirDn(event,'item','MATERIAL ABER','ss-item','fa-cube')">
+            MATERIAL ABER
+        </div>
+        <div class="dpn-row">
+            <div class="dpn n-inv shape-trap" style="background:#e08030;color:#fff;" draggable="true" ondragstart="dirDn(event,'inventory','Inventory','ss-inv','fa-boxes')"><i class="fas fa-boxes"></i>Inventory</div>
+            <div class="dpn n-trc shape-trap" style="background:#d09030;color:#fff;" draggable="true" ondragstart="dirDn(event,'op','Trace','ss-op','fa-route')"><i class="fas fa-route"></i>Trace</div>
+        </div>
+        <div class="dpn-row">
+            <div class="dpn n-sb1 shape-trap" style="background:#e07820;color:#fff;" draggable="true" ondragstart="dirDn(event,'inventory','Substitute','ss-inv','fa-exchange-alt')"><i class="fas fa-exchange-alt"></i>Subst.</div>
+            <div class="dpn n-heat shape-trap" style="background:#d86020;color:#fff;" draggable="true" ondragstart="dirDn(event,'heat','Heat Treat','ss-heat','fa-fire')"><i class="fas fa-fire"></i>Heat</div>
+        </div>
+
+        {{-- ══ GROUP 4: FLAG — Inspect/Control (red) ══ --}}
+        <div class="dp-sec" style="background:#b02020;color:#fff;border-color:#901010;">⚑ CONTROL</div>
+        <div class="dpn n-ins shape-flag" style="background:#90c860;color:#0a2a0a;" draggable="true" ondragstart="dirDn(event,'inspect','Inspect','ss-inspect','fa-search')">
+            <i class="fas fa-search"></i> Inspect
+        </div>
+        <div class="dpn n-ctl shape-flag" style="background:#d82020;color:#fff;" draggable="true" ondragstart="dirDn(event,'control','Control (Red)','ss-stop','fa-stop-circle')">
+            <i class="fas fa-stop-circle"></i> Control
+        </div>
+        <div class="dpn-row">
+            <div class="dpn n-hld shape-flag" style="background:#cc2020;color:#fff;" draggable="true" ondragstart="dirDn(event,'hold','Hold','ss-stop','fa-pause')"><i class="fas fa-pause"></i>Hold</div>
+            <div class="dpn n-pri shape-flag" style="background:#cc2020;color:#fff;" draggable="true" ondragstart="dirDn(event,'hold','Priority','ss-stop','fa-flag')"><i class="fas fa-flag"></i>Priority</div>
+        </div>
+
+        {{-- ══ GROUP 5: SHIELD — Quality/Approve (teal/green) ══ --}}
+        <div class="dp-sec" style="background:#1a7040;color:#fff;border-color:#0a5030;">🛡 QUALITY</div>
+        <div class="dpn n-qnv shape-shield" style="background:#3878d8;color:#fff;" draggable="true" ondragstart="dirDn(event,'approve','Quality Nav','ss-approve','fa-star')">
             <i class="fas fa-star"></i>&nbsp;Quality Nav
-            <span style="margin-left:5px;width:13px;height:13px;background:#5888d0;border-radius:3px;display:inline-block;"></span>
         </div>
         <div class="dpn-row">
-            <div class="dpn n-apr" draggable="true" ondragstart="dirDn(event,'approve','Approve','ss-approve','fa-check')"><i class="fas fa-check"></i>Approve</div>
-            <div class="dpn n-fst" draggable="true" ondragstart="dirDn(event,'firstart','1st Article','ss-approve','fa-file-alt')"><i class="fas fa-file-alt"></i>1st Article</div>
+            <div class="dpn n-apr shape-shield" style="background:#30a050;color:#fff;" draggable="true" ondragstart="dirDn(event,'approve','Approve','ss-approve','fa-check')"><i class="fas fa-check"></i>Approve</div>
+            <div class="dpn n-fst shape-shield" style="background:#2888c8;color:#fff;" draggable="true" ondragstart="dirDn(event,'approve','1st Article','ss-approve','fa-file-alt')"><i class="fas fa-file-alt"></i>1st Art.</div>
         </div>
-        <div class="dpn n-crt" style="border-radius:6px;justify-content:center;" draggable="true" ondragstart="dirDn(event,'cert','Cert Required','ss-approve','fa-certificate')">
+        <div class="dpn n-crt shape-shield" style="background:#5858b0;color:#fff;" draggable="true" ondragstart="dirDn(event,'cert','Cert Required','ss-cert','fa-certificate')">
             <i class="fas fa-certificate"></i>&nbsp;Cert Required
         </div>
-        <div class="dp-divider"></div>
-        <div class="dpn n-out" style="justify-content:center;margin-bottom:4px;">Output Purple</div>
+
+        {{-- ══ GROUP 6: ROUND-RECT — Output/Pack/Ship (purple) ══ --}}
+        <div class="dp-sec" style="background:#6020a0;color:#fff;border-color:#501888;">◉ OUTPUT</div>
+        <div class="dpn n-out shape-round" style="background:#7030c0;color:#fff;justify-content:center;" draggable="true" ondragstart="dirDn(event,'plating','Plating','ss-plating','fa-paint-brush')">
+            <i class="fas fa-paint-brush"></i>&nbsp;Plating
+        </div>
         <div class="dpn-row">
-            <div class="dpn n-pck" draggable="true" ondragstart="dirDn(event,'pack','Pack','ss-pack','fa-box-open')"><i class="fas fa-box-open"></i>Pack</div>
-            <div class="dpn n-shp" draggable="true" ondragstart="dirDn(event,'ship','Ship','ss-ship','fa-truck')"><i class="fas fa-truck"></i>Ship</div>
+            <div class="dpn n-pck shape-round" style="background:#8030a0;color:#fff;" draggable="true" ondragstart="dirDn(event,'pack','Pack','ss-pack','fa-box-open')"><i class="fas fa-box-open"></i>Pack</div>
+            <div class="dpn n-shp shape-round" style="background:#b030a0;color:#fff;" draggable="true" ondragstart="dirDn(event,'ship','Ship','ss-ship','fa-truck')"><i class="fas fa-truck"></i>Ship</div>
         </div>
         <div style="height:6px;"></div>
         <div style="font-size:8px;color:#5a7090;text-align:center;border-top:1px solid #90a4b8;padding-top:5px;line-height:1.4;">info from the Quote form/Order Input</div>
+
+        {{-- ═══ SHAPE LEGEND ═══ --}}
+        <div class="pal-shape-legend">
+            <div class="psl-title"><i class="fas fa-shapes"></i> Lane Shape Guide</div>
+            <div class="psl-row"><div class="psl-icon" style="background:#3090e8;border-radius:50%;width:20px;height:20px;"></div><div class="psl-label">Circle = Hole</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#d83060;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);border-radius:0;"></div><div class="psl-label">Diamond = Tap</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#2860b8;clip-path:polygon(15% 0%,85% 0%,100% 50%,85% 100%,15% 100%,0% 50%);border-radius:0;"></div><div class="psl-label">Hexagon = Machine</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#50a850;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 50%,calc(100% - 7px) 100%,0 100%);border-radius:0;"></div><div class="psl-label">Arrow = Operation</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#38a068;clip-path:polygon(10% 0%,100% 0%,90% 100%,0% 100%);border-radius:0;"></div><div class="psl-label">Slant = Thread</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#f0c040;border-radius:4px;"></div><div class="psl-label">Rect = Item</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#90c860;clip-path:polygon(0 50%,7px 0,100% 0,100% 100%,7px 100%);border-radius:0;"></div><div class="psl-label">Flag = Inspect</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#30a050;clip-path:polygon(15% 0%,85% 0%,100% 30%,100% 70%,50% 100%,0% 70%,0% 30%);height:22px;border-radius:0;"></div><div class="psl-label">Shield = Approve</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#e08030;clip-path:polygon(50% 0%,100% 30%,100% 100%,0% 100%,0% 30%);height:22px;border-radius:0;"></div><div class="psl-label">House = Inventory</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#d86020;clip-path:polygon(10% 0%,90% 0%,100% 100%,0% 100%);border-radius:0;"></div><div class="psl-label">Trapezoid = Heat</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#d82020;border-radius:3px;"></div><div class="psl-label">Square = Control/Hold</div></div>
+            <div class="psl-row"><div class="psl-icon" style="background:#b878d0;border-radius:6px;"></div><div class="psl-label">Pill = Plating/Pack</div></div>
+        </div>
     </div>
 
     {{-- ══ COL 2 — QUOTE/ORDER TREE ══ --}}
@@ -882,40 +1162,44 @@ var dirSelLane   = null;
    STEP DEFINITIONS
    Each item type maps to {cls, icon, label}
 ════════════════════════════════ */
+/* shape = CSS class added to lane step for clip-path shape
+   palette buttons (col1) stay as oval pills — shape only applies in lane */
 var STEP_DEF = {
-    start:    {cls:'ss-start',   icon:'fa-play',         label:'Start'},
-    hole:     {cls:'ss-hole',    icon:'fa-circle-notch', label:'Hole'},
-    tap:      {cls:'ss-tap',     icon:'fa-screwdriver',  label:'Tap'},
-    machine:  {cls:'ss-machine', icon:'fa-cog',          label:'Machine'},
-    op:       {cls:'ss-op',      icon:'fa-tools',        label:'Operation'},
-    thread:   {cls:'ss-thread',  icon:'fa-ring',         label:'Thread'},
-    item:     {cls:'ss-item',    icon:'fa-box',          label:'Item'},
-    inventory:{cls:'ss-inv',     icon:'fa-boxes',        label:'Inventory'},
-    plating:  {cls:'ss-plating', icon:'fa-paint-brush',  label:'Plating'},
-    heat:     {cls:'ss-heat',    icon:'fa-fire',         label:'Heat Treat'},
-    inspect:  {cls:'ss-inspect', icon:'fa-search',       label:'Inspect'},
-    approve:  {cls:'ss-approve', icon:'fa-check',        label:'Approve'},
-    pack:     {cls:'ss-pack',    icon:'fa-box-open',     label:'Pack'},
-    ship:     {cls:'ss-ship',    icon:'fa-truck',        label:'Ship'},
-    cert:     {cls:'ss-approve', icon:'fa-certificate',  label:'Cert'},
-    control:  {cls:'ss-stop',    icon:'fa-stop-circle',  label:'Control'},
-    hold:     {cls:'ss-stop',    icon:'fa-pause',        label:'Hold'}
+    start:    {cls:'ss-start',   icon:'fa-play',         label:'Start',      shape:'ss-shape-arrow-first'},
+    hole:     {cls:'ss-hole',    icon:'fa-circle-notch', label:'Hole',       shape:'ss-shape-circle'},
+    tap:      {cls:'ss-tap',     icon:'fa-screwdriver',  label:'Tap',        shape:'ss-shape-diamond'},
+    machine:  {cls:'ss-machine', icon:'fa-cog',          label:'Machine',    shape:'ss-shape-hexagon'},
+    op:       {cls:'ss-op',      icon:'fa-tools',        label:'Operation',  shape:'ss-shape-arrow'},
+    thread:   {cls:'ss-thread',  icon:'fa-ring',         label:'Thread',     shape:'ss-shape-parallelogram'},
+    item:     {cls:'ss-item',    icon:'fa-box',          label:'Item',       shape:'ss-shape-octagon'},
+    inventory:{cls:'ss-inv',     icon:'fa-boxes',        label:'Inventory',  shape:'ss-shape-house'},
+    plating:  {cls:'ss-plating', icon:'fa-paint-brush',  label:'Plating',    shape:'ss-shape-round-rect'},
+    heat:     {cls:'ss-heat',    icon:'fa-fire',         label:'Heat Treat', shape:'ss-shape-trapezoid'},
+    inspect:  {cls:'ss-inspect', icon:'fa-search',       label:'Inspect',    shape:'ss-shape-flag'},
+    approve:  {cls:'ss-approve', icon:'fa-check',        label:'Approve',    shape:'ss-shape-shield'},
+    pack:     {cls:'ss-pack',    icon:'fa-box-open',     label:'Pack',       shape:'ss-shape-round-rect'},
+    ship:     {cls:'ss-ship',    icon:'fa-truck',        label:'Ship',       shape:'ss-shape-arrow-end'},
+    cert:     {cls:'ss-cert',    icon:'fa-certificate',  label:'Cert',       shape:'ss-shape-shield'},
+    control:  {cls:'ss-stop',    icon:'fa-stop-circle',  label:'Control',    shape:'ss-shape-stop'},
+    hold:     {cls:'ss-stop',    icon:'fa-pause',        label:'Hold',       shape:'ss-shape-stop'}
 };
 
 /* Make a locked step object */
 function mkLocked(type) {
-    var d = STEP_DEF[type] || {cls:'ss-start', icon:'fa-play', label:type};
-    return {type:type, label:d.label, cls:d.cls, icon:d.icon, locked:true};
+    var d = STEP_DEF[type] || {cls:'ss-start', icon:'fa-play', label:type, shape:'ss-shape-arrow-first'};
+    return {type:type, label:d.label, cls:d.cls, icon:d.icon, shape:d.shape||'ss-shape-arrow', locked:true};
 }
 
 /* Make a blank slot */
 function mkBlank() {
-    return {type:'blank', label:'', cls:'ss-blank', icon:'', locked:false};
+    return {type:'blank', label:'', cls:'ss-blank', icon:'', shape:'', locked:false};
 }
 
 /* Make a step from a palette/input drag item */
-function mkStep(type, label, cls, icon) {
-    return {type:type, label:label, cls:cls, icon:icon, locked:false};
+function mkStep(type, label, cls, icon, shape) {
+    var d = STEP_DEF[type] || {};
+    var resolvedShape = shape || d.shape || 'ss-shape-arrow';
+    return {type:type, label:label, cls:cls, icon:icon, shape:resolvedShape, locked:false};
 }
 
 /* ════════════════════════════════
@@ -1273,8 +1557,9 @@ function dirRenderCanvas() {
             var isBlank  = s.type === 'blank';
             var isFirst  = si === 0;
 
+            var shapeClass = (!isBlank && s.shape) ? (' ' + s.shape) : '';
             h += '<div';
-            h += ' class="dstep ' + s.cls + (isFirst?' fs':'') + (isLocked?' step-locked':'') + (isBlank?' step-blank':'') + '"';
+            h += ' class="dstep ' + s.cls + shapeClass + (isFirst?' fs':'') + (isLocked?' step-locked':'') + (isBlank?' step-blank':'') + '"';
             h += ' data-si="' + si + '"';
 
             if(isLocked) {
@@ -1316,19 +1601,21 @@ function dirRenderCanvas() {
    DRAG — SOURCES
 ════════════════════════════════ */
 
-/* Drag from palette (col 1) */
+/* Drag from palette (col 1) — shape comes from STEP_DEF */
 function dirDn(e, type, label, cls, icon) {
-    DIR_DRAG = {src:'palette', type:type, label:label, cls:cls, icon:icon};
+    var shape = (STEP_DEF[type] && STEP_DEF[type].shape) ? STEP_DEF[type].shape : 'ss-shape-arrow';
+    DIR_DRAG = {src:'palette', type:type, label:label, cls:cls, icon:icon, shape:shape};
     e.dataTransfer.setData('text/plain', 'drag');
     e.dataTransfer.effectAllowed = 'copy';
 }
 
-/* Drag from input panel (col 3) — use stored index */
+/* Drag from input panel (col 3) — shape from STEP_DEF */
 function dirDnItem(e, idx) {
     if(!dirActiveJO || !dirActiveJO._inputItems) return;
     var item = dirActiveJO._inputItems[idx];
     if(!item) return;
-    DIR_DRAG = {src:'input', type:item.type, label:item.label, cls:item.cls, icon:item.icon};
+    var shape = (STEP_DEF[item.type] && STEP_DEF[item.type].shape) ? STEP_DEF[item.type].shape : 'ss-shape-arrow';
+    DIR_DRAG = {src:'input', type:item.type, label:item.label, cls:item.cls, icon:item.icon, shape:shape};
     e.dataTransfer.setData('text/plain', 'drag');
     e.dataTransfer.effectAllowed = 'copy';
 }
@@ -1339,7 +1626,8 @@ function dirStepDragStart(e, joid, si) {
     if(!lane) return;
     var s = lane.steps[si];
     if(!s || s.locked || s.type === 'blank') { e.preventDefault(); return; }
-    DIR_DRAG = {src:'lane', type:s.type, label:s.label, cls:s.cls, icon:s.icon, fromLane:joid, fromIdx:si};
+    var sd = STEP_DEF[s.type] || {};
+    DIR_DRAG = {src:'lane', type:s.type, label:s.label, cls:s.cls, icon:s.icon, shape:s.shape||(sd.shape||'ss-shape-arrow'), fromLane:joid, fromIdx:si};
     e.dataTransfer.setData('text/plain', 'drag');
     e.dataTransfer.effectAllowed = 'move';
     /* mark source slot visually */
@@ -1380,7 +1668,7 @@ function dirLaneDrop(e, joid) {
             DIR_DRAG = null;
             return;
         }
-        lane.steps[blankIdx] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon);
+        lane.steps[blankIdx] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon, DIR_DRAG.shape);
         /* If moving from another lane, blank that slot */
         if(DIR_DRAG.src === 'lane' && DIR_DRAG.fromLane !== joid) {
             var fl = DIR_LANES[DIR_DRAG.fromLane];
@@ -1433,7 +1721,7 @@ function dirSlotDrop(e, joid, si) {
         return;
     }
     /* Place the step */
-    lane.steps[si] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon);
+    lane.steps[si] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon, DIR_DRAG.shape);
     /* If moving from another slot in same or different lane — blank the source */
     if(DIR_DRAG.src === 'lane') {
         var fl = DIR_LANES[DIR_DRAG.fromLane];
