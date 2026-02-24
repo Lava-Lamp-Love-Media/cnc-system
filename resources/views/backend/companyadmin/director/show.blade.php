@@ -5,52 +5,104 @@
 
 @section('style')
 <style>
-/* ── Override AdminLTE body padding so director fills full height ── */
+/* ══════════════════════════════════════════════
+   DIRECTOR PAGE — full-screen override
+   Hides AdminLTE sidebar, top menubar, header, footer
+   so the 4-column layout fills the entire viewport.
+══════════════════════════════════════════════ */
+
+/* Hide sidebar completely */
+body.director-page .main-sidebar,
+body.director-page .main-sidebar * { display: none !important; }
+
+/* Hide top menubar */
+body.director-page .top-menubar { display: none !important; }
+
+/* Hide default AdminLTE main header (already hidden globally, but just in case) */
+body.director-page .main-header  { display: none !important; }
+
+/* Hide breadcrumb header and footer */
+body.director-page .content-header { display: none !important; }
+body.director-page .main-footer    { display: none !important; }
+
+/* Reset content-wrapper — no sidebar margin, fill full viewport */
 body.director-page .content-wrapper {
     padding: 0 !important;
-    margin: 0 !important;
-    height: calc(100vh - 57px);
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    background: #d0daea;
 }
-body.director-page .content-header { display: none; }
-body.director-page .main-footer    { display: none; }
+
+/* Also kill the container-fluid padding from section.content */
+body.director-page section.content { padding: 0 !important; }
+body.director-page .container-fluid { padding: 0 !important; max-width: 100% !important; }
+
+/* Transition override — sidebar push animation */
+body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 
 /* ── Director sub-header bar ── */
+/* ── Director top bar — matches app.blade.php top-menubar style ── */
 .dir-topbar {
-    background: #ccd6e8;
-    border-bottom: 2px solid #a8b8cc;
-    height: 36px;
+    background: #4a5f7f;
+    border-bottom: 2px solid rgba(0,0,0,.15);
+    height: 50px;
     display: flex;
     align-items: center;
     padding: 0 10px;
     gap: 6px;
     flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,.12);
 }
 .dir-topbar .dt-title {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
-    color: #1a2540;
+    color: #fff;
     flex: 1;
     text-align: center;
+    letter-spacing: .2px;
 }
+/* Back link styled as nav-link */
+.dir-topbar .dt-back {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 0 12px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-right: 1px solid rgba(255,255,255,.12);
+    text-decoration: none;
+    transition: background .15s;
+    white-space: nowrap;
+}
+.dir-topbar .dt-back:hover { background: rgba(255,255,255,.15); color: #fff; text-decoration: none; }
+
 .dtbtn {
-    padding: 3px 10px;
+    padding: 5px 14px;
     border-radius: 4px;
     font-size: 11px;
     font-weight: 700;
-    border: 1px solid #8a98b0;
+    border: 1px solid rgba(255,255,255,.25);
     cursor: pointer;
-    background: #d0daea;
-    color: #1a2540;
+    background: rgba(255,255,255,.12);
+    color: #fff;
     font-family: 'DM Sans', sans-serif;
     transition: background .1s;
     white-space: nowrap;
 }
-.dtbtn:hover   { background: #b8c8d8; }
-.dtbtn.green   { background: #4a9c6a; color: #fff; border-color: #3a8458; }
-.dtbtn.blue    { background: #3a70c8; color: #fff; border-color: #2a5aaa; }
+.dtbtn:hover   { background: rgba(255,255,255,.22); }
+.dtbtn.green   { background: #16a34a; border-color: #15803d; }
+.dtbtn.green:hover { background: #15803d; }
+.dtbtn.blue    { background: #3a70c8; border-color: #2a5aaa; }
+.dtbtn.blue:hover  { background: #2a5aaa; }
+.dtbtn.amber   { background: #d97706; border-color: #b45309; }
+.dtbtn.amber:hover { background: #b45309; }
 
 /* ── 4-column shell ── */
 .dir-shell {
@@ -239,9 +291,47 @@ body.director-page .main-footer    { display: none; }
 .di-list { overflow-y: auto; flex: 1; padding: 4px; }
 .di-list::-webkit-scrollbar { width: 3px; }
 .di-list::-webkit-scrollbar-thumb { background: #9aaabe; border-radius: 2px; }
-.qi { padding: 5px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #fff; border: 1px solid #a8b8cc; margin-bottom: 4px; cursor: grab; text-align: center; color: #1a2540; box-shadow: 0 1px 2px rgba(0,0,0,.1); user-select: none; transition: all .1s; }
-.qi:hover { background: #ddeeff; border-color: #5888cc; }
+.qi {
+    padding: 5px 10px;
+    border-radius: 20px;          /* PILL shape — matches lane steps */
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    cursor: grab;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,.15);
+    user-select: none;
+    transition: filter .1s, transform .1s;
+    border: 2px solid rgba(0,0,0,.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    /* default colour — overridden per-type below */
+    background: #c0d0e0;
+    color: #1a2540;
+}
+.qi:hover  { filter: brightness(.88); transform: translateY(-1px); }
 .qi:active { cursor: grabbing; opacity: .7; }
+
+/* Per-type colors matching lane pill colors */
+.qi[data-type="hole"]    { background: #3090e8; color: #fff;    border-color: #1870c8; }
+.qi[data-type="tap"]     { background: #d83060; color: #fff;    border-color: #b01848; }
+.qi[data-type="machine"] { background: #2860b8; color: #fff;    border-color: #1040a0; }
+.qi[data-type="op"]      { background: #6ec86e; color: #0a2a0a; border-color: #469846; }
+.qi[data-type="thread"]  { background: #38a068; color: #fff;    border-color: #208050; }
+.qi[data-type="item"]    { background: #f0c040; color: #3a2000; border-color: #d0a020; }
+
+/* Used / placed — greyed pill */
+.qi.qi-used {
+    cursor: default;
+    background: #e8eef4 !important;
+    border-color: #c0ccd8 !important;
+    color: #9aaabb !important;
+    pointer-events: none;
+    opacity: .6;
+    box-shadow: none;
+}
 
 /* ══ COL 4 — FLOW CANVAS ══ */
 .dir-cv {
@@ -250,11 +340,12 @@ body.director-page .main-footer    { display: none; }
     flex-direction: column;
     overflow: hidden;
     background: #dce4f0;
+    min-width: 0;
 }
 .dc-hd { background: #b0bece; border-bottom: 2px solid #98aabf; padding: 4px 12px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .dc-hd .dc-fl { font-size: 12px; font-weight: 700; color: #3a5070; flex: 1; text-align: center; }
 .dc-qref { font-family: 'DM Mono', monospace; font-size: 11px; color: #c07000; background: #fff8e0; border: 1px solid #ddb820; border-radius: 4px; padding: 1px 7px; }
-.dc-body { flex: 1; overflow: auto; padding: 14px 14px 20px; }
+.dc-body { flex: 1; overflow: auto; padding: 14px 14px 30px; min-width: 0; }
 .dc-body::-webkit-scrollbar { width: 5px; height: 5px; }
 .dc-body::-webkit-scrollbar-thumb { background: #a0b0c4; border-radius: 3px; }
 
@@ -328,7 +419,7 @@ body.director-page .main-footer    { display: none; }
     display: flex;
     flex-direction: column;
     gap: 0;
-    min-width: max-content;
+    width: 100%;
     padding-bottom: 20px;
 }
 
@@ -339,7 +430,7 @@ body.director-page .main-footer    { display: none; }
     background: #e8f0f8;
     border-bottom: none;
     transition: background .15s, border-color .15s;
-    min-width: max-content;
+    width: 100%;
 }
 .swim-lane:first-child { border-radius: 8px 8px 0 0; }
 .swim-lane:last-child  { border-radius: 0 0 8px 8px; border-bottom: 2px solid #c0ccd8; }
@@ -383,27 +474,45 @@ body.director-page .main-footer    { display: none; }
 }
 .lane-rm-btn:hover { background: #d82020; color: #fff; border-color: #d82020; }
 
-/* Lane steps row */
+/* Lane steps row — horizontal scroll, all steps in one line */
 .lane-steps {
     display: flex;
     align-items: center;
-    padding: 10px 12px;
-    gap: 0;
+    padding: 10px 14px 12px;
+    gap: 6px;
     overflow-x: auto;
-    min-height: 66px;
+    overflow-y: hidden;
+    min-height: 64px;
     flex-wrap: nowrap;
+    width: 100%;
+    box-sizing: border-box;
 }
-.lane-steps::-webkit-scrollbar { height: 4px; }
-.lane-steps::-webkit-scrollbar-thumb { background: #a0b0c4; border-radius: 2px; }
-.lane-steps.ldov { background: rgba(58,112,200,.08); }
+.lane-steps::-webkit-scrollbar { height: 5px; }
+.lane-steps::-webkit-scrollbar-track { background: rgba(0,0,0,.05); border-radius: 3px; }
+.lane-steps::-webkit-scrollbar-thumb { background: #a0b0c4; border-radius: 3px; }
+.lane-steps.ldov { background: rgba(58,112,200,.08); outline: 2px dashed #3a70c8; outline-offset: -3px; }
 
-/* Add slot (last blank) */
-.dstep.add-slot {
-    min-width: 44px; opacity: .6;
-    display: flex; align-items: center; justify-content: center;
+/* Add-slot button inside the lane steps area */
+.lane-add-slot-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 2px dashed #90a8c8;
+    background: transparent;
+    color: #6088b0;
+    font-size: 11px; font-weight: 700;
+    cursor: pointer;
+    transition: all .12s;
+    font-family: 'DM Sans', sans-serif;
+    height: 36px;
+    flex-shrink: 0;
+    margin-top: 0;
 }
-.dstep.add-slot:hover { opacity: 1; background: #c8d8f8; }
-.dstep.last-step { }
+.lane-add-slot-btn:hover {
+    background: #e8f0fc;
+    border-color: #3a70c8;
+    color: #3a70c8;
+}
 
 /* Empty state */
 .canvas-empty {
@@ -412,34 +521,107 @@ body.director-page .main-footer    { display: none; }
     color: #8898aa; font-size: 13px; font-weight: 600; gap: 12px;
 }
 
-/* Override dstep to fit lanes */
+/* ══════════════════════════════════════════════
+   LANE STEPS — pill shape matching palette buttons
+   Start & Ship keep the pentagon (clip-path).
+   All other steps = rounded pill, same colors as palette.
+══════════════════════════════════════════════ */
+
+/* Base override for steps inside a lane */
 .lane-steps .dstep {
-    height: 40px;
-    min-width: 70px;
-    font-size: 10px;
+    height: 36px;
+    min-width: 80px;
+    font-size: 11px;
+    font-weight: 700;
+    /* ── PILL SHAPE (override pentagon clip-path) ── */
+    clip-path: none !important;
+    border-radius: 20px;
+    padding: 0 14px;
+    border: 2px solid rgba(0,0,0,.18);
+    box-shadow: 0 2px 5px rgba(0,0,0,.15);
+    flex-shrink: 0;
 }
 .lane-steps .dstep span { white-space: nowrap; pointer-events: none; }
+.lane-steps .dstep i    { pointer-events: none; margin-right: 4px; font-size: 10px; }
 
-/* Locked step (Start/Ship) — no drop cursor */
-.dstep.step-locked { cursor: default; opacity: .95; }
-.dstep.step-locked:hover { filter: none; transform: none; }
-
-/* Blank drop slot — clearly a target */
-.dstep.step-blank {
-    background: repeating-linear-gradient(
-        -45deg,
-        #dce8f8,
-        #dce8f8 4px,
-        #e8f0fc 4px,
-        #e8f0fc 12px
-    ) !important;
-    color: #90a8c8;
-    border: 2px dashed #90a8c8 !important;
-    min-width: 80px;
-    opacity: .7;
+/* Start and Ship stay as left/right-capped pill (flat on one side) */
+.lane-steps .dstep.step-locked {
+    clip-path: none !important;
+    border-radius: 20px;
+    cursor: default;
+    opacity: 1;
+    border-color: rgba(0,0,0,.25);
+    box-shadow: 0 2px 6px rgba(0,0,0,.2);
 }
-.dstep.step-blank:hover { opacity: 1; border-color: #3a70c8 !important; background: #dbeafe !important; }
-.dstep.step-blank.dov   { opacity: 1; border-color: #3a70c8 !important; background: #bfdbfe !important; border-style: solid !important; }
+.lane-steps .dstep.step-locked:hover { filter: none; transform: none; }
+
+/* Remove first-step flat-left override inside lanes */
+.lane-steps .dstep.fs {
+    clip-path: none !important;
+    border-radius: 20px;
+    padding-left: 14px;
+}
+
+/* ── PILL COLORS (match palette n-* colors exactly) ── */
+.lane-steps .ss-start   { background: #b0c0d0; color: #1a2a3a; border-color: #8090a0; }
+.lane-steps .ss-ship    { background: #7030b8; color: #fff;    border-color: #5020a0; }
+.lane-steps .ss-pack    { background: #8030a0; color: #fff;    border-color: #601888; }
+.lane-steps .ss-hole    { background: #3090e8; color: #fff;    border-color: #1870c8; }  /* blue */
+.lane-steps .ss-tap     { background: #d83060; color: #fff;    border-color: #b01848; }  /* pink-red */
+.lane-steps .ss-machine { background: #2860b8; color: #fff;    border-color: #1040a0; }  /* dark blue */
+.lane-steps .ss-op      { background: #6ec86e; color: #0a2a0a; border-color: #469846; }  /* green (matches n-op) */
+.lane-steps .ss-item    { background: #f0c040; color: #3a2000; border-color: #d0a020; }  /* yellow (matches n-mat/n-rwk) */
+.lane-steps .ss-thread  { background: #38a068; color: #fff;    border-color: #208050; }  /* teal */
+.lane-steps .ss-inv     { background: #e08030; color: #fff;    border-color: #c06010; }  /* orange (matches n-inv) */
+.lane-steps .ss-plating { background: #b878d0; color: #fff;    border-color: #9858b0; }  /* purple */
+.lane-steps .ss-heat    { background: #d86020; color: #fff;    border-color: #b84000; }  /* dark orange */
+.lane-steps .ss-inspect { background: #90c860; color: #0a2a0a; border-color: #68a840; }  /* light green (matches n-ins) */
+.lane-steps .ss-approve { background: #30a050; color: #fff;    border-color: #208038; }  /* green */
+.lane-steps .ss-stop    { background: #d82020; color: #fff;    border-color: #b00000; }  /* red (matches n-ctl) */
+
+/* Hover & selected on lane pills */
+.lane-steps .dstep:not(.step-locked):not(.step-blank):hover {
+    filter: brightness(.88);
+    transform: translateY(-2px);
+    cursor: grab;
+}
+.lane-steps .dstep.sel {
+    outline: 3px solid #fff;
+    outline-offset: 1px;
+    box-shadow: 0 0 0 5px rgba(58,112,200,.5), 0 2px 8px rgba(0,0,0,.2);
+}
+.lane-steps .dstep.dov {
+    outline: 3px dashed #3060c8;
+    filter: brightness(.82);
+}
+
+/* ── BLANK DROP SLOT ── */
+.dstep.step-blank {
+    clip-path: none !important;
+    border-radius: 20px;
+    background: #fff !important;
+    border: 2px dashed #90a8c8 !important;
+    color: #90a8c8;
+    min-width: 90px;
+    width: 90px;
+    opacity: .7;
+    box-shadow: none;
+    font-size: 10px;
+    justify-content: center;
+}
+.dstep.step-blank:hover {
+    opacity: 1;
+    border-color: #3a70c8 !important;
+    background: #eff6ff !important;
+    box-shadow: 0 0 0 3px rgba(58,112,200,.15);
+}
+.dstep.step-blank.dov {
+    opacity: 1;
+    border-color: #3a70c8 !important;
+    border-style: solid !important;
+    background: #dbeafe !important;
+    box-shadow: 0 0 0 3px rgba(58,112,200,.25);
+}
 
 
 /* ══ ASSIGN MODAL ══ */
@@ -471,13 +653,24 @@ body.director-page .main-footer    { display: none; }
 {{-- Adds director-page class to body for full-height layout --}}
 <script>document.body.classList.add('director-page');</script>
 
-{{-- Director Sub-Header --}}
-<div class="dir-topbar mt-5">
-    <a href="{{ route('company.director.index') }}" class="dtbtn">← Back</a>
-    <div class="dt-title">The Director Main Screen — Parent or Child Item #</div>
-    <button class="dtbtn">Save Draft</button>
-    <button class="dtbtn blue">Preview</button>
-    <button class="dtbtn green" onclick="dirShowModal(null)">▶ Release to Shop Floor</button>
+{{-- Director Top Bar — matches app nav style --}}
+<div class="dir-topbar">
+    <a href="{{ route('company.quotes.index') }}" class="dt-back">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <div class="dt-title">
+        <i class="fas fa-industry" style="margin-right:6px;opacity:.7;"></i>
+        The Director Main Screen &mdash; Parent or Child Item #
+    </div>
+    <button class="dtbtn">
+        <i class="fas fa-save" style="margin-right:4px;"></i>Save Draft
+    </button>
+    <button class="dtbtn blue">
+        <i class="fas fa-eye" style="margin-right:4px;"></i>Preview
+    </button>
+    <button class="dtbtn green" onclick="dirShowModal(null)">
+        <i class="fas fa-paper-plane" style="margin-right:4px;"></i>Release
+    </button>
 </div>
 
 {{-- 4-Column Shell --}}
@@ -732,31 +925,90 @@ function mkStep(type, label, cls, icon) {
 ════════════════════════════════ */
 function dirBuildSteps(jo) {
     var steps = [];
-    /* LOCKED first: Start */
-    steps.push(mkLocked('start') );
-    /* One blank slot for each item in this JO */
+    /* LOCKED first: Start — always visible */
+    steps.push(mkLocked('start'));
+    /* One blank per JO item (quota) + 4 EXTRA blanks for palette drag-ins */
     var n = jo.holes + jo.taps + jo.machines + jo.ops + jo.threads + jo.items;
     if(n < 1) n = 3;
-    for(var i = 0; i < n; i++) steps.push(mkBlank());
-    /* LOCKED last: Ship */
+    var total = n + 4;   /* 4 extra slots always available for Inspect, Hold, etc. */
+    for(var i = 0; i < total; i++) steps.push(mkBlank());
+    /* LOCKED last: Ship — always visible */
     steps.push(mkLocked('ship'));
     return steps;
 }
 
+/* Add one extra blank slot before Ship in a lane */
+function dirAddSlot(joid) {
+    var lane = DIR_LANES[joid];
+    if(!lane) return;
+    var insertAt = lane.steps.length - 1; /* before Ship */
+    lane.steps.splice(insertAt, 0, mkBlank());
+    dirRenderCanvas();
+    dirFocusLane(joid);
+    dirToast('Slot added to ' + joid, '#2563eb');
+}
+
 /* ════════════════════════════════
    BUILD INPUT PANEL ITEMS
-   Shown in col-3, one per JO item — drag these into the lane blanks
+   Returns the full list for a JO — one entry per hole/tap/machine etc.
 ════════════════════════════════ */
 function dirBuildInputItems(jo) {
     var items = [];
     var i;
-    for(i=0;i<jo.holes;i++)    items.push({type:'hole',    label:'Hole '+(i+1),     icon:'fa-circle-notch', cls:'ss-hole'});
-    for(i=0;i<jo.taps;i++)     items.push({type:'tap',     label:'Tap '+(i+1),      icon:'fa-screwdriver',  cls:'ss-tap'});
-    for(i=0;i<jo.machines;i++) items.push({type:'machine', label:'Machine '+(i+1),  icon:'fa-cog',          cls:'ss-machine'});
-    for(i=0;i<jo.ops;i++)      items.push({type:'op',      label:'Op '+(i+1),       icon:'fa-tools',        cls:'ss-op'});
-    for(i=0;i<jo.threads;i++)  items.push({type:'thread',  label:'Thread '+(i+1),   icon:'fa-ring',         cls:'ss-thread'});
-    for(i=0;i<jo.items;i++)    items.push({type:'item',    label:'Item '+(i+1),      icon:'fa-box',          cls:'ss-item'});
+    for(i=0;i<jo.holes;i++)    items.push({type:'hole',    label:'Hole '+(i+1),    icon:'fa-circle-notch', cls:'ss-hole'});
+    for(i=0;i<jo.taps;i++)     items.push({type:'tap',     label:'Tap '+(i+1),     icon:'fa-screwdriver',  cls:'ss-tap'});
+    for(i=0;i<jo.machines;i++) items.push({type:'machine', label:'Machine '+(i+1), icon:'fa-cog',          cls:'ss-machine'});
+    for(i=0;i<jo.ops;i++)      items.push({type:'op',      label:'Op '+(i+1),      icon:'fa-tools',        cls:'ss-op'});
+    for(i=0;i<jo.threads;i++)  items.push({type:'thread',  label:'Thread '+(i+1),  icon:'fa-ring',         cls:'ss-thread'});
+    for(i=0;i<jo.items;i++)    items.push({type:'item',    label:'Item '+(i+1),     icon:'fa-box',          cls:'ss-item'});
     return items;
+}
+
+/* Count how many of each type are already placed (non-blank, non-locked) in a lane */
+function dirCountPlaced(joid) {
+    var counts = {};
+    var lane = DIR_LANES[joid];
+    if(!lane) return counts;
+    lane.steps.forEach(function(s) {
+        if(s.locked || s.type === 'blank') return;
+        counts[s.type] = (counts[s.type] || 0) + 1;
+    });
+    return counts;
+}
+
+/* Get the JO quota for a type in a lane (max allowed).
+   Returns Infinity if the lane has no linked JO (palette-only workflow). */
+function dirGetQuota(joid, type) {
+    var lane = DIR_LANES[joid];
+    if(!lane) return 0;
+    /* Find the JO in DIR_QUOTES */
+    var jo = null;
+    DIR_QUOTES.forEach(function(q) {
+        q.children.forEach(function(c) { if(c.id === lane.joId) jo = c; });
+    });
+    if(!jo) return Infinity; /* no linked JO — allow anything */
+    var map = {
+        hole:    jo.holes,
+        tap:     jo.taps,
+        machine: jo.machines,
+        op:      jo.ops,
+        thread:  jo.threads,
+        item:    jo.items
+    };
+    return (map[type] !== undefined) ? (map[type] || 0) : Infinity;
+}
+
+/* Check if adding one more of `type` to `joid` lane is allowed.
+   If `replacingType` is provided (a swap), that slot is freed first. */
+function dirQuotaOk(joid, type, replacingType) {
+    var quota = dirGetQuota(joid, type);
+    if(quota === Infinity) return true;   /* palette-only types always ok */
+    if(quota === 0) return false;         /* JO has none of this type */
+    var placed = dirCountPlaced(joid);
+    var current = placed[type] || 0;
+    /* If we are replacing a slot of the same type, count stays same */
+    if(replacingType === type) return true;
+    return current < quota;
 }
 
 /* ════════════════════════════════
@@ -855,6 +1107,7 @@ function dirClickChild(joid, qid) {
     if(jo) {
         jo._quoteId = qid; jo._quoteName = q.name;
         dirActiveJO = jo;
+        jo._laneId = DIR_LANES[joid] ? joid : null;  /* link to lane if exists */
         dirRenderInputPanel(jo);
         document.getElementById('dirActiveRef').textContent  = jo.id;
         document.getElementById('dirActiveName').textContent = jo.name;
@@ -880,6 +1133,7 @@ function dirAddLane(joid, qid) {
     };
     if(DIR_LANE_ORD.indexOf(joid) === -1) DIR_LANE_ORD.push(joid);
 
+    jo._laneId = joid;   /* link JO to its lane for quota tracking */
     dirRenderInputPanel(jo);
     dirRenderCanvas();
     dirRenderTree();
@@ -913,19 +1167,55 @@ function dirRemoveLane(joid) {
    Shows items for the selected JO — drag into lane blanks
 ════════════════════════════════ */
 function dirRenderInputPanel(jo) {
-    var items = dirBuildInputItems(jo);
-    var h = '<div style="font-size:9px;font-weight:800;color:#1a2540;padding:4px 4px 3px;border-bottom:1px solid #a8b8cc;margin-bottom:4px;">'
-          + jo.id + '</div>';
+    var items  = dirBuildInputItems(jo);
+    /* Count what is already placed in this JO's lane (if it exists) */
+    var placed = jo._laneId ? dirCountPlaced(jo._laneId) : {};
+    /* Track per-type usage so each specific item (Hole 1, Hole 2…) is matched */
+    var usedCount = {};   /* type → how many already placed */
+    var allPlaced = {};   /* idx → true if this item is already in the lane */
     items.forEach(function(item, idx) {
-        /* Store item index so drag carries the right data */
-        h += '<div class="qi" draggable="true" data-idx="' + idx + '"';
-        h += ' ondragstart="dirDnItem(event,' + idx + ')">';
-        h += '<i class="fas ' + item.icon + '" style="font-size:9px;opacity:.7;margin-right:3px;"></i>' + item.label;
-        h += '</div>';
+        var p = placed[item.type] || 0;
+        var u = usedCount[item.type] || 0;
+        if(u < p) {
+            allPlaced[idx] = true;   /* this specific item is already in the lane */
+            usedCount[item.type] = u + 1;
+        } else {
+            usedCount[item.type] = u;
+        }
     });
-    if(items.length === 0) h += '<div style="font-size:10px;color:#9aaabb;text-align:center;padding:10px 4px;">No items</div>';
+
+    var h = '<div style="font-size:9px;font-weight:800;color:#1a2540;padding:4px 4px 3px;'
+          + 'border-bottom:1px solid #a8b8cc;margin-bottom:4px;">'
+          + jo.id + '</div>';
+
+    var availableCount = 0;
+    items.forEach(function(item, idx) {
+        var used = !!allPlaced[idx];
+        availableCount += used ? 0 : 1;
+        if(used) {
+            /* Show as greyed-out / placed — not draggable */
+            h += '<div class="qi qi-used" title="Already placed in lane">';
+            h += '<i class="fas fa-check" style="font-size:9px;opacity:.5;margin-right:3px;color:#16a34a;"></i>';
+            h += '<span style="text-decoration:line-through;opacity:.45;">' + item.label + '</span>';
+            h += '</div>';
+        } else {
+            /* Available — draggable */
+            h += '<div class="qi" data-type="' + item.type + '" draggable="true" data-idx="' + idx + '"';
+            h += ' ondragstart="dirDnItem(event,' + idx + ')">';
+            h += '<i class="fas ' + item.icon + '" style="font-size:10px;pointer-events:none;"></i>' + item.label;
+            h += '</div>';
+        }
+    });
+
+    if(items.length === 0) {
+        h += '<div style="font-size:10px;color:#9aaabb;text-align:center;padding:10px 4px;">No items</div>';
+    } else if(availableCount === 0) {
+        h += '<div style="font-size:10px;color:#16a34a;text-align:center;padding:8px 4px;font-weight:700;">'
+          + '<i class="fas fa-check-circle"></i> All placed!</div>';
+    }
+
     document.getElementById('dirInList').innerHTML = h;
-    /* store items on active JO for drag lookup */
+    /* store full items list on active JO for drag lookup by index */
     dirActiveJO._inputItems = items;
 }
 
@@ -1008,9 +1298,12 @@ function dirRenderCanvas() {
             /* Children have pointer-events:none so events land on the div */
             if(s.icon) h += '<i class="fas ' + s.icon + '" style="pointer-events:none;"></i>';
             if(s.label) h += '<span style="pointer-events:none;margin-left:3px;">' + s.label + '</span>';
-            if(isBlank)  h += '<span style="pointer-events:none;opacity:.35;font-size:9px;">drop</span>';
+            if(isBlank)  h += '<span style="pointer-events:none;opacity:.4;font-size:9px;letter-spacing:.5px;">drop here</span>';
             h += '</div>';
         });
+
+        /* + Add Slot button — always at end of steps row */
+        h += '<button class="lane-add-slot-btn" onclick="dirAddSlot(\'' + joid + '\')"><i class="fas fa-plus"></i> + Slot</button>';
 
         h += '</div>'; /* /lane-steps */
         h += '</div>'; /* /swim-lane */
@@ -1079,6 +1372,14 @@ function dirLaneDrop(e, joid) {
         if(lane.steps[i].type === 'blank') { blankIdx = i; break; }
     }
     if(blankIdx >= 0) {
+        /* ── QUOTA CHECK ── */
+        var movingSameType = (DIR_DRAG.src === 'lane' && DIR_DRAG.fromLane === joid);
+        if(!dirQuotaOk(joid, DIR_DRAG.type, movingSameType ? DIR_DRAG.type : null)) {
+            var quota = dirGetQuota(joid, DIR_DRAG.type);
+            dirToast('Max ' + quota + ' × ' + DIR_DRAG.label.replace(/ \d+$/, '') + ' allowed in this lane', '#ef4444');
+            DIR_DRAG = null;
+            return;
+        }
         lane.steps[blankIdx] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon);
         /* If moving from another lane, blank that slot */
         if(DIR_DRAG.src === 'lane' && DIR_DRAG.fromLane !== joid) {
@@ -1088,6 +1389,8 @@ function dirLaneDrop(e, joid) {
         DIR_DRAG = null;
         dirRenderCanvas();
         dirFocusLane(joid);
+        /* refresh input panel so placed item is crossed off */
+        if(dirActiveJO && dirActiveJO._laneId === joid) dirRenderInputPanel(dirActiveJO);
         dirToast('Step added to ' + joid, '#2563eb');
     } else {
         dirToast('All slots filled — drop on a specific slot to replace', '#d97706');
@@ -1120,6 +1423,15 @@ function dirSlotDrop(e, joid, si) {
         DIR_DRAG = null;
         return;
     }
+    /* ── QUOTA CHECK ──
+       replacingType = what is currently in this slot (may free up quota for same type) */
+    var replacingType = (target && !target.locked && target.type !== 'blank') ? target.type : null;
+    if(!dirQuotaOk(joid, DIR_DRAG.type, replacingType)) {
+        var quota = dirGetQuota(joid, DIR_DRAG.type);
+        dirToast('Max ' + quota + ' × ' + DIR_DRAG.label.replace(/ \d+$/, '') + ' allowed in this lane', '#ef4444');
+        DIR_DRAG = null;
+        return;
+    }
     /* Place the step */
     lane.steps[si] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon);
     /* If moving from another slot in same or different lane — blank the source */
@@ -1134,6 +1446,8 @@ function dirSlotDrop(e, joid, si) {
     document.querySelectorAll('.dstep').forEach(function(el){ el.style.opacity = ''; });
     dirRenderCanvas();
     dirFocusLane(joid);
+    /* refresh input panel so placed item is crossed off, or restored if blanked */
+    if(dirActiveJO && dirActiveJO._laneId === joid) dirRenderInputPanel(dirActiveJO);
     dirToast('Placed: ' + lane.steps[si].label, '#2563eb');
 }
 
