@@ -628,6 +628,9 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 .lane-steps::-webkit-scrollbar-track { background: rgba(0,0,0,.05); border-radius: 3px; }
 .lane-steps::-webkit-scrollbar-thumb { background: #a0b0c4; border-radius: 3px; }
 .lane-steps.ldov { background: rgba(58,112,200,.08); outline: 2px dashed #3a70c8; outline-offset: -3px; }
+/* Cross-lane block — red "no entry" highlight on other lanes while dragging a step */
+.lane-steps.ldov-blocked { background: rgba(220,32,32,.06); outline: 2px dashed #ef4444; outline-offset: -3px; cursor: not-allowed; }
+.swim-lane.lane-blocked { opacity: .55; pointer-events: none; }
 
 /* Add-slot button inside the lane steps area */
 .lane-add-slot-btn {
@@ -1575,6 +1578,7 @@ function dirRenderCanvas() {
                 /* Filled non-locked: draggable AND droppable (swap) */
                 h += ' draggable="true"';
                 h += ' ondragstart="dirStepDragStart(event,\'' + joid + '\',' + si + ')"';
+                h += ' ondragend="dirStepDragEnd()"';
                 h += ' ondragover="dirSlotOver(event,' + si + ')"';
                 h += ' ondragleave="dirSlotLeave(event)"';
                 h += ' ondrop="dirSlotDrop(event,\'' + joid + '\',' + si + ')"';
@@ -1630,8 +1634,13 @@ function dirStepDragStart(e, joid, si) {
     DIR_DRAG = {src:'lane', type:s.type, label:s.label, cls:s.cls, icon:s.icon, shape:s.shape||(sd.shape||'ss-shape-arrow'), fromLane:joid, fromIdx:si};
     e.dataTransfer.setData('text/plain', 'drag');
     e.dataTransfer.effectAllowed = 'move';
-    /* mark source slot visually */
     e.target.style.opacity = '0.4';
+}
+
+function dirStepDragEnd() {
+    /* Restore opacity on all steps */
+    document.querySelectorAll('.dstep').forEach(function(el){ el.style.opacity = ''; });
+    if(DIR_DRAG && DIR_DRAG.src === 'lane') DIR_DRAG = null;
 }
 
 /* ════════════════════════════════
@@ -1639,12 +1648,10 @@ function dirStepDragStart(e, joid, si) {
    Fires when dropped on the lane-steps background (missed all slots)
 ════════════════════════════════ */
 function dirLaneDragOver(e, joid) {
-    /* Only accept if the drag came from palette or input */
     e.preventDefault();
     document.getElementById('lsteps-' + joid).classList.add('ldov');
 }
 function dirLaneDragLeave(e, joid) {
-    /* Only remove highlight if leaving the container itself */
     if(e.currentTarget.contains(e.relatedTarget)) return;
     document.getElementById('lsteps-' + joid).classList.remove('ldov');
 }
@@ -1652,7 +1659,14 @@ function dirLaneDrop(e, joid) {
     e.preventDefault();
     document.getElementById('lsteps-' + joid).classList.remove('ldov');
     if(!DIR_DRAG) return;
-    /* Dropped on background — fill the first blank slot */
+
+    /* ══ BLOCK: cannot drag a lane step to a DIFFERENT lane ══ */
+    if(DIR_DRAG.src === 'lane' && DIR_DRAG.fromLane !== joid) {
+        dirToast('Cannot move steps between lanes', '#ef4444');
+        dirStepDragEnd();
+        return;
+    }
+
     var lane = DIR_LANES[joid];
     if(!lane) return;
     var blankIdx = -1;
@@ -1669,15 +1683,14 @@ function dirLaneDrop(e, joid) {
             return;
         }
         lane.steps[blankIdx] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon, DIR_DRAG.shape);
-        /* If moving from another lane, blank that slot */
-        if(DIR_DRAG.src === 'lane' && DIR_DRAG.fromLane !== joid) {
-            var fl = DIR_LANES[DIR_DRAG.fromLane];
-            if(fl) fl.steps[DIR_DRAG.fromIdx] = mkBlank();
+        /* If moving within same lane, blank the source slot */
+        if(DIR_DRAG.src === 'lane' && DIR_DRAG.fromLane === joid) {
+            lane.steps[DIR_DRAG.fromIdx] = mkBlank();
         }
         DIR_DRAG = null;
+        document.querySelectorAll('.dstep').forEach(function(el){ el.style.opacity = ''; });
         dirRenderCanvas();
         dirFocusLane(joid);
-        /* refresh input panel so placed item is crossed off */
         if(dirActiveJO && dirActiveJO._laneId === joid) dirRenderInputPanel(dirActiveJO);
         dirToast('Step added to ' + joid, '#2563eb');
     } else {
@@ -1702,6 +1715,14 @@ function dirSlotDrop(e, joid, si) {
     e.currentTarget.classList.remove('dov');
     document.getElementById('lsteps-' + joid).classList.remove('ldov');
     if(!DIR_DRAG) return;
+
+    /* ══ BLOCK: cannot drag a lane step to a DIFFERENT lane ══ */
+    if(DIR_DRAG.src === 'lane' && DIR_DRAG.fromLane !== joid) {
+        dirToast('Cannot move steps between lanes', '#ef4444');
+        dirStepDragEnd();
+        return;
+    }
+
     var lane = DIR_LANES[joid];
     if(!lane) return;
     var target = lane.steps[si];
@@ -1711,8 +1732,7 @@ function dirSlotDrop(e, joid, si) {
         DIR_DRAG = null;
         return;
     }
-    /* ── QUOTA CHECK ──
-       replacingType = what is currently in this slot (may free up quota for same type) */
+    /* ── QUOTA CHECK ── */
     var replacingType = (target && !target.locked && target.type !== 'blank') ? target.type : null;
     if(!dirQuotaOk(joid, DIR_DRAG.type, replacingType)) {
         var quota = dirGetQuota(joid, DIR_DRAG.type);
@@ -1722,7 +1742,7 @@ function dirSlotDrop(e, joid, si) {
     }
     /* Place the step */
     lane.steps[si] = mkStep(DIR_DRAG.type, DIR_DRAG.label, DIR_DRAG.cls, DIR_DRAG.icon, DIR_DRAG.shape);
-    /* If moving from another slot in same or different lane — blank the source */
+    /* If moving from another slot in same lane — blank the source */
     if(DIR_DRAG.src === 'lane') {
         var fl = DIR_LANES[DIR_DRAG.fromLane];
         if(fl && !(DIR_DRAG.fromLane === joid && DIR_DRAG.fromIdx === si)) {
@@ -1730,11 +1750,9 @@ function dirSlotDrop(e, joid, si) {
         }
     }
     DIR_DRAG = null;
-    /* restore opacity on all steps */
     document.querySelectorAll('.dstep').forEach(function(el){ el.style.opacity = ''; });
     dirRenderCanvas();
     dirFocusLane(joid);
-    /* refresh input panel so placed item is crossed off, or restored if blanked */
     if(dirActiveJO && dirActiveJO._laneId === joid) dirRenderInputPanel(dirActiveJO);
     dirToast('Placed: ' + lane.steps[si].label, '#2563eb');
 }
@@ -1776,3 +1794,4 @@ dirRenderCanvas();
 </script>
 @endverbatim
 @endpush
+
