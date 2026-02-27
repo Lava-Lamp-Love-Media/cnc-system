@@ -363,7 +363,7 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 .qi {
     padding: 5px 12px;
     height: 36px;
-    border-radius: 0;       /* shape set per type below */
+    border-radius: 999px;   /* always round pill */
     font-size: 10px;
     font-weight: 700;
     margin-bottom: 8px;
@@ -383,44 +383,13 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 .qi:hover  { filter: brightness(.88); transform: translateY(-1px); }
 .qi:active { cursor: grabbing; opacity: .7; }
 
-/* ── Per-type: color + MATCHING SHAPE as the lane ── */
-/* HOLE → circle */
-.qi[data-type="hole"] {
-    background: #3090e8; border-color: #1870c8;
-    border-radius: 999px !important;
-    clip-path: none !important;
-}
-/* TAP → diamond */
-.qi[data-type="tap"] {
-    background: #d83060; border-color: #b01848;
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%) !important;
-    height: 52px; min-width: 52px; padding: 0 6px; font-size: 9px;
-}
-/* MACHINE → hexagon */
-.qi[data-type="machine"] {
-    background: #2860b8; border-color: #1040a0;
-    clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%) !important;
-    border-radius: 0 !important;
-}
-/* OPERATION → arrow */
-.qi[data-type="op"] {
-    background: #50a050; color: #fff; border-color: #308030;
-    clip-path: polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%) !important;
-    border-radius: 0 !important;
-    padding-right: 20px;
-}
-/* THREAD → parallelogram */
-.qi[data-type="thread"] {
-    background: #38a068; border-color: #208050;
-    clip-path: polygon(14% 0%, 100% 0%, 86% 100%, 0% 100%) !important;
-    border-radius: 0 !important;
-}
-/* ITEM → octagon */
-.qi[data-type="item"] {
-    background: #d8a010; color: #fff; border-color: #b08000;
-    clip-path: polygon(12px 0%,calc(100% - 12px) 0%,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0% calc(100% - 12px),0% 12px) !important;
-    border-radius: 0 !important;
-}
+/* ── Per-type: color only — ALL stay round pill ── */
+.qi[data-type="hole"]    { background: #3090e8; border-color: #1870c8; }
+.qi[data-type="tap"]     { background: #d83060; border-color: #b01848; }
+.qi[data-type="machine"] { background: #2860b8; border-color: #1040a0; }
+.qi[data-type="op"]      { background: #50a050; border-color: #308030; }
+.qi[data-type="thread"]  { background: #38a068; border-color: #208050; }
+.qi[data-type="item"]    { background: #d8a010; border-color: #b08000; }
 
 /* Used/placed — strikethrough, semi-transparent */
 .qi.qi-used {
@@ -670,125 +639,15 @@ body.director-page.sidebar-mini .content-wrapper { margin-left: 0 !important; }
 .lane-steps .dstep span { white-space: nowrap; pointer-events: none; }
 .lane-steps .dstep i    { pointer-events: none; font-size: 11px; opacity: .92; }
 
-/* ════════════════════════════════════════════════
-   SHAPE CLASSES — all use !important to guarantee
-   nothing overrides them regardless of specificity
-════════════════════════════════════════════════ */
-
-/* ARROW chevron → Operation */
-.lane-steps .dstep.ss-shape-arrow {
-    clip-path: polygon(0% 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 0% 100%) !important;
-    border-radius: 0 !important;
-    padding: 0 24px 0 14px;
-}
-
-/* ARROW-FIRST → Start */
-.lane-steps .dstep.ss-shape-arrow-first {
-    clip-path: polygon(0% 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 0% 100%) !important;
-    border-radius: 0 !important;
-    padding: 0 24px 0 12px;
-}
-
-/* ARROW-END → Ship */
-.lane-steps .dstep.ss-shape-arrow-end {
-    clip-path: polygon(16px 0%, 100% 0%, 100% 100%, 16px 100%, 0% 50%) !important;
-    border-radius: 0 !important;
-    padding: 0 14px 0 26px;
-}
-
-/* CIRCLE → Hole */
-.lane-steps .dstep.ss-shape-circle {
+/* ════════════════════
+   SHAPE — ALL ROUND PILL
+   Every step type uses the same pill shape
+════════════════════ */
+.lane-steps .dstep.ss-shape-pill {
     clip-path: none !important;
     border-radius: 999px !important;
-    min-width: 90px;
-    border: 2px solid rgba(255,255,255,.4) !important;
-}
-
-/* DIAMOND → Tap */
-.lane-steps .dstep.ss-shape-diamond {
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%) !important;
-    border-radius: 0 !important;
-    height: 62px;
-    min-width: 62px;
-    padding: 0 6px;
-    font-size: 9px;
-}
-
-/* HEXAGON → Machine */
-.lane-steps .dstep.ss-shape-hexagon {
-    clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%) !important;
-    border-radius: 0 !important;
-    padding: 0 22px;
-    min-width: 92px;
-}
-
-/* PARALLELOGRAM → Thread */
-.lane-steps .dstep.ss-shape-parallelogram {
-    clip-path: polygon(14% 0%, 100% 0%, 86% 100%, 0% 100%) !important;
-    border-radius: 0 !important;
-    padding: 0 22px 0 20px;
-    min-width: 92px;
-}
-
-/* FLAG → Inspect */
-.lane-steps .dstep.ss-shape-flag {
-    clip-path: polygon(0% 50%, 16px 0%, 100% 0%, 100% 100%, 16px 100%) !important;
-    border-radius: 0 !important;
-    padding: 0 16px 0 28px;
-    min-width: 92px;
-}
-
-/* SHIELD → Approve, Cert */
-.lane-steps .dstep.ss-shape-shield {
-    clip-path: polygon(15% 0%, 85% 0%, 100% 25%, 100% 65%, 50% 100%, 0% 65%, 0% 25%) !important;
-    border-radius: 0 !important;
-    height: 56px;
-    min-width: 64px;
-    padding: 4px 10px 0;
-    font-size: 9px;
-    align-items: flex-start;
-}
-
-/* HOUSE → Inventory */
-.lane-steps .dstep.ss-shape-house {
-    clip-path: polygon(50% 0%, 100% 35%, 100% 100%, 0% 100%, 0% 35%) !important;
-    border-radius: 0 !important;
-    height: 56px;
-    min-width: 64px;
-    padding: 10px 10px 4px;
-    font-size: 9px;
-    align-items: flex-end;
-}
-
-/* TRAPEZOID → Heat Treat */
-.lane-steps .dstep.ss-shape-trapezoid {
-    clip-path: polygon(12% 0%, 88% 0%, 100% 100%, 0% 100%) !important;
-    border-radius: 0 !important;
     padding: 0 18px;
-    min-width: 88px;
-}
-
-/* ROUND-RECT → Plating, Pack */
-.lane-steps .dstep.ss-shape-round-rect {
-    clip-path: none !important;
-    border-radius: 12px !important;
     border: 2px solid rgba(255,255,255,.3) !important;
-}
-
-/* STOP square → Control, Hold */
-.lane-steps .dstep.ss-shape-stop {
-    clip-path: none !important;
-    border-radius: 6px !important;
-    border: 3px solid rgba(255,255,255,.35) !important;
-    min-width: 76px;
-}
-
-/* OCTAGON → Item / MATERIAL ABER */
-.lane-steps .dstep.ss-shape-octagon {
-    clip-path: polygon(14px 0%,calc(100% - 14px) 0%,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0% calc(100% - 14px),0% 14px) !important;
-    border-radius: 0 !important;
-    padding: 0 18px;
-    min-width: 90px;
 }
 
 /* ── COLORS ── */
@@ -984,6 +843,96 @@ body.dragging .step-note-row { pointer-events: none !important; }
 .dnm-cost-sm { margin-left: auto; font-size: 11px; font-weight: 700; color: #3a5070; }
 .dnm-ec-link { font-size: 10px; color: #8a9aaa; }
 
+/* ══ HOLE DIRECTOR MODAL ══ */
+.dh-modal-wrap {
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    width:700px;
+    max-width:95vw;
+    max-height:92vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    font-family:'DM Sans',sans-serif;
+}
+/* Top purple nav bar */
+.dh-navbar {
+    background: linear-gradient(135deg,#6c5ce7,#a29bfe);
+    padding:8px 14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+}
+.dh-navbar-brand { display:flex;align-items:center;gap:5px;font-size:13px;font-weight:800;color:#fff; }
+.dh-navbar-nav { font-size:10px;color:rgba(255,255,255,.8);margin-left:8px; }
+.dh-navbar-nav strong { color:#fff; }
+.dh-view-btn { margin-left:auto;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:3px 10px;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px; }
+/* Job bar */
+.dh-jobbar { background:#f8f6ff;border-bottom:1px solid #e8e0ff;padding:8px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0; }
+.dh-jobbar-lbl { font-size:11px;color:#4a3a7a;font-weight:600; }
+.dh-save-btn { margin-left:auto;background:#6c5ce7;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px; }
+.dh-save-btn:hover { background:#5a4bd0; }
+.dh-cancel-sm { background:#fff;border:1px solid #d0c8f0;color:#4a3a7a;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer; }
+/* Meta row */
+.dh-metarow { background:#f0ecff;border-bottom:1px solid #e0d8ff;padding:5px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;font-size:11px;color:#3a2a6a; }
+.dh-cost-tag { margin-left:auto;background:#6c5ce7;color:#fff;padding:2px 10px;border-radius:5px;font-size:11px;font-weight:700; }
+.dh-profit-tag { background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:3px; }
+/* Item detail header */
+.dh-item-hd { background:#eee8ff;border-bottom:1px solid #ddd0ff;padding:7px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0; }
+.dh-item-hd-title { font-size:12px;font-weight:800;color:#3a2a7a; }
+.dh-review-link { font-size:11px;color:#6c5ce7;text-decoration:underline;cursor:pointer; }
+.dh-autofill-btn { margin-left:auto;background:#fff;border:1px solid #c0b0f0;color:#5a4bd0;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer; }
+/* Job label strip */
+.dh-joblabel { background:#f8f6ff;border-bottom:1px solid #ece4ff;padding:5px 14px;display:flex;align-items:center;font-size:11px;color:#4a3a7a;flex-shrink:0; }
+.dh-joblabel-cost { margin-left:auto;font-weight:800;color:#3a2a7a; }
+/* Scrollable body split */
+.dh-body-split { display:flex;flex:1;min-height:0;overflow:hidden; }
+.dh-left  { flex:1;min-width:0;overflow-y:auto;padding:0; }
+.dh-right { width:175px;flex-shrink:0;background:#f8f6ff;border-left:1px solid #e8e0ff;padding:12px;overflow-y:auto; }
+/* Section headers */
+.dh-sec { background:#f0ecff;border-top:1px solid #e0d8ff;border-bottom:1px solid #e0d8ff;padding:7px 14px;font-size:11px;font-weight:700;color:#3a2a7a;display:flex;align-items:center;gap:6px;cursor:pointer; }
+.dh-sec i { color:#6c5ce7;font-size:9px; }
+.dh-sec-body { padding:12px 14px;background:#fff; }
+/* Spec grid */
+.dh-spec-grid { display:grid;grid-template-columns:auto 1fr;gap:7px 12px;align-items:center; }
+.dh-spec-lbl { font-size:11px;font-weight:600;color:#5a6a7a;white-space:nowrap; }
+.dh-spec-val { display:flex;align-items:center;gap:6px; }
+.dh-method-row { display:flex;align-items:center;gap:8px;margin-top:8px;padding:6px 0;border-top:1px solid #f0f0f0; }
+.dh-method-cost { margin-left:auto;font-size:12px;font-weight:700;color:#2a3a4a; }
+/* Edge requirement */
+.dh-edge-row { display:flex;align-items:center;gap:8px;margin-bottom:6px; }
+.dh-info-note { font-size:10px;color:#8a9aaa;font-style:italic;margin-top:6px; }
+/* Future plan */
+.dh-fp-group { background:#f8f6ff;border:1px solid #e0d4ff;border-radius:8px;padding:10px;margin-bottom:8px; }
+.dh-fp-group-hd { display:flex;align-items:center;gap:6px;margin-bottom:6px; }
+.dh-fp-group-name { font-size:11px;font-weight:800;color:#3a2a7a; }
+.dh-auto-btn { background:#6c5ce7;color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px; }
+.dh-truck-btn { background:#e0f0ff;border:1px solid #90c0f0;color:#1a60b0;padding:3px 6px;border-radius:4px;font-size:10px;cursor:pointer; }
+.dh-risk-badge { background:#dcfce7;color:#16a34a;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:700; }
+.dh-fp-plan { font-size:11px;font-weight:700;color:#2a3a4a;margin:8px 0 6px; }
+.dh-op-card { background:#fff;border:1px solid #e0e8f0;border-radius:6px;padding:8px 10px;font-size:10px;color:#3a4a5a; }
+.dh-op-header { display:flex;justify-content:space-between;font-weight:700;font-size:11px;margin-bottom:3px; }
+.dh-op-detail { color:#6a7a8a;margin-bottom:2px; }
+.dh-op-pos { text-align:right;color:#6c5ce7;font-size:10px;font-weight:600;margin-bottom:3px; }
+.dh-cycle-row { display:flex;align-items:center;gap:6px;margin-top:5px;padding-top:5px;border-top:1px solid #f0f0f0; }
+.dh-cycle-time { margin-left:auto;font-weight:800;color:#2a3a4a;font-size:12px; }
+/* Real impact panel */
+.dh-impact-title { font-size:11px;font-weight:800;color:#2a3a4a;margin-bottom:8px; }
+.dh-impact-row { margin-bottom:6px; }
+.dh-impact-lbl { font-size:9px;color:#8a9aaa;font-weight:600;text-transform:uppercase;letter-spacing:.3px; }
+.dh-impact-val { font-size:13px;font-weight:800;color:#2a3a4a;display:flex;align-items:center;gap:4px; }
+.dh-inspect-row label { display:flex;align-items:center;gap:5px;font-size:10px;color:#3a4a5a;margin-bottom:3px;cursor:pointer; }
+.dh-margin-good { color:#16a34a;font-weight:800;font-size:12px; }
+/* Profit warning */
+.dh-profit-bar { background:#fff7ed;border-top:2px solid #fed7aa;padding:8px 14px;display:flex;align-items:center;gap:6px;font-size:11px;color:#92400e;flex-shrink:0; }
+/* Bottom actions */
+.dh-footer { background:#f8f6ff;border-top:1px solid #e0d8ff;padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0; }
+.dh-profit-btn { background:#f59e0b;color:#fff;border:none;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px; }
+.dh-bom-btn { background:#6c5ce7;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;margin-left:auto; }
+.dh-bom-btn:hover { background:#5a4bd0; }
+
 /* ── BLANK DROP SLOT — always visible rectangle ── */
 .lane-steps .dstep.step-blank,
 .dstep.step-blank {
@@ -1033,25 +982,10 @@ body.dragging .step-note-row { pointer-events: none !important; }
 #dir-toast.on { display: flex; transform: translateX(-50%) translateY(0); }
 
 /* ══════════════════════════════════════════════════════
-   SHAPE OVERRIDE BLOCK — loaded last, maximum specificity
-   Guarantees shapes never get overridden by any framework CSS
+   SHAPE OVERRIDE — all steps are round pills
 ══════════════════════════════════════════════════════ */
-html body .lane-steps .dstep.ss-shape-arrow-first { clip-path: polygon(0% 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 0% 100%) !important; border-radius: 0 !important; }
-html body .lane-steps .dstep.ss-shape-arrow       { clip-path: polygon(0% 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 0% 100%) !important; border-radius: 0 !important; }
-html body .lane-steps .dstep.ss-shape-arrow-end   { clip-path: polygon(16px 0%, 100% 0%, 100% 100%, 16px 100%, 0% 50%) !important; border-radius: 0 !important; }
-html body .lane-steps .dstep.ss-shape-circle      { clip-path: none !important; border-radius: 999px !important; min-width: 90px; }
-html body .lane-steps .dstep.ss-shape-diamond     { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%) !important; border-radius: 0 !important; height: 62px; min-width: 62px; }
-html body .lane-steps .dstep.ss-shape-hexagon     { clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%) !important; border-radius: 0 !important; min-width: 92px; }
-html body .lane-steps .dstep.ss-shape-parallelogram { clip-path: polygon(14% 0%, 100% 0%, 86% 100%, 0% 100%) !important; border-radius: 0 !important; min-width: 92px; }
-html body .lane-steps .dstep.ss-shape-flag        { clip-path: polygon(0% 50%, 16px 0%, 100% 0%, 100% 100%, 16px 100%) !important; border-radius: 0 !important; min-width: 92px; }
-html body .lane-steps .dstep.ss-shape-shield      { clip-path: polygon(15% 0%, 85% 0%, 100% 25%, 100% 65%, 50% 100%, 0% 65%, 0% 25%) !important; border-radius: 0 !important; height: 56px; min-width: 64px; }
-html body .lane-steps .dstep.ss-shape-house       { clip-path: polygon(50% 0%, 100% 35%, 100% 100%, 0% 100%, 0% 35%) !important; border-radius: 0 !important; height: 56px; min-width: 64px; }
-html body .lane-steps .dstep.ss-shape-trapezoid   { clip-path: polygon(12% 0%, 88% 0%, 100% 100%, 0% 100%) !important; border-radius: 0 !important; min-width: 88px; }
-html body .lane-steps .dstep.ss-shape-round-rect  { clip-path: none !important; border-radius: 12px !important; }
-html body .lane-steps .dstep.ss-shape-stop        { clip-path: none !important; border-radius: 6px !important; min-width: 76px; }
-html body .lane-steps .dstep.ss-shape-octagon     { clip-path: polygon(14px 0%,calc(100% - 14px) 0%,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0% calc(100% - 14px),0% 14px) !important; border-radius: 0 !important; min-width: 90px; }
-/* Blank slots always rectangle */
-html body .lane-steps .dstep.step-blank           { clip-path: none !important; border-radius: 8px !important; }
+html body .lane-steps .dstep.ss-shape-pill  { clip-path: none !important; border-radius: 999px !important; }
+html body .lane-steps .dstep.step-blank     { clip-path: none !important; border-radius: 8px !important; }
 
 </style>
 @endsection
@@ -1225,187 +1159,289 @@ html body .lane-steps .dstep.step-blank           { clip-path: none !important; 
 {{-- ══ HOLE / TAP / GENERIC NOTE MODAL ══ --}}
 <div id="dir-note-modal">
 
-    {{-- ── HOLE SPECS panel ── --}}
-    <div class="dnm-box" id="dnm-hole" style="display:none;width:460px;">
-        <div class="dnm-hd" style="background:#3090e8;">
-            <div><i class="fas fa-circle-notch" style="margin-right:7px;"></i>Holes <span class="dnm-sub" id="dnm-hole-title"></span></div>
-            <div style="display:flex;align-items:center;gap:8px;">
-                <span class="dnm-cost-badge" id="dnm-hole-cost">$0.00</span>
-                <button class="dnm-close" onclick="dirCloseNoteModal()">&#x2715;</button>
-            </div>
-        </div>
-        <div class="dnm-body" style="max-height:70vh;overflow-y:auto;">
-            <p class="dnm-sub-label">Basic hole details</p>
+    {{-- ══ HOLE SPECS MODAL (Director style) ══ --}}
+    <div class="dh-modal-wrap" id="dnm-hole" style="display:none;">
 
-            <div class="dnm-section">
-                <div class="dnm-section-hd"><i class="fas fa-circle dnm-dot" style="color:#3090e8;"></i> Hole Specifications <span class="dnm-chevron">&#x2304;</span></div>
-                <div class="dnm-section-body">
-                    <div class="dnm-row2">
-                        <div class="dnm-field">
-                            <label>Hole Size</label>
-                            <div style="display:flex;gap:4px;">
-                                <input type="text" id="dnh-size" value=".2500" class="dnm-input" style="width:80px;">
-                                <select id="dnh-unit" class="dnm-select" style="width:70px;"><option>inch</option><option>mm</option></select>
+        {{-- Nav bar --}}
+        <div class="dh-navbar">
+            <div class="dh-navbar-brand">
+                <i class="fas fa-cog"></i> Director
+            </div>
+            <div class="dh-navbar-nav">
+                Home &rsaquo; Jobs &rsaquo; <span id="dnh-job-nav">Job 10027-A</span> &rsaquo; <strong>Item Detail (From Quote)</strong>
+            </div>
+            <button class="dh-view-btn">
+                <i class="fas fa-star" style="color:#f59e0b;font-size:8px;"></i> STANDARD VIEW
+                <i class="fas fa-chevron-down" style="font-size:8px;"></i>
+            </button>
+        </div>
+
+        {{-- Job / Save bar --}}
+        <div class="dh-jobbar">
+            <span class="dh-jobbar-lbl">Job: <strong id="dnh-jobref">10027-A</strong> — <span id="dnh-company">INDUSTRY XYZ</span></span>
+            <button class="dh-save-btn" onclick="dirSaveStepData('hole')">
+                <i class="fas fa-save"></i> Save &amp; Close
+            </button>
+            <button class="dh-cancel-sm" onclick="dirCloseNoteModal()">Cancel</button>
+        </div>
+
+        {{-- Quote meta --}}
+        <div class="dh-metarow">
+            <span>Job: <strong id="dnh-jobref2">10027-A</strong> — INDUSTRY XYZ</span>
+            <span style="margin-left:10px;">Customer: <strong id="dnh-customer">Acme Manufacturing</strong></span>
+            <span class="dh-cost-tag" id="dnh-total-cost">$50.00</span>
+            <span class="dh-profit-tag"><i class="fas fa-times-circle"></i> Profit Not Added</span>
+        </div>
+        <div class="dh-metarow" style="border-top:none;padding-top:0;padding-bottom:6px;">
+            <span>Quote #: <strong id="dnh-quotenum">Q1-4458</strong></span>
+            <span style="margin-left:18px;">Date: <span id="dnh-date">Apr 24, 2024</span></span>
+        </div>
+
+        {{-- Item Detail header --}}
+        <div class="dh-item-hd">
+            <i class="fas fa-cog" style="color:#6c5ce7;font-size:13px;"></i>
+            <span class="dh-item-hd-title">Item Detail from Quote</span>
+            <span class="dh-review-link">Review &amp; Complete Details</span>
+            <button class="dh-autofill-btn">
+                <i class="fas fa-magic" style="margin-right:3px;"></i>Auto-Fill Stock
+                <i class="fas fa-chevron-down" style="font-size:8px;margin-left:2px;"></i>
+            </button>
+        </div>
+
+        {{-- Job label strip --}}
+        <div class="dh-joblabel">
+            Job: <strong style="margin:0 4px;" id="dnh-jobref3">10027-A</strong> — INDUSTRY XYZ
+            <span class="dh-joblabel-cost" id="dnh-job-cost">$50.00 <i class="fas fa-chevron-down" style="font-size:9px;"></i></span>
+        </div>
+
+        {{-- Split body --}}
+        <div class="dh-body-split">
+
+            {{-- LEFT: specs --}}
+            <div class="dh-left">
+
+                {{-- Hole Specs section --}}
+                <div class="dh-sec">
+                    <i class="fas fa-circle" style="color:#6c5ce7;font-size:8px;"></i>
+                    Hole Specifications
+                    <i class="fas fa-chevron-up" style="margin-left:auto;font-size:9px;color:#9a8aaa;"></i>
+                </div>
+                <div class="dh-sec" style="background:#f8f6ff;border-top:none;">
+                    <span style="font-size:10px;color:#8a7aaa;">Job: <strong>10027-A</strong> — INDUSTRY XYZ</span>
+                    <i class="fas fa-chevron-down" style="margin-left:auto;font-size:9px;color:#9a8aaa;"></i>
+                </div>
+
+                <div class="dh-sec-body">
+                    <div style="font-size:13px;font-weight:800;color:#2a3a4a;margin-bottom:12px;">Hole Specifications</div>
+                    <div class="dh-spec-grid">
+                        <span class="dh-spec-lbl">Hole Size</span>
+                        <div class="dh-spec-val">
+                            <input type="text" id="dnh-size" value=".2500" class="dnm-input" style="width:90px;">
+                            <select id="dnh-unit" class="dnm-select" style="width:65px;"><option>inch</option><option>mm</option></select>
+                        </div>
+                        <span class="dh-spec-lbl">Quantity:</span>
+                        <div class="dh-spec-val">
+                            <input type="number" id="dnh-qty" value="6" class="dnm-input" style="width:70px;">
+                        </div>
+                        <span class="dh-spec-lbl">Depth:</span>
+                        <div class="dh-spec-val">
+                            <select id="dnh-depth" class="dnm-select" style="width:130px;"><option>THRU</option><option>Blind</option><option>Custom</option></select>
+                        </div>
+                        <span class="dh-spec-lbl">Units:</span>
+                        <div class="dh-spec-val">
+                            <select id="dnh-units" class="dnm-select" style="width:130px;"><option>Standard</option><option>Metric</option></select>
+                        </div>
+                    </div>
+                    <div class="dh-method-row">
+                        <span class="dh-spec-lbl">Method:</span>
+                        <select id="dnh-method" class="dnm-select" style="width:110px;"><option>Drill</option><option>Ream</option><option>Bore</option><option>Mill</option></select>
+                        <span class="dh-method-cost">$50.00 <i class="fas fa-chevron-down" style="font-size:8px;"></i></span>
+                    </div>
+                </div>
+
+                {{-- Edge Requirement --}}
+                <div class="dh-sec">Edge Requirement <i class="fas fa-chevron-up" style="margin-left:auto;font-size:9px;color:#9a8aaa;"></i></div>
+                <div class="dh-sec-body">
+                    <div class="dh-edge-row">
+                        <input type="checkbox" id="dnh-debur" checked>
+                        <label for="dnh-debur" style="font-size:12px;font-weight:600;cursor:pointer;">Debur</label>
+                        <select id="dnh-debur-type" class="dnm-select" style="width:140px;"><option>Break Edge)</option><option>Full Debur</option><option>None</option></select>
+                    </div>
+                    <div class="dh-info-note">Full details such as tolerance and finishing will be set by the Director.</div>
+                </div>
+
+                {{-- Future Plan --}}
+                <div class="dh-sec">Future Plan</div>
+                <div class="dh-sec-body">
+                    <div class="dh-fp-group">
+                        <div class="dh-fp-group-hd">
+                            <i class="fas fa-circle" style="color:#6c5ce7;font-size:9px;"></i>
+                            <span class="dh-fp-group-name" id="dnh-group">HOLE GROUP H-01</span>
+                            <button class="dh-auto-btn">AUTO <i class="fas fa-arrow-right" style="font-size:8px;"></i></button>
+                            <button class="dh-truck-btn"><i class="fas fa-truck"></i></button>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                            <span style="font-size:10px;color:#6a7a8a;">Qty: <strong>6 per part</strong></span>
+                            <span class="dh-risk-badge">LOW RISK</span>
+                            <span style="color:#6c5ce7;font-size:16px;font-weight:800;line-height:1;cursor:pointer;">+</span>
+                        </div>
+                        <div class="dh-fp-plan">Future Plan</div>
+                        <div class="dh-op-card">
+                            <div class="dh-op-header">
+                                <span>Op 20: Drill &rsaquo; T05 - #28 Carbide</span>
+                                <span style="color:#2a3a4a;">$50.00</span>
                             </div>
+                            <div class="dh-op-detail">Coolant Through</div>
+                            <div class="dh-op-detail">8322 RPM</div>
+                            <div class="dh-op-pos">Pos. SA <i class="fas fa-chevron-right" style="font-size:8px;"></i></div>
+                            <div class="dh-op-detail">Angle: 180° &nbsp; x: 2.500 &nbsp; y: 4.750 &nbsp; @: 180°</div>
+                            <div class="dh-op-detail">Total Runtime: 0 hr 3 min</div>
+                            <div class="dh-cycle-row">
+                                <input type="checkbox" checked>
+                                <span style="font-size:10px;">Debur: In Cycle</span>
+                                <i class="fas fa-check" style="color:#22c55e;font-size:10px;"></i>
+                                <span class="dh-cycle-time">00:18</span>
+                            </div>
+                            <div class="dh-op-detail" style="margin-top:4px;">Total Cycle 1Der Part: 00:18</div>
+                            <div class="dh-op-detail">Total Runtime: 36 min</div>
                         </div>
-                        <div class="dnm-field"><label>Quantity</label><input type="number" id="dnh-qty" value="1" class="dnm-input" style="width:70px;"></div>
-                    </div>
-                    <div class="dnm-row2">
-                        <div class="dnm-field">
-                            <label>Depth</label>
-                            <select id="dnh-depth" class="dnm-select"><option>THRU</option><option>Blind</option><option>Custom</option></select>
-                        </div>
-                        <div class="dnm-field">
-                            <label>Units</label>
-                            <select id="dnh-units" class="dnm-select"><option>Standard</option><option>Metric</option></select>
-                        </div>
-                    </div>
-                    <div class="dnm-row-inline" style="margin-top:8px;">
-                        <label style="margin-right:8px;">Method:</label>
-                        <select id="dnh-method" class="dnm-select" style="width:100px;"><option>Drill</option><option>Ream</option><option>Bore</option><option>Mill</option></select>
-                        <span class="dnm-cost-sm" id="dnh-method-cost">$0.00</span>
                     </div>
                 </div>
-            </div>
 
-            <div class="dnm-section">
-                <div class="dnm-section-hd"><i class="fas fa-circle dnm-dot" style="color:#3090e8;"></i> Edge Requirement <span class="dnm-chevron">&#x2304;</span></div>
-                <div class="dnm-section-body">
-                    <div class="dnm-row-inline">
-                        <input type="checkbox" id="dnh-debur" style="margin-right:6px;">
-                        <label for="dnh-debur" style="margin-right:10px;">Debur</label>
-                        <select id="dnh-debur-type" class="dnm-select" style="width:130px;"><option>Break Edge)</option><option>Full Debur</option><option>None</option></select>
-                    </div>
+            </div>{{-- /dh-left --}}
+
+            {{-- RIGHT: Real Impact --}}
+            <div class="dh-right">
+                <div class="dh-impact-title">Real Impact</div>
+
+                <div class="dh-impact-row">
+                    <div class="dh-impact-lbl">Cycle Added Part</div>
+                    <div class="dh-impact-val">00:18 <i class="fas fa-minus-circle" style="color:#ef4444;font-size:10px;"></i></div>
                 </div>
-            </div>
-
-            <div class="dnm-section">
-                <div class="dnm-section-hd"><i class="fas fa-circle dnm-dot" style="color:#3090e8;"></i> Simple Note <span class="dnm-chevron">&#x2304;</span></div>
-                <div class="dnm-section-body">
-                    <textarea id="dnh-note" class="dnm-textarea" placeholder="Add any comments or instructions..."></textarea>
+                <div class="dh-impact-row">
+                    <div class="dh-impact-lbl">Total Runtime</div>
+                    <div class="dh-impact-val">36 min</div>
                 </div>
-            </div>
+                <div class="dh-impact-row" style="margin-top:10px;">
+                    <div class="dh-impact-lbl">Total Changes</div>
+                    <div class="dh-impact-val" style="font-size:11px;">—</div>
+                </div>
+                <div class="dh-impact-row" style="margin-top:10px;">
+                    <div class="dh-impact-lbl">Inspection Level</div>
+                </div>
+                <div class="dh-inspect-row" style="margin-left:2px;">
+                    <label><input type="checkbox"> CMM</label>
+                    <label><input type="checkbox" checked> Random Pin <span style="margin-left:4px;font-weight:700;">100%</span></label>
+                </div>
+                <div class="dh-impact-row" style="margin-top:10px;">
+                    <div class="dh-impact-lbl">Margin</div>
+                    <div class="dh-margin-good">GOOD <i class="fas fa-check" style="font-size:10px;"></i></div>
+                </div>
+            </div>{{-- /dh-right --}}
 
-            <div class="dnm-info-row">
-                <span>Full details such as tolerance and finishing will be set by the Director.</span>
-            </div>
-            <div class="dnm-cost-row">
-                <span>Hole Cost: <strong id="dnh-cost-lo">$0.00</strong></span>
-                <span>Hole Cost: <strong id="dnh-cost-hi">$0.00</strong> <span class="dnm-chevron">&#x2304;</span></span>
-            </div>
-            <div class="dnm-time-row">Estimated Cycle Time: <strong id="dnh-time">0:00</strong></div>
-        </div>
-        <div class="dnm-foot" style="justify-content:space-between;align-items:center;">
-            <span class="dnm-ec-link">2.9¢* <a href="#" style="color:#3090e8;font-size:10px;">see more...</a></span>
-            <div style="display:flex;gap:8px;">
-                <button class="dnm-cancel" onclick="dirCloseNoteModal()">Cancel</button>
-                <button class="dnm-save" style="background:#3090e8;" onclick="dirSaveStepData('hole')">
-                    <i class="fas fa-check" style="margin-right:4px;"></i>Save Hole
-                    <span style="margin-left:4px;border-left:1px solid rgba(255,255,255,.4);padding-left:6px;">&#x2304;</span>
-                </button>
-            </div>
-        </div>
-    </div>
+        </div>{{-- /dh-body-split --}}
 
-    {{-- ── TAP SPECS panel ── --}}
-    <div class="dnm-box" id="dnm-tap" style="display:none;width:480px;">
-        <div class="dnm-hd" style="background:#d83060;">
-            <div><i class="fas fa-screwdriver" style="margin-right:7px;"></i>Taps <span class="dnm-sub" id="dnm-tap-title"></span></div>
-            <div style="display:flex;align-items:center;gap:8px;">
-                <span class="dnm-cost-badge" id="dnm-tap-cost">$7.30</span>
-                <button class="dnm-close" onclick="dirCloseNoteModal()">&#x2715;</button>
-            </div>
+        {{-- Profit warning --}}
+        <div class="dh-profit-bar">
+            <i class="fas fa-exclamation-triangle" style="color:#f59e0b;font-size:13px;"></i>
+            <strong>Profit Not Added</strong>
+            <span>Quote cannot be turned into an <strong>order</strong> unless it profit has been added.</span>
         </div>
-        <div class="dnm-body" style="max-height:70vh;overflow-y:auto;">
+
+        {{-- Footer actions --}}
+        <div class="dh-footer">
+            <button class="dh-cancel-sm" onclick="dirCloseNoteModal()">Cancel</button>
+            <button class="dh-profit-btn">
+                <i class="fas fa-exclamation-triangle" style="font-size:10px;"></i>Quote Must Be Profited
+            </button>
+            <button class="dh-cancel-sm" onclick="dirCloseNoteModal()">Cancel</button>
+            <button class="dh-bom-btn" onclick="dirSaveStepData('hole')">
+                Create BOM <i class="fas fa-chevron-right" style="font-size:10px;"></i>
+            </button>
+        </div>
+
+    </div>{{-- /dnm-hole --}}
+
+    {{-- ══ TAP SPECS MODAL ══ --}}
+    <div class="dh-modal-wrap" id="dnm-tap" style="display:none;width:520px;">
+        <div class="dh-navbar">
+            <div class="dh-navbar-brand"><i class="fas fa-cog"></i> Director</div>
+            <div class="dh-navbar-nav">Taps &rsaquo; <span id="dnm-tap-title">—</span></div>
+            <span class="dh-view-btn" style="cursor:default;" id="dnm-tap-cost">$7.30</span>
+        </div>
+        <div class="dh-sec-body" style="overflow-y:auto;max-height:70vh;">
             <p class="dnm-sub-label">Basic tap details</p>
-
-            <div class="dnm-section">
-                <div class="dnm-section-hd"><i class="fas fa-circle dnm-dot" style="color:#d83060;"></i> Tap Specifications <span class="dnm-chevron">&#x2304;</span></div>
-                <div class="dnm-section-body">
-                    <div class="dnm-field" style="margin-bottom:8px;">
-                        <label>Tap Size *</label>
-                        <select id="dnt-size" class="dnm-select" style="width:100%;">
-                            <option>1/4-20</option><option>1/4-28</option><option>5/16-18</option><option>3/8-16</option>
-                            <option>1/2-13</option><option>M3x0.5</option><option>M4x0.7</option><option>M6x1.0</option><option>M8x1.25</option>
-                        </select>
-                    </div>
-                    <div class="dnm-field" style="margin-bottom:8px;">
-                        <label>Hole Depth *</label>
-                        <select id="dnt-depth" class="dnm-select" style="width:100%;">
-                            <option>THRU hole</option><option>Blind hole</option><option>Custom depth</option>
-                        </select>
-                    </div>
-                    <div class="dnm-field" style="margin-bottom:8px;">
-                        <label>Thread Specs</label>
-                        <select id="dnt-spec" class="dnm-select" style="width:100%;">
-                            <option>2B (Standard)</option><option>3B (Tight)</option><option>1B (Loose)</option>
-                        </select>
-                    </div>
-                    <div class="dnm-row2">
-                        <div class="dnm-field">
-                            <label>Difficulty</label>
-                            <select id="dnt-difficulty" class="dnm-select" style="background:#4caf50;color:#fff;font-weight:700;">
-                                <option value="EASY">EASY</option><option value="MEDIUM">MEDIUM</option><option value="HARD">HARD</option>
-                            </select>
-                        </div>
-                        <div></div>
-                    </div>
+            <div class="dh-spec-grid">
+                <span class="dh-spec-lbl">Tap Size *</span>
+                <div class="dh-spec-val">
+                    <select id="dnt-size" class="dnm-select" style="width:180px;">
+                        <option>1/4-20</option><option>1/4-28</option><option>5/16-18</option>
+                        <option>3/8-16</option><option>1/2-13</option><option>M3x0.5</option>
+                        <option>M4x0.7</option><option>M6x1.0</option><option>M8x1.25</option>
+                    </select>
+                </div>
+                <span class="dh-spec-lbl">Hole Depth *</span>
+                <div class="dh-spec-val">
+                    <select id="dnt-depth" class="dnm-select" style="width:180px;">
+                        <option>THRU hole</option><option>Blind hole</option><option>Custom depth</option>
+                    </select>
+                </div>
+                <span class="dh-spec-lbl">Thread Specs</span>
+                <div class="dh-spec-val">
+                    <select id="dnt-spec" class="dnm-select" style="width:180px;">
+                        <option>2B (Standard)</option><option>3B (Tight)</option><option>1B (Loose)</option>
+                    </select>
+                </div>
+                <span class="dh-spec-lbl">Difficulty</span>
+                <div class="dh-spec-val">
+                    <select id="dnt-difficulty" class="dnm-select" style="background:#22c55e;color:#fff;font-weight:700;width:120px;">
+                        <option value="EASY">EASY</option><option value="MEDIUM">MEDIUM</option><option value="HARD">HARD</option>
+                    </select>
                 </div>
             </div>
-
-            <div class="dnm-section">
-                <div class="dnm-section-hd"><i class="fas fa-circle dnm-dot" style="color:#d83060;"></i> Edge Requirement <span class="dnm-chevron">&#x2304;</span></div>
-                <div class="dnm-section-body">
-                    <div class="dnm-row-inline">
-                        <input type="checkbox" id="dnt-debur" checked style="margin-right:6px;">
-                        <label for="dnt-debur" style="margin-right:10px;">Debur</label>
-                        <select id="dnt-debur-type" class="dnm-select" style="width:160px;"><option>Standard Break Edge</option><option>Full Debur</option><option>None</option></select>
-                    </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f0f0f0;">
+                <div class="dh-edge-row">
+                    <input type="checkbox" id="dnt-debur" checked>
+                    <label for="dnt-debur" style="font-size:12px;font-weight:600;cursor:pointer;">Debur</label>
+                    <select id="dnt-debur-type" class="dnm-select" style="width:170px;"><option>Standard Break Edge</option><option>Full Debur</option><option>None</option></select>
                 </div>
+                <div class="dh-info-note">Full details such as tolerance and finishing will be set by the Director.</div>
             </div>
-
-            <div class="dnm-section">
-                <div class="dnm-section-hd"><i class="fas fa-circle dnm-dot" style="color:#d83060;"></i> Simple Note <span class="dnm-chevron">&#x2304;</span></div>
-                <div class="dnm-section-body">
-                    <textarea id="dnt-note" class="dnm-textarea" placeholder="Add any comments or instructions..."></textarea>
-                </div>
+            <div style="margin-top:10px;">
+                <label style="font-size:11px;font-weight:700;color:#3a4a5a;display:block;margin-bottom:4px;">Note</label>
+                <textarea id="dnt-note" class="dnm-textarea" placeholder="Add any comments or instructions..."></textarea>
             </div>
-
-            <div class="dnm-info-row">
-                <span>Full details such as tolerance and finishing will be set by the Director.</span>
-            </div>
-            <div class="dnm-cost-row">
+            <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:11px;font-weight:600;color:#3a4a5a;padding-top:8px;border-top:1px solid #f0f0f0;">
                 <span>Tap Cost: <strong id="dnt-cost-lo">$7.30</strong></span>
-                <span>Tap Cost: <strong id="dnt-cost-hi">$7.30</strong> <span class="dnm-chevron">&#x2304;</span></span>
+                <span>Tap Cost: <strong id="dnt-cost-hi">$7.30</strong></span>
             </div>
-            <div class="dnm-time-row">Estimated Cycle Time: <strong id="dnt-time">0 hr 6 min</strong></div>
+            <div style="font-size:10px;color:#6a7a8a;margin-top:4px;">Estimated Cycle Time: <strong id="dnt-time">0 hr 6 min</strong></div>
         </div>
-        <div class="dnm-foot" style="justify-content:space-between;align-items:center;">
-            <span class="dnm-ec-link">2.9¢* <a href="#" style="color:#d83060;font-size:10px;">see more...</a></span>
-            <div style="display:flex;gap:8px;">
-                <button class="dnm-cancel" onclick="dirCloseNoteModal()">Cancel</button>
-                <button class="dnm-save" style="background:#d83060;" onclick="dirSaveStepData('tap')">
-                    <i class="fas fa-check" style="margin-right:4px;"></i>Save Tap
-                    <span style="margin-left:4px;border-left:1px solid rgba(255,255,255,.4);padding-left:6px;">&#x2304;</span>
-                </button>
-            </div>
+        <div class="dh-footer">
+            <button class="dh-cancel-sm" onclick="dirCloseNoteModal()">Cancel</button>
+            <button class="dh-bom-btn" onclick="dirSaveStepData('tap')">
+                <i class="fas fa-check" style="font-size:10px;"></i> Save Tap
+            </button>
         </div>
-    </div>
+    </div>{{-- /dnm-tap --}}
 
-    {{-- ── GENERIC NOTE panel (for non-hole/tap steps) ── --}}
-    <div class="dnm-box" id="dnm-generic" style="display:none;">
-        <div class="dnm-hd">
-            <div><i class="fas fa-sticky-note" style="margin-right:6px;opacity:.8;"></i>Step Note <span class="dnm-sub" id="dnm-title"></span></div>
-            <button class="dnm-close" onclick="dirCloseNoteModal()">&#x2715;</button>
+    {{-- ══ GENERIC NOTE MODAL ══ --}}
+    <div class="dh-modal-wrap" id="dnm-generic" style="display:none;width:400px;">
+        <div class="dh-navbar">
+            <div class="dh-navbar-brand"><i class="fas fa-sticky-note"></i> Step Note</div>
+            <span id="dnm-title" style="font-size:10px;color:rgba(255,255,255,.8);margin-left:6px;"></span>
+            <button class="dh-cancel-sm" style="margin-left:auto;background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.3);color:#fff;" onclick="dirCloseNoteModal()">&#x2715;</button>
         </div>
-        <div class="dnm-body">
-            <textarea id="dnm-text" class="dnm-textarea" placeholder="Add a note — instructions, remarks, or reminders..."></textarea>
+        <div class="dh-sec-body">
+            <textarea id="dnm-text" class="dnm-textarea" style="height:120px;" placeholder="Add a note — instructions, remarks, or reminders..."></textarea>
         </div>
-        <div class="dnm-foot">
-            <button class="dnm-cancel" onclick="dirCloseNoteModal()">Cancel</button>
-            <button class="dnm-save" onclick="dirSaveNoteModal()"><i class="fas fa-check" style="margin-right:4px;"></i>Save Note</button>
+        <div class="dh-footer">
+            <button class="dh-cancel-sm" onclick="dirCloseNoteModal()">Cancel</button>
+            <button class="dh-bom-btn" onclick="dirSaveNoteModal()">
+                <i class="fas fa-check" style="font-size:10px;"></i> Save Note
+            </button>
         </div>
-    </div>
+    </div>{{-- /dnm-generic --}}
 
 </div>{{-- /dir-note-modal --}}
 
@@ -1521,23 +1557,23 @@ var dirSelLane   = null;
 /* shape = CSS class added to lane step for clip-path shape
    palette buttons (col1) stay as oval pills — shape only applies in lane */
 var STEP_DEF = {
-    start:    {cls:'ss-start',   icon:'fa-play',         label:'Start',      shape:'ss-shape-arrow-first'},
-    hole:     {cls:'ss-hole',    icon:'fa-circle-notch', label:'Hole',       shape:'ss-shape-circle'},
-    tap:      {cls:'ss-tap',     icon:'fa-screwdriver',  label:'Tap',        shape:'ss-shape-diamond'},
-    machine:  {cls:'ss-machine', icon:'fa-cog',          label:'Machine',    shape:'ss-shape-hexagon'},
-    op:       {cls:'ss-op',      icon:'fa-tools',        label:'Operation',  shape:'ss-shape-arrow'},
-    thread:   {cls:'ss-thread',  icon:'fa-ring',         label:'Thread',     shape:'ss-shape-parallelogram'},
-    item:     {cls:'ss-item',    icon:'fa-box',          label:'Item',       shape:'ss-shape-octagon'},
-    inventory:{cls:'ss-inv',     icon:'fa-boxes',        label:'Inventory',  shape:'ss-shape-house'},
-    plating:  {cls:'ss-plating', icon:'fa-paint-brush',  label:'Plating',    shape:'ss-shape-round-rect'},
-    heat:     {cls:'ss-heat',    icon:'fa-fire',         label:'Heat Treat', shape:'ss-shape-trapezoid'},
-    inspect:  {cls:'ss-inspect', icon:'fa-search',       label:'Inspect',    shape:'ss-shape-flag'},
-    approve:  {cls:'ss-approve', icon:'fa-check',        label:'Approve',    shape:'ss-shape-shield'},
-    pack:     {cls:'ss-pack',    icon:'fa-box-open',     label:'Pack',       shape:'ss-shape-round-rect'},
-    ship:     {cls:'ss-ship',    icon:'fa-truck',        label:'Ship',       shape:'ss-shape-arrow-end'},
-    cert:     {cls:'ss-cert',    icon:'fa-certificate',  label:'Cert',       shape:'ss-shape-shield'},
-    control:  {cls:'ss-stop',    icon:'fa-stop-circle',  label:'Control',    shape:'ss-shape-stop'},
-    hold:     {cls:'ss-stop',    icon:'fa-pause',        label:'Hold',       shape:'ss-shape-stop'}
+    start:    {cls:'ss-start',   icon:'fa-play',         label:'Start',      shape:'ss-shape-pill'},
+    hole:     {cls:'ss-hole',    icon:'fa-circle-notch', label:'Hole',       shape:'ss-shape-pill'},
+    tap:      {cls:'ss-tap',     icon:'fa-screwdriver',  label:'Tap',        shape:'ss-shape-pill'},
+    machine:  {cls:'ss-machine', icon:'fa-cog',          label:'Machine',    shape:'ss-shape-pill'},
+    op:       {cls:'ss-op',      icon:'fa-tools',        label:'Operation',  shape:'ss-shape-pill'},
+    thread:   {cls:'ss-thread',  icon:'fa-ring',         label:'Thread',     shape:'ss-shape-pill'},
+    item:     {cls:'ss-item',    icon:'fa-box',          label:'Item',       shape:'ss-shape-pill'},
+    inventory:{cls:'ss-inv',     icon:'fa-boxes',        label:'Inventory',  shape:'ss-shape-pill'},
+    plating:  {cls:'ss-plating', icon:'fa-paint-brush',  label:'Plating',    shape:'ss-shape-pill'},
+    heat:     {cls:'ss-heat',    icon:'fa-fire',         label:'Heat Treat', shape:'ss-shape-pill'},
+    inspect:  {cls:'ss-inspect', icon:'fa-search',       label:'Inspect',    shape:'ss-shape-pill'},
+    approve:  {cls:'ss-approve', icon:'fa-check',        label:'Approve',    shape:'ss-shape-pill'},
+    pack:     {cls:'ss-pack',    icon:'fa-box-open',     label:'Pack',       shape:'ss-shape-pill'},
+    ship:     {cls:'ss-ship',    icon:'fa-truck',        label:'Ship',       shape:'ss-shape-pill'},
+    cert:     {cls:'ss-cert',    icon:'fa-certificate',  label:'Cert',       shape:'ss-shape-pill'},
+    control:  {cls:'ss-stop',    icon:'fa-stop-circle',  label:'Control',    shape:'ss-shape-pill'},
+    hold:     {cls:'ss-stop',    icon:'fa-pause',        label:'Hold',       shape:'ss-shape-pill'}
 };
 
 /* Make a locked step object */
@@ -2167,22 +2203,31 @@ function dirOpenNoteModal(joid, si) {
     if(s.type === 'hole') {
         /* Populate hole fields from saved data */
         var d = s.specData || {};
-        document.getElementById('dnm-hole-title').textContent = '— ' + s.label;
-        document.getElementById('dnh-size').value         = d.size    || '.2500';
-        document.getElementById('dnh-unit').value         = d.unit    || 'inch';
-        document.getElementById('dnh-qty').value          = d.qty     || '1';
-        document.getElementById('dnh-depth').value        = d.depth   || 'THRU';
-        document.getElementById('dnh-units').value        = d.units   || 'Standard';
-        document.getElementById('dnh-method').value       = d.method  || 'Drill';
-        document.getElementById('dnh-debur').checked      = d.debur   !== false;
-        document.getElementById('dnh-debur-type').value   = d.deburType || 'Break Edge)';
-        document.getElementById('dnh-note').value         = d.note    || s.note || '';
+        var jobEl = document.getElementById('dnh-job-nav');
+        if(jobEl) jobEl.textContent = joid;
+        var sizeEl = document.getElementById('dnh-size');
+        if(sizeEl) sizeEl.value = d.size || '.2500';
+        var unitEl = document.getElementById('dnh-unit');
+        if(unitEl) unitEl.value = d.unit || 'inch';
+        var qtyEl = document.getElementById('dnh-qty');
+        if(qtyEl) qtyEl.value = d.qty || '6';
+        var depthEl = document.getElementById('dnh-depth');
+        if(depthEl) depthEl.value = d.depth || 'THRU';
+        var unitsEl = document.getElementById('dnh-units');
+        if(unitsEl) unitsEl.value = d.units || 'Standard';
+        var methodEl = document.getElementById('dnh-method');
+        if(methodEl) methodEl.value = d.method || 'Drill';
+        var deburEl = document.getElementById('dnh-debur');
+        if(deburEl) deburEl.checked = d.debur !== false;
+        var deburTypeEl = document.getElementById('dnh-debur-type');
+        if(deburTypeEl) deburTypeEl.value = d.deburType || 'Break Edge)';
         document.getElementById('dnm-hole').style.display = 'block';
 
     } else if(s.type === 'tap') {
         /* Populate tap fields from saved data */
         var d = s.specData || {};
-        document.getElementById('dnm-tap-title').textContent  = '— ' + s.label;
+        var tapTitleEl = document.getElementById('dnm-tap-title');
+        if(tapTitleEl) tapTitleEl.textContent = '— ' + s.label;
         document.getElementById('dnt-size').value             = d.size       || '1/4-20';
         document.getElementById('dnt-depth').value            = d.depth      || 'THRU hole';
         document.getElementById('dnt-spec').value             = d.spec       || '2B (Standard)';
@@ -2224,7 +2269,7 @@ function dirSaveStepData(type) {
             method:    document.getElementById('dnh-method').value,
             debur:     document.getElementById('dnh-debur').checked,
             deburType: document.getElementById('dnh-debur-type').value,
-            note:      document.getElementById('dnh-note').value
+            note:      (document.getElementById('dnh-note') ? document.getElementById('dnh-note').value : '')
         };
         s.note = s.specData.note;
     } else if(type === 'tap') {
