@@ -1423,81 +1423,287 @@ html body .lane-steps .dstep.step-blank     { clip-path: none !important; border
             <span>Quote cannot be turned into an <strong>order</strong> unless it profit has been added.</span>
         </div>
 
-        {{-- Footer actions --}}
-        <div class="dh-footer">
-            <button class="dh-cancel-sm" onclick="dirCloseNoteModal()">Cancel</button>
-            <button class="dh-profit-btn">
-                <i class="fas fa-exclamation-triangle" style="font-size:10px;"></i>Quote Must Be Profited
+        {{-- Footer: team + Apply Changes (matches tap modal) --}}
+        <div style="background:#f0ecff;border-top:1px solid #ddd0ff;padding:6px 14px;display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-user-circle" style="color:#e67e22;"></i> Katie
             </button>
-            <button class="dh-cancel-sm" onclick="dirCloseNoteModal()">Cancel</button>
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-user-circle" style="color:#27ae60;"></i> Parker
+            </button>
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-file-alt" style="color:#3498db;"></i> BOMs
+            </button>
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-ticket-alt" style="color:#8e44ad;"></i> Tickets
+            </button>
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-users" style="color:#e74c3c;"></i> Ops
+            </button>
             <button class="dh-bom-btn" onclick="dirSaveStepData('hole')">
-                Create BOM <i class="fas fa-chevron-right" style="font-size:10px;"></i>
+                Apply Changes <i class="fas fa-chevron-right" style="font-size:10px;margin-left:3px;"></i>
             </button>
         </div>
 
     </div>{{-- /dnm-hole --}}
 
-    {{-- ══ TAP SPECS MODAL ══ --}}
-    <div class="dh-modal-wrap" id="dnm-tap" style="display:none;width:520px;">
+    {{-- ══ TAP SPECS MODAL (Director style matching screenshot) ══ --}}
+    <div class="dh-modal-wrap" id="dnm-tap" style="display:none;width:720px;max-width:95vw;">
+
+        {{-- Nav bar --}}
         <div class="dh-navbar">
             <div class="dh-navbar-brand"><i class="fas fa-cog"></i> Director</div>
-            <div class="dh-navbar-nav">Taps &rsaquo; <span id="dnm-tap-title">—</span></div>
-            <span class="dh-view-btn" style="cursor:default;" id="dnm-tap-cost">$7.30</span>
-        </div>
-        <div class="dh-sec-body" style="overflow-y:auto;max-height:70vh;">
-            <p class="dnm-sub-label">Basic tap details</p>
-            <div class="dh-spec-grid">
-                <span class="dh-spec-lbl">Tap Size *</span>
-                <div class="dh-spec-val">
-                    <select id="dnt-size" class="dnm-select" style="width:180px;">
-                        <option>1/4-20</option><option>1/4-28</option><option>5/16-18</option>
-                        <option>3/8-16</option><option>1/2-13</option><option>M3x0.5</option>
-                        <option>M4x0.7</option><option>M6x1.0</option><option>M8x1.25</option>
-                    </select>
-                </div>
-                <span class="dh-spec-lbl">Hole Depth *</span>
-                <div class="dh-spec-val">
-                    <select id="dnt-depth" class="dnm-select" style="width:180px;">
-                        <option>THRU hole</option><option>Blind hole</option><option>Custom depth</option>
-                    </select>
-                </div>
-                <span class="dh-spec-lbl">Thread Specs</span>
-                <div class="dh-spec-val">
-                    <select id="dnt-spec" class="dnm-select" style="width:180px;">
-                        <option>2B (Standard)</option><option>3B (Tight)</option><option>1B (Loose)</option>
-                    </select>
-                </div>
-                <span class="dh-spec-lbl">Difficulty</span>
-                <div class="dh-spec-val">
-                    <select id="dnt-difficulty" class="dnm-select" style="background:#22c55e;color:#fff;font-weight:700;width:120px;">
-                        <option value="EASY">EASY</option><option value="MEDIUM">MEDIUM</option><option value="HARD">HARD</option>
-                    </select>
-                </div>
+            <div class="dh-navbar-nav">
+                Home &rsaquo; Jobs &rsaquo; <span id="dnt-job-nav">Job 10027-A</span> &rsaquo; <strong>Item Detail (From Quote)</strong>
             </div>
-            <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f0f0f0;">
-                <div class="dh-edge-row">
-                    <input type="checkbox" id="dnt-debur" checked>
-                    <label for="dnt-debur" style="font-size:12px;font-weight:600;cursor:pointer;">Debur</label>
-                    <select id="dnt-debur-type" class="dnm-select" style="width:170px;"><option>Standard Break Edge</option><option>Full Debur</option><option>None</option></select>
-                </div>
-                <div class="dh-info-note">Full details such as tolerance and finishing will be set by the Director.</div>
-            </div>
-            <div style="margin-top:10px;">
-                <label style="font-size:11px;font-weight:700;color:#3a4a5a;display:block;margin-bottom:4px;">Note</label>
-                <textarea id="dnt-note" class="dnm-textarea" placeholder="Add any comments or instructions..."></textarea>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:11px;font-weight:600;color:#3a4a5a;padding-top:8px;border-top:1px solid #f0f0f0;">
-                <span>Tap Cost: <strong id="dnt-cost-lo">$7.30</strong></span>
-                <span>Tap Cost: <strong id="dnt-cost-hi">$7.30</strong></span>
-            </div>
-            <div style="font-size:10px;color:#6a7a8a;margin-top:4px;">Estimated Cycle Time: <strong id="dnt-time">0 hr 6 min</strong></div>
-        </div>
-        <div class="dh-footer">
-            <button class="dh-cancel-sm" onclick="dirCloseNoteModal()">Cancel</button>
-            <button class="dh-bom-btn" onclick="dirSaveStepData('tap')">
-                <i class="fas fa-check" style="font-size:10px;"></i> Save Tap
+            <button class="dh-view-btn">
+                <i class="fas fa-star" style="color:#f59e0b;font-size:8px;"></i> STANDARD VIEW
+                <i class="fas fa-chevron-down" style="font-size:8px;"></i>
             </button>
         </div>
+
+        {{-- Job / Save bar --}}
+        <div class="dh-jobbar">
+            <span class="dh-jobbar-lbl">Job: <strong id="dnt-jobref">10027-A</strong> — <span id="dnt-company">INDUSTRY XYZ</span></span>
+            <button class="dh-save-btn" onclick="dirSaveStepData('tap')">
+                <i class="fas fa-save"></i> Save &amp; Close
+            </button>
+            <button class="dh-cancel-sm" onclick="dirCloseNoteModal()">Cancel</button>
+        </div>
+
+        {{-- Meta row --}}
+        <div class="dh-metarow">
+            <span>Job: <strong id="dnt-jobref2">10027-A</strong> — INDUSTRY XYZ</span>
+            <span style="margin-left:10px;">Customer: <strong id="dnt-customer">Acme Manufacturing</strong></span>
+            <span class="dh-cost-tag" id="dnt-total-cost">$80.00</span>
+            <span class="dh-profit-tag"><i class="fas fa-times-circle"></i> Profit Not Added</span>
+            <span style="margin-left:8px;color:#6a5a9a;font-size:10px;">Q#: <strong id="dnt-quotenum">Q1-4458</strong> &bull; <span id="dnt-date">Apr 24, 2024</span></span>
+        </div>
+
+        {{-- Item detail header --}}
+        <div class="dh-item-hd">
+            <i class="fas fa-cog" style="color:#6c5ce7;font-size:13px;"></i>
+            <span class="dh-item-hd-title">Item Detail from Quote</span>
+            <span class="dh-review-link">Review &amp; Complete Details</span>
+            <button class="dh-autofill-btn">
+                <i class="fas fa-magic" style="margin-right:3px;"></i>Auto-Fill Stock
+                <i class="fas fa-chevron-down" style="font-size:8px;margin-left:2px;"></i>
+            </button>
+        </div>
+
+        {{-- Job label --}}
+        <div class="dh-joblabel">
+            Job: <strong style="margin:0 4px;" id="dnt-jobref3">10027-A</strong> — INDUSTRY XYZ
+            <span class="dh-joblabel-cost">$50.00 <i class="fas fa-chevron-down" style="font-size:9px;"></i></span>
+        </div>
+
+        {{-- Split body --}}
+        <div class="dh-body-split" style="overflow:hidden;height:calc(88vh - 210px);">
+
+            {{-- LEFT --}}
+            <div class="dh-left" style="overflow-y:scroll;height:100%;">
+
+                {{-- Tap Specifications --}}
+                <div class="dh-sec">
+                    <i class="fas fa-circle" style="color:#6c5ce7;font-size:8px;"></i>
+                    Tap Specifications
+                    <i class="fas fa-chevron-up" style="margin-left:auto;font-size:9px;color:#9a8aaa;"></i>
+                </div>
+                <div class="dh-sec" style="background:#f8f6ff;border-top:none;font-size:10px;color:#8a7aaa;font-weight:400;">
+                    Job: <strong id="dnt-jobref4">10027-A</strong> — INDUSTRY XYZ
+                    <i class="fas fa-chevron-down" style="margin-left:auto;font-size:9px;color:#9a8aaa;"></i>
+                </div>
+
+                <div class="dh-sec-body">
+                    {{-- Grid: Tap Size / Quantity / Depth / Units --}}
+                    <div style="display:grid;grid-template-columns:auto 1fr auto 1fr;gap:8px 12px;align-items:center;margin-bottom:10px;">
+                        <span class="dh-spec-lbl">Tap Size:</span>
+                        <div>
+                            <input type="text" id="dnt-size" value="1/4-20 UNC" class="dnm-input" style="width:100%;">
+                        </div>
+                        <span class="dh-spec-lbl">Quantity:</span>
+                        <div><input type="number" id="dnt-qty" value="6" class="dnm-input" style="width:70px;"></div>
+
+                        <span class="dh-spec-lbl">Depth:</span>
+                        <div>
+                            <select id="dnt-depth" class="dnm-select" style="width:100%;">
+                                <option>THRU</option><option>Blind</option><option>Custom</option>
+                            </select>
+                        </div>
+                        <span class="dh-spec-lbl">Units:</span>
+                        <div>
+                            <select id="dnt-units" class="dnm-select" style="width:100%;">
+                                <option>Standard</option><option>Metric</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Method row --}}
+                    <div class="dh-method-row">
+                        <span class="dh-spec-lbl">Method:</span>
+                        <select id="dnt-method" class="dnm-select" style="width:120px;">
+                            <option>Tap</option><option>Thread Mill</option><option>Form Tap</option>
+                        </select>
+                        <span class="dh-method-cost">$80.00 <i class="fas fa-chevron-down" style="font-size:8px;"></i></span>
+                    </div>
+                </div>
+
+                {{-- Edge Requirement --}}
+                <div class="dh-sec">
+                    Edge Requirement
+                    <i class="fas fa-chevron-up" style="margin-left:auto;font-size:9px;color:#9a8aaa;"></i>
+                </div>
+                <div class="dh-sec-body">
+                    <div class="dh-edge-row">
+                        <input type="checkbox" id="dnt-debur" checked>
+                        <label for="dnt-debur" style="font-size:12px;font-weight:600;cursor:pointer;">Debur</label>
+                        <select id="dnt-debur-type" class="dnm-select" style="width:140px;">
+                            <option>Break Edge)</option><option>Full Debur</option><option>None</option>
+                        </select>
+                    </div>
+                    <div class="dh-info-note">Full details such as tolerance and finishing will be set by the Director.</div>
+                </div>
+
+                {{-- Future Plan --}}
+                <div class="dh-sec">Future Plan</div>
+                <div class="dh-sec-body">
+                    <div class="dh-fp-group">
+                        <div class="dh-fp-group-hd">
+                            <i class="fas fa-circle" style="color:#6c5ce7;font-size:9px;"></i>
+                            <span class="dh-fp-group-name">TAP GROUP T-01</span>
+                            <button class="dh-auto-btn">AUTO <i class="fas fa-arrow-right" style="font-size:8px;"></i></button>
+                            <button class="dh-truck-btn"><i class="fas fa-truck"></i></button>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                            <span style="font-size:10px;color:#6a7a8a;">Qty: <strong>6 per part</strong></span>
+                            <span class="dh-risk-badge">LOW RISK</span>
+                            <span style="color:#6c5ce7;font-size:16px;font-weight:800;line-height:1;cursor:pointer;">+</span>
+                        </div>
+                        <div class="dh-fp-plan">Future Plan</div>
+                        <div class="dh-op-card">
+                            <div class="dh-op-header">
+                                <span>Op 30: Tap</span>
+                            </div>
+                            <div style="font-weight:700;font-size:11px;margin:4px 0 2px;">T12 — 1/4-20 UNC</div>
+                            <div class="dh-op-detail">&#9675; 600 RPM</div>
+                            <div class="dh-op-detail">&#9675; With Coolant</div>
+                            <div class="dh-op-detail" style="margin-top:4px;">Peck Depth: .200</div>
+                            <div class="dh-op-detail">Speed: 600 RPM</div>
+                            <div class="dh-op-detail">Total Runtime: 0 hr 2 min</div>
+                            {{-- Cycle time inputs --}}
+                            <div style="margin-top:8px;padding-top:6px;border-top:1px solid #f0f0f0;">
+                                <div class="dh-cycle-input-row">
+                                    <span class="dh-cycle-lbl">Cycle Added / Part:</span>
+                                    <input type="text" id="dnt-cycle-part" class="dh-cycle-input" value="00:10"
+                                           onchange="dntCheckPriceChange()">
+                                    <span style="font-size:9px;color:#8a9aaa;">hh:mm</span>
+                                </div>
+                                <div class="dh-cycle-input-row">
+                                    <span class="dh-cycle-lbl">Total Cycle Time:</span>
+                                    <input type="text" id="dnt-cycle-total" class="dh-cycle-input" value="20 min"
+                                           onchange="dntCheckPriceChange()">
+                                    <span style="font-size:9px;color:#8a9aaa;">min</span>
+                                </div>
+                                <div class="dh-price-warn" id="dnt-price-warn">
+                                    <i class="fas fa-exclamation-triangle" style="color:#f59e0b;"></i>
+                                    Price may need updating — cycle time changed
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>{{-- /dh-left --}}
+
+            {{-- RIGHT: Real Impact --}}
+            <div class="dh-right" style="overflow-y:auto;height:100%;">
+                <div class="dh-impact-title">Real Impact</div>
+
+                <div class="dh-impact-row">
+                    <div class="dh-impact-lbl">Cycle Added Per Part</div>
+                    <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+                        <input type="text" id="dnt-impact-cycle" class="dh-cycle-input" value="00:10"
+                               style="width:56px;" onchange="dntSyncCycle()">
+                        <i class="fas fa-info-circle" style="color:#6c5ce7;font-size:10px;"></i>
+                    </div>
+                </div>
+                <div class="dh-impact-row">
+                    <div class="dh-impact-lbl">Total Runtime:</div>
+                    <div style="font-size:13px;font-weight:800;color:#2a3a4a;margin-top:2px;">
+                        <input type="text" id="dnt-impact-runtime" class="dh-cycle-input" value="20 min"
+                               style="width:70px;" onchange="dntSyncCycle()">
+                    </div>
+                </div>
+                <div class="dh-impact-row" style="margin-top:8px;">
+                    <div class="dh-impact-lbl">Total Changes:</div>
+                    <div style="margin-top:2px;">
+                        <input type="text" id="dnt-impact-changes" class="dh-cycle-input" value="—" style="width:56px;">
+                    </div>
+                </div>
+                <div class="dh-impact-row" style="margin-top:8px;">
+                    <div class="dh-impact-lbl">Inspection Level</div>
+                </div>
+                <div class="dh-inspect-row" style="margin-left:2px;">
+                    <label><input type="checkbox" id="dnt-insp-cmm"> CMM</label>
+                    <label>
+                        <input type="checkbox" id="dnt-insp-pin" checked> Random Pin: 95.0%
+                        <input type="text" id="dnt-insp-pct" value="100%" style="width:36px;font-size:9px;border:1px solid #c8d8e8;border-radius:3px;padding:1px 3px;margin-left:2px;">
+                    </label>
+                </div>
+                <div class="dh-impact-row" style="margin-top:8px;">
+                    <div class="dh-impact-lbl">Margin</div>
+                    <div class="dh-margin-good">GOOD <i class="fas fa-check" style="font-size:10px;"></i></div>
+                </div>
+                <div class="dh-impact-row" style="margin-top:8px;">
+                    <div class="dh-impact-lbl">Quoted Feature Value:</div>
+                    <div style="font-size:13px;font-weight:800;color:#2a3a4a;margin-top:2px;">$2.50</div>
+                </div>
+                <div class="dh-impact-row">
+                    <div class="dh-impact-lbl">Estimated Cost:</div>
+                    <div style="font-size:13px;font-weight:800;color:#2a3a4a;margin-top:2px;">$1.78</div>
+                </div>
+
+                <hr style="border:none;border-top:1px solid #e0d8ff;margin:10px 0;">
+                <button class="dh-inventory-btn" onclick="dhAllocateInventory()">
+                    <i class="fas fa-boxes"></i> Allocate Inventory
+                </button>
+                <button class="dh-po-btn" style="margin-top:8px;width:100%;justify-content:center;" onclick="dhOpenPO()">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span id="dnt-po-label">Open Purchase Order</span>
+                </button>
+            </div>{{-- /dh-right --}}
+
+        </div>{{-- /dh-body-split --}}
+
+        {{-- Profit warning --}}
+        <div class="dh-profit-bar">
+            <i class="fas fa-exclamation-triangle" style="color:#f59e0b;font-size:13px;"></i>
+            <strong>Profit Not Added</strong>
+            <span>Quote cannot be turned into an <strong>order</strong> unless it profit has been added.</span>
+        </div>
+
+        {{-- Footer: Katie / Parker / BOMs / Tickets / Ops / Apply Changes --}}
+        <div style="background:#f0ecff;border-top:1px solid #ddd0ff;padding:6px 14px;display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-user-circle" style="color:#e67e22;"></i> Katie
+            </button>
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-user-circle" style="color:#27ae60;"></i> Parker
+            </button>
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-file-alt" style="color:#3498db;"></i> BOMs
+            </button>
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-ticket-alt" style="color:#8e44ad;"></i> Tickets
+            </button>
+            <button style="background:none;border:none;cursor:pointer;font-size:11px;color:#5a4bd0;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:5px;" onmouseenter="this.style.background='#e8e0ff'" onmouseleave="this.style.background='none'">
+                <i class="fas fa-users" style="color:#e74c3c;"></i> Ops
+            </button>
+            <button class="dh-bom-btn" style="margin-left:auto;" onclick="dirSaveStepData('tap')">
+                Apply Changes <i class="fas fa-chevron-right" style="font-size:10px;margin-left:3px;"></i>
+            </button>
+        </div>
+
     </div>{{-- /dnm-tap --}}
 
     {{-- ══ GENERIC NOTE MODAL ══ --}}
@@ -2394,16 +2600,28 @@ function dirOpenNoteModal(joid, si) {
     } else if(s.type === 'tap') {
         /* Populate tap fields from saved data */
         var d = s.specData || {};
-        var tapTitleEl = document.getElementById('dnm-tap-title');
-        if(tapTitleEl) tapTitleEl.textContent = '— ' + s.label;
-        document.getElementById('dnt-size').value             = d.size       || '1/4-20';
-        document.getElementById('dnt-depth').value            = d.depth      || 'THRU hole';
-        document.getElementById('dnt-spec').value             = d.spec       || '2B (Standard)';
-        document.getElementById('dnt-difficulty').value       = d.difficulty || 'EASY';
-        document.getElementById('dnt-debur').checked          = d.debur      !== false;
-        document.getElementById('dnt-debur-type').value       = d.deburType  || 'Standard Break Edge';
-        document.getElementById('dnt-note').value             = d.note       || s.note || '';
-        document.getElementById('dnm-tap').style.display      = 'block';
+        var el;
+        el = document.getElementById('dnt-job-nav');   if(el) el.textContent = joid;
+        el = document.getElementById('dnt-jobref');    if(el) el.textContent = joid;
+        el = document.getElementById('dnt-jobref2');   if(el) el.textContent = joid;
+        el = document.getElementById('dnt-jobref3');   if(el) el.textContent = joid;
+        el = document.getElementById('dnt-jobref4');   if(el) el.textContent = joid;
+        el = document.getElementById('dnt-size');      if(el) el.value = d.size      || '1/4-20 UNC';
+        el = document.getElementById('dnt-qty');       if(el) el.value = d.qty       || '6';
+        el = document.getElementById('dnt-depth');     if(el) el.value = d.depth     || 'THRU';
+        el = document.getElementById('dnt-units');     if(el) el.value = d.units     || 'Standard';
+        el = document.getElementById('dnt-method');    if(el) el.value = d.method    || 'Tap';
+        el = document.getElementById('dnt-debur');     if(el) el.checked = d.debur   !== false;
+        el = document.getElementById('dnt-debur-type');if(el) el.value = d.deburType || 'Break Edge)';
+        /* reset cycle defaults */
+        dntOrigCyclePart  = d.cyclePart  || '00:10';
+        dntOrigCycleTotal = d.cycleTotal || '20 min';
+        el = document.getElementById('dnt-cycle-part');   if(el) el.value = dntOrigCyclePart;
+        el = document.getElementById('dnt-cycle-total');  if(el) el.value = dntOrigCycleTotal;
+        el = document.getElementById('dnt-impact-cycle'); if(el) el.value = dntOrigCyclePart;
+        el = document.getElementById('dnt-impact-runtime');if(el) el.value = dntOrigCycleTotal;
+        el = document.getElementById('dnt-price-warn');   if(el) el.classList.remove('on');
+        document.getElementById('dnm-tap').style.display = 'block';
 
     } else {
         /* Generic note for all other step types */
@@ -2441,16 +2659,19 @@ function dirSaveStepData(type) {
         };
         s.note = s.specData.note;
     } else if(type === 'tap') {
+        var g = function(id){ var e=document.getElementById(id); return e?e.value:''; };
         s.specData = {
-            size:       document.getElementById('dnt-size').value,
-            depth:      document.getElementById('dnt-depth').value,
-            spec:       document.getElementById('dnt-spec').value,
-            difficulty: document.getElementById('dnt-difficulty').value,
-            debur:      document.getElementById('dnt-debur').checked,
-            deburType:  document.getElementById('dnt-debur-type').value,
-            note:       document.getElementById('dnt-note').value
+            size:       g('dnt-size'),
+            qty:        g('dnt-qty'),
+            depth:      g('dnt-depth'),
+            units:      g('dnt-units'),
+            method:     g('dnt-method'),
+            debur:      (document.getElementById('dnt-debur') || {}).checked,
+            deburType:  g('dnt-debur-type'),
+            cyclePart:  g('dnt-cycle-part'),
+            cycleTotal: g('dnt-cycle-total')
         };
-        s.note = s.specData.note;
+        s.note = 'Tap: ' + s.specData.size + ' | ' + s.specData.method;
     }
 
     /* Update inline note field */
@@ -2529,6 +2750,8 @@ dirRenderCanvas();
 ════════════════════════════════ */
 var dhOrigCyclePart  = '00:18';
 var dhOrigCycleTotal = '36 min';
+var dntOrigCyclePart  = '00:10';
+var dntOrigCycleTotal = '20 min';
 
 function dhCheckPriceChange() {
     var partEl  = document.getElementById('dnh-cycle-part');
@@ -2553,6 +2776,30 @@ function dhSyncCycle() {
     if(impCycle && partEl)     partEl.value   = impCycle.value;
     if(impRuntime && totalEl)  totalEl.value  = impRuntime.value;
     dhCheckPriceChange();
+}
+
+/* ── TAP cycle sync ── */
+function dntCheckPriceChange() {
+    var partEl  = document.getElementById('dnt-cycle-part');
+    var totalEl = document.getElementById('dnt-cycle-total');
+    var warnEl  = document.getElementById('dnt-price-warn');
+    if(!partEl || !totalEl || !warnEl) return;
+    var changed = (partEl.value !== dntOrigCyclePart) || (totalEl.value !== dntOrigCycleTotal);
+    warnEl.classList.toggle('on', changed);
+    var impCycle   = document.getElementById('dnt-impact-cycle');
+    var impRuntime = document.getElementById('dnt-impact-runtime');
+    if(impCycle)   impCycle.value   = partEl.value;
+    if(impRuntime) impRuntime.value = totalEl.value;
+}
+
+function dntSyncCycle() {
+    var impCycle   = document.getElementById('dnt-impact-cycle');
+    var impRuntime = document.getElementById('dnt-impact-runtime');
+    var partEl     = document.getElementById('dnt-cycle-part');
+    var totalEl    = document.getElementById('dnt-cycle-total');
+    if(impCycle && partEl)     partEl.value   = impCycle.value;
+    if(impRuntime && totalEl)  totalEl.value  = impRuntime.value;
+    dntCheckPriceChange();
 }
 
 /* ════════════════════════════════
