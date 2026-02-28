@@ -36,6 +36,17 @@ body.director-page .content-wrapper {
     display: flex;
     flex-direction: column;
     background: #d0daea;
+    /* No transform — keeps position:fixed modals working */
+}
+/* Ensure modals escape any overflow clipping */
+#dir-note-modal,
+#dh-po-modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 9999 !important;
 }
 
 /* Also kill the container-fluid padding from section.content */
@@ -850,7 +861,8 @@ body.dragging .step-note-row { pointer-events: none !important; }
     box-shadow:0 20px 60px rgba(0,0,0,.35);
     width:700px;
     max-width:95vw;
-    max-height:92vh;
+    height:88vh;
+    max-height:88vh;
     display:flex;
     flex-direction:column;
     overflow:hidden;
@@ -859,7 +871,7 @@ body.dragging .step-note-row { pointer-events: none !important; }
 /* Top purple nav bar */
 .dh-navbar {
     background: linear-gradient(135deg,#6c5ce7,#a29bfe);
-    padding:8px 14px;
+    padding:5px 12px;
     display:flex;
     align-items:center;
     gap:8px;
@@ -870,27 +882,27 @@ body.dragging .step-note-row { pointer-events: none !important; }
 .dh-navbar-nav strong { color:#fff; }
 .dh-view-btn { margin-left:auto;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:3px 10px;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px; }
 /* Job bar */
-.dh-jobbar { background:#f8f6ff;border-bottom:1px solid #e8e0ff;padding:8px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0; }
+.dh-jobbar { background:#f8f6ff;border-bottom:1px solid #e8e0ff;padding:5px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0; }
 .dh-jobbar-lbl { font-size:11px;color:#4a3a7a;font-weight:600; }
 .dh-save-btn { margin-left:auto;background:#6c5ce7;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px; }
 .dh-save-btn:hover { background:#5a4bd0; }
 .dh-cancel-sm { background:#fff;border:1px solid #d0c8f0;color:#4a3a7a;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer; }
 /* Meta row */
-.dh-metarow { background:#f0ecff;border-bottom:1px solid #e0d8ff;padding:5px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;font-size:11px;color:#3a2a6a; }
+.dh-metarow { background:#f0ecff;border-bottom:1px solid #e0d8ff;padding:3px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;font-size:11px;color:#3a2a6a; }
 .dh-cost-tag { margin-left:auto;background:#6c5ce7;color:#fff;padding:2px 10px;border-radius:5px;font-size:11px;font-weight:700; }
 .dh-profit-tag { background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:3px; }
 /* Item detail header */
-.dh-item-hd { background:#eee8ff;border-bottom:1px solid #ddd0ff;padding:7px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0; }
+.dh-item-hd { background:#eee8ff;border-bottom:1px solid #ddd0ff;padding:4px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0; }
 .dh-item-hd-title { font-size:12px;font-weight:800;color:#3a2a7a; }
 .dh-review-link { font-size:11px;color:#6c5ce7;text-decoration:underline;cursor:pointer; }
 .dh-autofill-btn { margin-left:auto;background:#fff;border:1px solid #c0b0f0;color:#5a4bd0;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer; }
 /* Job label strip */
-.dh-joblabel { background:#f8f6ff;border-bottom:1px solid #ece4ff;padding:5px 14px;display:flex;align-items:center;font-size:11px;color:#4a3a7a;flex-shrink:0; }
+.dh-joblabel { background:#f8f6ff;border-bottom:1px solid #ece4ff;padding:3px 12px;display:flex;align-items:center;font-size:11px;color:#4a3a7a;flex-shrink:0; }
 .dh-joblabel-cost { margin-left:auto;font-weight:800;color:#3a2a7a; }
 /* Scrollable body split */
-.dh-body-split { display:flex;flex:1;min-height:0;overflow:hidden; }
-.dh-left  { flex:1;min-width:0;overflow-y:auto;padding:0; }
-.dh-right { width:175px;flex-shrink:0;background:#f8f6ff;border-left:1px solid #e8e0ff;padding:12px;overflow-y:auto; }
+.dh-body-split { display:flex;overflow:hidden; height:calc(88vh - 200px); min-height:200px; }
+.dh-left  { flex:1;min-width:0;overflow-y:scroll;padding:0;height:100%; }
+.dh-right { width:175px;flex-shrink:0;background:#f8f6ff;border-left:1px solid #e8e0ff;padding:12px;overflow-y:auto;height:100%; }
 /* Section headers */
 .dh-sec { background:#f0ecff;border-top:1px solid #e0d8ff;border-bottom:1px solid #e0d8ff;padding:7px 14px;font-size:11px;font-weight:700;color:#3a2a7a;display:flex;align-items:center;gap:6px;cursor:pointer; }
 .dh-sec i { color:#6c5ce7;font-size:9px; }
@@ -926,12 +938,47 @@ body.dragging .step-note-row { pointer-events: none !important; }
 .dh-inspect-row label { display:flex;align-items:center;gap:5px;font-size:10px;color:#3a4a5a;margin-bottom:3px;cursor:pointer; }
 .dh-margin-good { color:#16a34a;font-weight:800;font-size:12px; }
 /* Profit warning */
-.dh-profit-bar { background:#fff7ed;border-top:2px solid #fed7aa;padding:8px 14px;display:flex;align-items:center;gap:6px;font-size:11px;color:#92400e;flex-shrink:0; }
+.dh-profit-bar { background:#fff7ed;border-top:2px solid #fed7aa;padding:5px 12px;display:flex;align-items:center;gap:6px;font-size:11px;color:#92400e;flex-shrink:0; }
 /* Bottom actions */
-.dh-footer { background:#f8f6ff;border-top:1px solid #e0d8ff;padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0; }
+.dh-footer { background:#f8f6ff;border-top:1px solid #e0d8ff;padding:6px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0; }
 .dh-profit-btn { background:#f59e0b;color:#fff;border:none;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px; }
 .dh-bom-btn { background:#6c5ce7;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;margin-left:auto; }
 .dh-bom-btn:hover { background:#5a4bd0; }
+
+/* ── Cycle input rows ── */
+.dh-cycle-input-row { display:flex;align-items:center;gap:6px;margin-bottom:5px; }
+.dh-cycle-lbl { font-size:9px;font-weight:700;color:#6a7a8a;text-transform:uppercase;letter-spacing:.3px;min-width:90px; }
+.dh-cycle-input { width:68px;padding:3px 6px;border:1px solid #c8d8e8;border-radius:5px;font-size:12px;font-weight:800;color:#2a3a4a;text-align:center;font-family:'DM Sans',sans-serif;outline:none; }
+.dh-cycle-input:focus { border-color:#6c5ce7;box-shadow:0 0 0 2px rgba(108,92,231,.15); }
+/* ── Price change warning ── */
+.dh-price-warn { display:none;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:5px 8px;font-size:10px;color:#92400e;font-weight:600;margin-top:6px;align-items:center;gap:5px; }
+.dh-price-warn.on { display:flex; }
+/* ── Inventory allocate button ── */
+.dh-inventory-btn { display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;border:1px dashed #6c5ce7;background:#f5f0ff;color:#5a4bd0;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;width:100%;justify-content:center;margin-top:8px; }
+.dh-inventory-btn:hover { background:#ede8ff;border-style:solid; }
+/* ── Purchase Order button + modal ── */
+.dh-po-btn { display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid #90c0e8;background:#e8f4ff;color:#1a60b0;font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap; }
+.dh-po-btn:hover { background:#d0e8ff;border-color:#5090c8; }
+#dh-po-modal { display:none;position:fixed;inset:0;z-index:2200;background:rgba(10,20,40,.6);align-items:center;justify-content:center; }
+#dh-po-modal.on { display:flex; }
+.dh-po-box { background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.35);width:520px;max-width:92vw;overflow:hidden;font-family:'DM Sans',sans-serif; }
+.dh-po-hd { background:linear-gradient(135deg,#1a60b0,#3090e8);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between; }
+.dh-po-hd-title { font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px; }
+.dh-po-close { background:none;border:none;color:#fff;font-size:16px;cursor:pointer;opacity:.7;line-height:1; }
+.dh-po-close:hover { opacity:1; }
+.dh-po-body { padding:16px; }
+.dh-po-ref-row { background:#f0f8ff;border:1px solid #b8d8f8;border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between; }
+.dh-po-ref-lbl { font-size:11px;color:#3a6080;font-weight:600; }
+.dh-po-ref-val { font-size:15px;font-weight:800;color:#1a60b0;letter-spacing:.5px; }
+.dh-po-field { margin-bottom:12px; }
+.dh-po-field label { display:block;font-size:10px;font-weight:700;color:#5a6a7a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px; }
+.dh-po-field input,.dh-po-field select,.dh-po-field textarea { width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid #c8d8e8;border-radius:6px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;color:#1a2540; }
+.dh-po-field input:focus,.dh-po-field select:focus,.dh-po-field textarea:focus { border-color:#3090e8;box-shadow:0 0 0 2px rgba(48,144,232,.12); }
+.dh-po-grid2 { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+.dh-po-foot { background:#f8f9fa;border-top:1px solid #e0e8f0;padding:10px 16px;display:flex;justify-content:flex-end;gap:8px; }
+.dh-po-cancel { padding:7px 14px;border-radius:6px;border:1px solid #c8d8e8;background:#fff;color:#3a5070;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif; }
+.dh-po-create { padding:7px 18px;border-radius:6px;border:none;background:#1a60b0;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px; }
+.dh-po-create:hover { background:#0a50a0; }
 
 /* ── BLANK DROP SLOT — always visible rectangle ── */
 .lane-steps .dstep.step-blank,
@@ -1191,11 +1238,9 @@ html body .lane-steps .dstep.step-blank     { clip-path: none !important; border
             <span style="margin-left:10px;">Customer: <strong id="dnh-customer">Acme Manufacturing</strong></span>
             <span class="dh-cost-tag" id="dnh-total-cost">$50.00</span>
             <span class="dh-profit-tag"><i class="fas fa-times-circle"></i> Profit Not Added</span>
+            <span style="margin-left:8px;color:#6a5a9a;font-size:10px;">Q#: <strong id="dnh-quotenum">Q1-4458</strong> &bull; <span id="dnh-date">Apr 24, 2024</span></span>
         </div>
-        <div class="dh-metarow" style="border-top:none;padding-top:0;padding-bottom:6px;">
-            <span>Quote #: <strong id="dnh-quotenum">Q1-4458</strong></span>
-            <span style="margin-left:18px;">Date: <span id="dnh-date">Apr 24, 2024</span></span>
-        </div>
+
 
         {{-- Item Detail header --}}
         <div class="dh-item-hd">
@@ -1208,17 +1253,13 @@ html body .lane-steps .dstep.step-blank     { clip-path: none !important; border
             </button>
         </div>
 
-        {{-- Job label strip --}}
-        <div class="dh-joblabel">
-            Job: <strong style="margin:0 4px;" id="dnh-jobref3">10027-A</strong> — INDUSTRY XYZ
-            <span class="dh-joblabel-cost" id="dnh-job-cost">$50.00 <i class="fas fa-chevron-down" style="font-size:9px;"></i></span>
-        </div>
+
 
         {{-- Split body --}}
         <div class="dh-body-split">
 
             {{-- LEFT: specs --}}
-            <div class="dh-left">
+            <div class="dh-left" style="overflow-y:scroll!important;height:calc(88vh - 210px)!important;max-height:calc(88vh - 210px);">
 
                 {{-- Hole Specs section --}}
                 <div class="dh-sec">
@@ -1226,13 +1267,9 @@ html body .lane-steps .dstep.step-blank     { clip-path: none !important; border
                     Hole Specifications
                     <i class="fas fa-chevron-up" style="margin-left:auto;font-size:9px;color:#9a8aaa;"></i>
                 </div>
-                <div class="dh-sec" style="background:#f8f6ff;border-top:none;">
-                    <span style="font-size:10px;color:#8a7aaa;">Job: <strong>10027-A</strong> — INDUSTRY XYZ</span>
-                    <i class="fas fa-chevron-down" style="margin-left:auto;font-size:9px;color:#9a8aaa;"></i>
-                </div>
+
 
                 <div class="dh-sec-body">
-                    <div style="font-size:13px;font-weight:800;color:#2a3a4a;margin-bottom:12px;">Hole Specifications</div>
                     <div class="dh-spec-grid">
                         <span class="dh-spec-lbl">Hole Size</span>
                         <div class="dh-spec-val">
@@ -1297,46 +1334,84 @@ html body .lane-steps .dstep.step-blank     { clip-path: none !important; border
                             <div class="dh-op-detail">Angle: 180° &nbsp; x: 2.500 &nbsp; y: 4.750 &nbsp; @: 180°</div>
                             <div class="dh-op-detail">Total Runtime: 0 hr 3 min</div>
                             <div class="dh-cycle-row">
-                                <input type="checkbox" checked>
-                                <span style="font-size:10px;">Debur: In Cycle</span>
+                                <input type="checkbox" id="dnh-debur-cycle" checked>
+                                <label for="dnh-debur-cycle" style="font-size:10px;cursor:pointer;">Debur: In Cycle</label>
                                 <i class="fas fa-check" style="color:#22c55e;font-size:10px;"></i>
-                                <span class="dh-cycle-time">00:18</span>
                             </div>
-                            <div class="dh-op-detail" style="margin-top:4px;">Total Cycle 1Der Part: 00:18</div>
-                            <div class="dh-op-detail">Total Runtime: 36 min</div>
+                            <div style="margin-top:8px;padding-top:6px;border-top:1px solid #f0f0f0;">
+                                <div class="dh-cycle-input-row">
+                                    <span class="dh-cycle-lbl">Cycle Added / Part:</span>
+                                    <input type="text" id="dnh-cycle-part" class="dh-cycle-input" value="00:18"
+                                           onchange="dhCheckPriceChange()">
+                                    <span style="font-size:9px;color:#8a9aaa;">hh:mm</span>
+                                </div>
+                                <div class="dh-cycle-input-row">
+                                    <span class="dh-cycle-lbl">Total Cycle Time:</span>
+                                    <input type="text" id="dnh-cycle-total" class="dh-cycle-input" value="36 min"
+                                           onchange="dhCheckPriceChange()">
+                                    <span style="font-size:9px;color:#8a9aaa;">min</span>
+                                </div>
+                                <div class="dh-price-warn" id="dnh-price-warn">
+                                    <i class="fas fa-exclamation-triangle" style="color:#f59e0b;"></i>
+                                    Price may need updating — cycle time changed
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
             </div>{{-- /dh-left --}}
 
-            {{-- RIGHT: Real Impact --}}
-            <div class="dh-right">
+            {{-- RIGHT: Real Impact (editable) --}}
+            <div class="dh-right" style="overflow-y:auto;height:calc(88vh - 210px);max-height:calc(88vh - 210px);">
                 <div class="dh-impact-title">Real Impact</div>
 
                 <div class="dh-impact-row">
                     <div class="dh-impact-lbl">Cycle Added Part</div>
-                    <div class="dh-impact-val">00:18 <i class="fas fa-minus-circle" style="color:#ef4444;font-size:10px;"></i></div>
+                    <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+                        <input type="text" id="dnh-impact-cycle" class="dh-cycle-input" value="00:18"
+                               style="width:56px;" onchange="dhSyncCycle()">
+                        <i class="fas fa-minus-circle" style="color:#ef4444;font-size:10px;"></i>
+                    </div>
                 </div>
                 <div class="dh-impact-row">
                     <div class="dh-impact-lbl">Total Runtime</div>
-                    <div class="dh-impact-val">36 min</div>
+                    <div style="margin-top:2px;">
+                        <input type="text" id="dnh-impact-runtime" class="dh-cycle-input" value="36 min"
+                               style="width:70px;" onchange="dhSyncCycle()">
+                    </div>
                 </div>
-                <div class="dh-impact-row" style="margin-top:10px;">
+                <div class="dh-impact-row" style="margin-top:8px;">
                     <div class="dh-impact-lbl">Total Changes</div>
-                    <div class="dh-impact-val" style="font-size:11px;">—</div>
+                    <div style="margin-top:2px;">
+                        <input type="text" id="dnh-impact-changes" class="dh-cycle-input" value="—" style="width:56px;">
+                    </div>
                 </div>
-                <div class="dh-impact-row" style="margin-top:10px;">
+                <div class="dh-impact-row" style="margin-top:8px;">
                     <div class="dh-impact-lbl">Inspection Level</div>
                 </div>
                 <div class="dh-inspect-row" style="margin-left:2px;">
-                    <label><input type="checkbox"> CMM</label>
-                    <label><input type="checkbox" checked> Random Pin <span style="margin-left:4px;font-weight:700;">100%</span></label>
+                    <label><input type="checkbox" id="dnh-insp-cmm"> CMM</label>
+                    <label><input type="checkbox" id="dnh-insp-pin" checked> Random Pin
+                        <input type="text" id="dnh-insp-pct" value="100%" style="width:36px;font-size:9px;border:1px solid #c8d8e8;border-radius:3px;padding:1px 3px;margin-left:2px;">
+                    </label>
                 </div>
-                <div class="dh-impact-row" style="margin-top:10px;">
+                <div class="dh-impact-row" style="margin-top:8px;">
                     <div class="dh-impact-lbl">Margin</div>
                     <div class="dh-margin-good">GOOD <i class="fas fa-check" style="font-size:10px;"></i></div>
                 </div>
+
+                <hr style="border:none;border-top:1px solid #e0d8ff;margin:10px 0;">
+
+                {{-- Allocate Inventory --}}
+                <button class="dh-inventory-btn" onclick="dhAllocateInventory()">
+                    <i class="fas fa-boxes"></i> Allocate Inventory
+                </button>
+
+                {{-- Purchase Order --}}
+                <button class="dh-po-btn" id="dnh-po-btn-label" style="margin-top:8px;width:100%;justify-content:center;" onclick="dhOpenPO()">
+                    <i class="fas fa-file-invoice-dollar"></i> <span id="dnh-po-label">Open Purchase Order</span>
+                </button>
             </div>{{-- /dh-right --}}
 
         </div>{{-- /dh-body-split --}}
@@ -1444,6 +1519,99 @@ html body .lane-steps .dstep.step-blank     { clip-path: none !important; border
     </div>{{-- /dnm-generic --}}
 
 </div>{{-- /dir-note-modal --}}
+
+{{-- ══ PURCHASE ORDER MODAL ══ --}}
+<div id="dh-po-modal">
+    <div class="dh-po-box">
+        <div class="dh-po-hd">
+            <div class="dh-po-hd-title">
+                <i class="fas fa-file-invoice-dollar"></i>
+                Create Purchase Order
+            </div>
+            <button class="dh-po-close" onclick="dhClosePO()">&#x2715;</button>
+        </div>
+        <div class="dh-po-body">
+
+            {{-- Auto order reference row --}}
+            <div class="dh-po-ref-row">
+                <div>
+                    <div class="dh-po-ref-lbl">Auto Order Reference #</div>
+                    <div style="font-size:10px;color:#6a8aaa;margin-top:2px;">Linked from active Job Order</div>
+                </div>
+                <div class="dh-po-ref-val" id="dh-po-ref">JO-000000</div>
+            </div>
+
+            <div class="dh-po-grid2">
+                <div class="dh-po-field">
+                    <label>PO Number</label>
+                    <input type="text" id="dh-po-number" placeholder="Auto-generated" readonly
+                           style="background:#f0f4f8;color:#5a7090;">
+                </div>
+                <div class="dh-po-field">
+                    <label>PO Date</label>
+                    <input type="date" id="dh-po-date">
+                </div>
+            </div>
+
+            <div class="dh-po-field">
+                <label>Supplier / Vendor</label>
+                <select id="dh-po-vendor">
+                    <option value="">— Select Supplier —</option>
+                    <option>Acme Supply Co.</option>
+                    <option>Global Tools Inc.</option>
+                    <option>Precision Materials Ltd.</option>
+                    <option>FastCut Distributors</option>
+                </select>
+            </div>
+
+            <div class="dh-po-grid2">
+                <div class="dh-po-field">
+                    <label>Item / Description</label>
+                    <input type="text" id="dh-po-item" placeholder="e.g. #28 Carbide Drill">
+                </div>
+                <div class="dh-po-field">
+                    <label>Quantity</label>
+                    <input type="number" id="dh-po-qty" value="1" min="1">
+                </div>
+            </div>
+
+            <div class="dh-po-grid2">
+                <div class="dh-po-field">
+                    <label>Unit Price ($)</label>
+                    <input type="number" id="dh-po-price" placeholder="0.00" step="0.01">
+                </div>
+                <div class="dh-po-field">
+                    <label>Total Cost</label>
+                    <input type="text" id="dh-po-total" placeholder="$0.00" readonly
+                           style="background:#f0f4f8;font-weight:700;color:#1a60b0;">
+                </div>
+            </div>
+
+            <div class="dh-po-field">
+                <label>Notes / Instructions</label>
+                <textarea id="dh-po-notes" rows="2"
+                    placeholder="Add delivery requirements, special instructions..."></textarea>
+            </div>
+
+            {{-- Sale Order link --}}
+            <div style="background:#f0f8ff;border:1px solid #b8d8f8;border-radius:7px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin-top:4px;">
+                <i class="fas fa-link" style="color:#3090e8;font-size:11px;"></i>
+                <span style="font-size:11px;color:#3a6080;font-weight:600;">Linked Sale Order:</span>
+                <span id="dh-po-sale-ref" style="font-size:11px;font-weight:800;color:#1a60b0;">—</span>
+                <button onclick="dhLinkSaleOrder()"
+                    style="margin-left:auto;background:#e8f4ff;border:1px solid #90c0e8;color:#1a60b0;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;">
+                    Link Sale Order
+                </button>
+            </div>
+        </div>
+        <div class="dh-po-foot">
+            <button class="dh-po-cancel" onclick="dhClosePO()">Cancel</button>
+            <button class="dh-po-create" onclick="dhCreatePO()">
+                <i class="fas fa-plus" style="font-size:10px;"></i> Create PO
+            </button>
+        </div>
+    </div>
+</div>
 
 {{-- ══ ASSIGN MODAL ══ --}}
 <div class="dir-overlay" id="dirModal">
@@ -2355,6 +2523,115 @@ function dirToast(msg, col) {
 dirTreeOpen['Q-000002'] = true;
 dirRenderTree();
 dirRenderCanvas();
+
+/* ════════════════════════════════
+   HOLE MODAL — CYCLE INPUTS & PRICE WARNING
+════════════════════════════════ */
+var dhOrigCyclePart  = '00:18';
+var dhOrigCycleTotal = '36 min';
+
+function dhCheckPriceChange() {
+    var partEl  = document.getElementById('dnh-cycle-part');
+    var totalEl = document.getElementById('dnh-cycle-total');
+    var warnEl  = document.getElementById('dnh-price-warn');
+    if(!partEl || !totalEl || !warnEl) return;
+    var changed = (partEl.value !== dhOrigCyclePart) || (totalEl.value !== dhOrigCycleTotal);
+    warnEl.classList.toggle('on', changed);
+    /* Also sync Real Impact panel */
+    var impCycle   = document.getElementById('dnh-impact-cycle');
+    var impRuntime = document.getElementById('dnh-impact-runtime');
+    if(impCycle)   impCycle.value   = partEl.value;
+    if(impRuntime) impRuntime.value = totalEl.value;
+}
+
+function dhSyncCycle() {
+    /* Sync Real Impact → cycle inputs in op card */
+    var impCycle   = document.getElementById('dnh-impact-cycle');
+    var impRuntime = document.getElementById('dnh-impact-runtime');
+    var partEl     = document.getElementById('dnh-cycle-part');
+    var totalEl    = document.getElementById('dnh-cycle-total');
+    if(impCycle && partEl)     partEl.value   = impCycle.value;
+    if(impRuntime && totalEl)  totalEl.value  = impRuntime.value;
+    dhCheckPriceChange();
+}
+
+/* ════════════════════════════════
+   HOLE MODAL — ALLOCATE INVENTORY
+════════════════════════════════ */
+function dhAllocateInventory() {
+    dirToast('Inventory allocated to this step', '#6c5ce7');
+}
+
+/* ════════════════════════════════
+   PURCHASE ORDER MODAL
+════════════════════════════════ */
+var dhPOCounter = 1000;
+
+function dhOpenPO() {
+    /* Auto-fill reference from active step context */
+    var refEl  = document.getElementById('dh-po-ref');
+    var numEl  = document.getElementById('dh-po-number');
+    var saleEl = document.getElementById('dh-po-sale-ref');
+    var dateEl = document.getElementById('dh-po-date');
+
+    var joRef = dirNoteCtx ? dirNoteCtx.joid : 'JO-000000';
+    if(refEl)  refEl.textContent  = joRef;
+    dhPOCounter++;
+    if(numEl)  numEl.value        = 'PO-' + dhPOCounter;
+    if(saleEl) saleEl.textContent = 'SO-' + joRef.replace('JO-','');
+    if(dateEl) {
+        var today = new Date();
+        dateEl.value = today.toISOString().split('T')[0];
+    }
+
+    /* Auto-calc total when qty/price change */
+    var qtyEl   = document.getElementById('dh-po-qty');
+    var priceEl = document.getElementById('dh-po-price');
+    var totalEl = document.getElementById('dh-po-total');
+    if(qtyEl && priceEl && totalEl) {
+        function calcTotal() {
+            var t = (parseFloat(qtyEl.value)||0) * (parseFloat(priceEl.value)||0);
+            totalEl.value = '$' + t.toFixed(2);
+        }
+        qtyEl.oninput   = calcTotal;
+        priceEl.oninput = calcTotal;
+    }
+
+    /* Update PO number field and button label */
+    var poLabelEl = document.getElementById('dnh-po-label');
+    if(poLabelEl) poLabelEl.textContent = '#PO-' + dhPOCounter;
+
+    document.getElementById('dh-po-modal').classList.add('on');
+}
+
+function dhClosePO() {
+    document.getElementById('dh-po-modal').classList.remove('on');
+}
+
+function dhCreatePO() {
+    var ref    = document.getElementById('dh-po-ref')    ? document.getElementById('dh-po-ref').textContent    : '—';
+    var num    = document.getElementById('dh-po-number') ? document.getElementById('dh-po-number').value       : '—';
+    var vendor = document.getElementById('dh-po-vendor') ? document.getElementById('dh-po-vendor').value       : '—';
+    var total  = document.getElementById('dh-po-total')  ? document.getElementById('dh-po-total').value        : '$0.00';
+    /* Update the open PO button to show the created PO number */
+    var poLabelEl = document.getElementById('dnh-po-label');
+    if(poLabelEl) poLabelEl.textContent = '#' + num + ' ✓';
+    dhClosePO();
+    dirToast('PO ' + num + ' created — Ref: ' + ref + ' | ' + vendor + ' | ' + total, '#22c55e');
+}
+
+function dhLinkSaleOrder() {
+    var saleEl = document.getElementById('dh-po-sale-ref');
+    var joRef  = dirNoteCtx ? dirNoteCtx.joid : 'JO-000000';
+    var soNum  = 'SO-' + joRef.replace('JO-','') + '-' + (Math.floor(Math.random()*900)+100);
+    if(saleEl) saleEl.textContent = soNum;
+    dirToast('Sale Order ' + soNum + ' linked', '#3090e8');
+}
+
+/* Close PO modal on backdrop click */
+document.getElementById('dh-po-modal').addEventListener('click', function(e){
+    if(e.target === this) dhClosePO();
+});
 </script>
 @endverbatim
 @endpush
